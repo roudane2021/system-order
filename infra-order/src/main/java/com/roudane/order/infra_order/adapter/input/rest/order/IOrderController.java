@@ -10,5 +10,5 @@ import java.util.Set;
 public interface IOrderController {
 
     ResponseEntity<OrderCreateResponseDto> createOrder(final OrderCreateRequestDto orderCreateRequest);
-    ResponseEntity<OrderDto> retrieverOrders();
+    ResponseEntity<OrderDto> retrieverOrders(final Long id);
 }
