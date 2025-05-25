@@ -13,3 +13,7 @@
 
 domain-order/target/*
 infra-order/target/*
+domain-inventory/target/*
+infra-inventory/target/*
+domain-notification/target/*
+infra-notification/target/*
