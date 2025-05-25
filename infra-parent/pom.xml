@@ -1,0 +1,73 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.roudane.order</groupId>
+  <artifactId>infra-parent</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <name>Archetype - system-order</name>
+  <url>http://maven.apache.org</url>
+
+  <packaging>pom</packaging>
+  <properties>
+    <java.version>17</java.version>
+  </properties>
+
+  <modules>
+    <!-- Order -->
+    <module>infra-order</module>
+    <module>domain-order</module>
+
+    <!-- Inventory -->
+    <module>infra-inventory</module>
+    <module>domain-inventory</module>
+
+    <!-- Notification -->
+    <module>infra-notification</module>
+    <module>domain-notification</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <!--order -->
+      <dependency>
+        <groupId>com.roudane.order</groupId>
+        <artifactId>infra-order</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.roudane.order</groupId>
+        <artifactId>domain-order</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+
+      <!--inventory -->
+      <dependency>
+        <groupId>com.roudane.order</groupId>
+        <artifactId>infra-inventory</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.roudane.order</groupId>
+        <artifactId>domain-inventory</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+
+      <!--inventory -->
+      <dependency>
+        <groupId>com.roudane.order</groupId>
+        <artifactId>infra-notification</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>com.roudane.order</groupId>
+        <artifactId>domain-notification</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+
+
+    </dependencies>
+  </dependencyManagement>
+
+
+</project>
