@@ -9,5 +9,6 @@ import lombok.NoArgsConstructor;
 public enum OrderStatus {
     CREATED,
     CANCELLED,
-    SHIPPED
+    SHIPPED,
+    PAID
 }

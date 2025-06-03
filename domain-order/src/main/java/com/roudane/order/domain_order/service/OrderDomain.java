@@ -9,6 +9,8 @@ import com.roudane.order.domain_order.port.input.ICreateOrderUseCase;
 import com.roudane.order.domain_order.port.input.IGetOrderUseCase;
 import com.roudane.order.domain_order.port.input.IListOrderUseCase;
 import com.roudane.order.domain_order.port.input.IUpdateOrderUseCase;
+import com.roudane.order.domain_order.port.input.ICancelOrderUseCase;
+import com.roudane.order.domain_order.port.input.IPayOrderUseCase;
 import com.roudane.order.domain_order.port.output.event.IOrderEventPublisherOutPort;
 import com.roudane.order.domain_order.port.output.logger.ILoggerPort;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
@@ -19,7 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 
 @RequiredArgsConstructor
-public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IListOrderUseCase, IUpdateOrderUseCase {
+public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IListOrderUseCase, IUpdateOrderUseCase, ICancelOrderUseCase, IPayOrderUseCase {
 
     private final IOrderEventPublisherOutPort orderEventPublisherOutPort;
     private final IOrderPersistenceOutPort orderPersistenceOutPort;
@@ -94,6 +96,42 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         orderEventPublisherOutPort.publisherEventOrder(orderModel);
 
         loggerPort.info("Order updated successfully with ID: " + updatedOrder.getId());
+        return updatedOrder;
+    }
+
+    public OrderModel cancelOrder(final Long orderId) {
+        loggerPort.debug("Attempting to cancel order with ID: " + orderId);
+        OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
+                .orElseThrow(() -> {
+                    loggerPort.warn("Order not found for cancellation: " + orderId);
+                    return new OrderNotFoundException("Order with ID " + orderId + " not found, cannot cancel.");
+                });
+
+        // Add logic to check if order can be cancelled (e.g., not already shipped) if necessary
+        // For now, directly setting to CANCELLED
+        orderModel.setStatus(OrderStatus.CANCELLED);
+        OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel); // Assuming updateOrder handles status changes
+
+        orderEventPublisherOutPort.publisherEventOrder(updatedOrder); // Pass the updated order
+        loggerPort.info("Order with ID: " + orderId + " cancelled successfully.");
+        return updatedOrder;
+    }
+
+    public OrderModel payOrder(final Long orderId) {
+        loggerPort.debug("Attempting to pay order with ID: " + orderId);
+        OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
+                .orElseThrow(() -> {
+                    loggerPort.warn("Order not found for payment: " + orderId);
+                    return new OrderNotFoundException("Order with ID " + orderId + " not found, cannot pay.");
+                });
+
+        // Add logic to check if order can be paid (e.g., is in CREATED status) if necessary
+        // For now, directly setting to PAID
+        orderModel.setStatus(OrderStatus.PAID);
+        OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel); // Assuming updateOrder handles status changes
+
+        orderEventPublisherOutPort.publisherEventOrder(updatedOrder); // Pass the updated order
+        loggerPort.info("Order with ID: " + orderId + " paid successfully.");
         return updatedOrder;
     }
 }
