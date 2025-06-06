@@ -6,19 +6,17 @@ import com.roudane.order.infra_order.adapter.output.persistence.entity.OrderEnti
 import com.roudane.order.infra_order.adapter.output.persistence.mapper.PersistenceOrderMapper;
 import com.roudane.order.infra_order.adapter.output.persistence.repository.OrderJpaRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Component; // No @Profile annotation
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Component
-@Profile("oracle")
+@Component // Default component, active for all profiles unless overridden
 @RequiredArgsConstructor
-@Transactional // Add transactional behavior to the adapter
-public class OracleOrderPersistenceAdapter implements IOrderPersistenceOutPort {
+@Transactional
+public class DefaultOrderPersistenceAdapter implements IOrderPersistenceOutPort {
 
     private final OrderJpaRepository orderJpaRepository;
     private final PersistenceOrderMapper persistenceOrderMapper;
@@ -26,7 +24,6 @@ public class OracleOrderPersistenceAdapter implements IOrderPersistenceOutPort {
     @Override
     public OrderModel createOrder(OrderModel orderModel) {
         OrderEntity orderEntity = persistenceOrderMapper.toEntity(orderModel);
-        // Ensure items in OrderEntity have their 'order' field set for cascading persistence
         if (orderEntity.getItems() != null) {
             orderEntity.getItems().forEach(item -> item.setOrder(orderEntity));
         }
@@ -43,7 +40,7 @@ public class OracleOrderPersistenceAdapter implements IOrderPersistenceOutPort {
     @Override
     public OrderModel getOrder(Long orderID) {
         return findOrderById(orderID)
-                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderID)); // Replace with specific domain exception
+                .orElseThrow(() -> new RuntimeException("Order not found with ID: " + orderID)); // Consider a domain specific exception
     }
 
     @Override
@@ -56,10 +53,9 @@ public class OracleOrderPersistenceAdapter implements IOrderPersistenceOutPort {
     @Override
     public OrderModel updateOrder(OrderModel orderModel) {
         if (orderModel.getId() == null || !orderJpaRepository.existsById(orderModel.getId())) {
-            throw new RuntimeException("Order with ID " + orderModel.getId() + " not found, cannot update."); // Replace with specific domain exception
+            throw new RuntimeException("Order with ID " + orderModel.getId() + " not found, cannot update."); // Consider a domain specific exception
         }
         OrderEntity orderEntity = persistenceOrderMapper.toEntity(orderModel);
-        // Ensure items in OrderEntity have their 'order' field set
         if (orderEntity.getItems() != null) {
             orderEntity.getItems().forEach(item -> item.setOrder(orderEntity));
         }

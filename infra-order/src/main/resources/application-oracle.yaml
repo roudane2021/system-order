@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    # Replace with actual Oracle connection details
+    url: jdbc:oracle:thin:@your-oracle-host:1521:your-oracle-sid
+    driverClassName: oracle.jdbc.OracleDriver
+    username: your_oracle_username
+    password: your_oracle_password
+  jpa:
+    database-platform: org.hibernate.dialect.OracleDialect
+    hibernate:
+      ddl-auto: validate # Or 'update' if schema management is desired
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
