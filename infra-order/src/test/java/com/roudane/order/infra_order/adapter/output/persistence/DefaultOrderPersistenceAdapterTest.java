@@ -29,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @SpringBootTest // Loads the full application context
 @ActiveProfiles("h2") // Activates the H2 profile and application-h2.properties
 @Transactional // Roll back transactions after each test method
-public class H2OrderPersistenceAdapterTest {
+public class DefaultOrderPersistenceAdapterTest {
 
     @Autowired
     private IOrderPersistenceOutPort orderPersistenceOutPort; // Spring injects H2OrderPersistenceAdapter
