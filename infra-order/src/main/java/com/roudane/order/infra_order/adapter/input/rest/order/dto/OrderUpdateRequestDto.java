@@ -7,12 +7,13 @@ import lombok.NoArgsConstructor;
 
 import java.util.List; // Needed for List
 
-// Add validation annotations later if needed (e.g., @NotNull, @NotEmpty)
+// Add validation annotations later if needed
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderCreateRequestDto {
-    private Long customerId;
-    private List<OrderItemDto> items; // Reusing OrderItemDto
+public class OrderUpdateRequestDto {
+    // Assuming only items can be updated for now.
+    // Add other fields if they are updatable e.g. customerId
+    private List<OrderItemDto> items;
 }
