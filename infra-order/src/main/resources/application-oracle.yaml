@@ -8,8 +8,11 @@ spring:
   jpa:
     database-platform: org.hibernate.dialect.OracleDialect
     hibernate:
-      ddl-auto: validate # Or 'update' if schema management is desired
+      ddl-auto: none # Changed from 'validate' to 'none'
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+  liquibase:
+    enabled: true # Enable Liquibase for this profile
+    change-log: classpath:/db/changelog/db.changelog-master.yaml # Path to the master changelog

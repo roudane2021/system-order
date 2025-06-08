@@ -16,3 +16,5 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  liquibase:
+    enabled: false # Disable Liquibase for the H2 profile
