@@ -3,6 +3,7 @@ package com.roudane.order.infra_order.adapter.input.rest.order;
 import com.roudane.order.infra_order.adapter.input.rest.order.dto.OrderCreateRequestDto;
 import com.roudane.order.infra_order.adapter.input.rest.order.dto.OrderCreateResponseDto;
 import com.roudane.order.infra_order.adapter.input.rest.order.dto.OrderDto;
+import com.roudane.order.infra_order.adapter.input.rest.order.dto.ShipOrderRequestDto; // New DTO import
 // Assuming an OrderUpdateRequestDto will be created later for the update operation
 import com.roudane.order.infra_order.adapter.input.rest.order.dto.OrderUpdateRequestDto;
 import org.springframework.http.ResponseEntity;
@@ -22,4 +23,6 @@ public interface IOrderController {
     ResponseEntity<OrderDto> cancelOrder(final Long id);
 
     ResponseEntity<OrderDto> payOrder(final Long id);
+
+    ResponseEntity<OrderDto> shipOrder(Long id, ShipOrderRequestDto shipOrderRequestDto); // New DTO needed
 }
