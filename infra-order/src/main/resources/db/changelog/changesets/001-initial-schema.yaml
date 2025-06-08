@@ -1,60 +1,10 @@
 databaseChangeLog:
   - changeSet:
-      id: 1
+      id: 1 # Keep the same ID and author for this logical change
       author: jules (liquibase-integration)
       changes:
-        - createTable:
-            tableName: orders
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true # Liquibase handles specifics for Oracle (sequence/trigger) or H2 (identity)
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: order_number
-                  type: VARCHAR(255)
-              - column:
-                  name: order_date
-                  type: TIMESTAMP
-              - column:
-                  name: customer_id
-                  type: BIGINT
-              - column:
-                  name: status
-                  type: VARCHAR(50) # For OrderStatus enum
-        - createTable:
-            tableName: order_items
-            columns:
-              - column:
-                  name: id
-                  type: BIGINT
-                  autoIncrement: true
-                  constraints:
-                    primaryKey: true
-                    nullable: false
-              - column:
-                  name: product_id
-                  type: BIGINT
-              - column:
-                  name: quantity
-                  type: INT
-              - column:
-                  name: price
-                  type: DECIMAL(19, 2) # Example precision for currency
-              - column:
-                  name: order_id # Foreign key column
-                  type: BIGINT
-                  constraints:
-                    nullable: false
-                    # Foreign key constraint defined separately for better control by some DBs or if deferrable
-        - addForeignKeyConstraint:
-            baseColumnNames: order_id
-            baseTableName: order_items
-            constraintName: fk_order_items_order_id
-            referencedColumnNames: id
-            referencedTableName: orders
-            # onDelete: CASCADE # Optional: if order deletion should cascade to items
-            # onUpdate: RESTRICT # Optional
+        - sqlFile:
+            path: db/changelog/sql/001-initial-schema.sql # Relative to the resources directory or classpath
+            # endDelimiter: / # Optional: if your SQL file uses a different delimiter for PL/SQL blocks, etc.
+            # stripComments: true # Optional: default is true for most DBs
+            # splitStatements: true # Optional: default is true, set to false if file should be run as a single block
