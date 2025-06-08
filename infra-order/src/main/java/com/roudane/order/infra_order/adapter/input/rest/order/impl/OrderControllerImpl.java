@@ -9,6 +9,7 @@ import com.roudane.order.infra_order.adapter.input.rest.order.dto.OrderCreateReq
 import com.roudane.order.infra_order.adapter.input.rest.order.dto.OrderCreateResponseDto;
 import com.roudane.order.infra_order.adapter.input.rest.order.dto.OrderDto;
 import com.roudane.order.infra_order.adapter.input.rest.order.dto.OrderUpdateRequestDto;
+import com.roudane.order.infra_order.adapter.input.rest.order.dto.ShipOrderRequestDto; // Import ShipOrderRequestDto
 import com.roudane.order.infra_order.adapter.input.rest.order.mapper.IOrderMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus; // Added for ResponseEntity.status()
@@ -83,6 +84,15 @@ public class OrderControllerImpl implements IOrderController {
     public ResponseEntity<OrderDto> payOrder(@PathVariable final Long id) {
         OrderModel paidOrder = orderDomain.payOrder(id);
         final OrderDto orderDto = IOrderMapper.INSTANCE.toDto(paidOrder);
+        return ResponseEntity.ok(orderDto);
+    }
+
+    @PostMapping("/{id}/ship") // New endpoint
+    @Override
+    public ResponseEntity<OrderDto> shipOrder(@PathVariable final Long id, @RequestBody final ShipOrderRequestDto shipOrderRequestDto) {
+        // Assuming OrderDomain implements IShipOrderUseCase
+        OrderModel shippedOrderModel = orderDomain.shipOrder(id, shipOrderRequestDto.getTrackingNumber());
+        final OrderDto orderDto = IOrderMapper.INSTANCE.toDto(shippedOrderModel);
         return ResponseEntity.ok(orderDto);
     }
 }
