@@ -1,6 +1,5 @@
 package com.roudane.order.infra_order.adapter.output.persistence.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.roudane.order.domain_order.model.OrderStatus; // Assuming this enum can be used directly
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -14,7 +13,9 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode; // Import for Exclude
 import lombok.NoArgsConstructor;
+import lombok.ToString; // Import for Exclude
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,5 +38,7 @@ public class OrderEntity {
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @ToString.Exclude // Add this
+    @EqualsAndHashCode.Exclude // Add this
     private List<OrderItemEntity> items;
 }

@@ -1,5 +1,6 @@
 package com.roudane.order.infra_order.adapter.input.rest.order.impl;
 
+package com.roudane.order.infra_order.adapter.input.rest.order.impl;
 
 import com.roudane.order.domain_order.model.OrderModel;
 import com.roudane.order.domain_order.service.OrderDomain;
@@ -30,6 +31,7 @@ import java.util.stream.Collectors; // Added for stream operations
 public class OrderControllerImpl implements IOrderController {
 
     private final OrderDomain orderDomain;
+    // private final IOrderMapper orderMapper; // Mapper should be injected if componentModel="spring"
 
     @PostMapping("/create") // Annotation was present, keep it
     @Override

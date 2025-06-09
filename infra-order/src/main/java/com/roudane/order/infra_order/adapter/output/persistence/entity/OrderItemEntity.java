@@ -6,9 +6,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,7 +29,6 @@ public class OrderItemEntity {
     private BigDecimal price;
 
     @ManyToOne
-    // @JoinColumn(name = "order_id")
-    @JsonIgnore
+    // @JoinColumn(name = "order_id") // MapStruct might need consistent naming or explicit mapping if this is different from OrderEntity's mappedBy
     private OrderEntity order;
 }

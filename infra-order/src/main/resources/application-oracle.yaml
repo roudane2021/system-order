@@ -1,13 +1,10 @@
-server:
-  port: 8787
-
 spring:
   datasource:
     # Replace with actual Oracle connection details
-    url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
+    url: jdbc:oracle:thin:@your-oracle-host:1521:your-oracle-sid
     driverClassName: oracle.jdbc.OracleDriver
-    username: rachid
-    password: EnovaBeit@1993
+    username: your_oracle_username
+    password: your_oracle_password
   jpa:
     database-platform: org.hibernate.dialect.OracleDialect
     hibernate:
