@@ -1,10 +1,10 @@
 spring:
   datasource:
     # Replace with actual Oracle connection details
-    url: jdbc:oracle:thin:@your-oracle-host:1521:your-oracle-sid
+    url: jdbc:oracle:thin:@//localhost:1521/XEPDB1
     driverClassName: oracle.jdbc.OracleDriver
-    username: your_oracle_username
-    password: your_oracle_password
+    username: rachid
+    password: EnovaBeit@1993
   jpa:
     database-platform: org.hibernate.dialect.OracleDialect
     hibernate:
@@ -16,3 +16,5 @@ spring:
   liquibase:
     enabled: true # Enable Liquibase for this profile
     change-log: classpath:/db/changelog/db.changelog-master.yaml # Path to the master changelog
+server:
+  port: 8787

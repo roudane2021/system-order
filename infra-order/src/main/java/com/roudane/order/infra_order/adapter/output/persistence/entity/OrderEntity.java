@@ -1,15 +1,9 @@
 package com.roudane.order.infra_order.adapter.output.persistence.entity;
 
 import com.roudane.order.domain_order.model.OrderStatus; // Assuming this enum can be used directly
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+
+import javax.persistence.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -27,8 +21,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderEntity {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_seq_gen")
+    @SequenceGenerator(name = "order_seq_gen", sequenceName = "order_seq", allocationSize = 1)
     private Long id;
     private String orderNumber;
     private LocalDateTime orderDate;
