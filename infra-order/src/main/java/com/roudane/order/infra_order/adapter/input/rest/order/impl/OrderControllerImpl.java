@@ -1,5 +1,6 @@
 package com.roudane.order.infra_order.adapter.input.rest.order.impl;
 
+
 import com.roudane.order.domain_order.model.OrderModel;
 import com.roudane.order.domain_order.service.OrderDomain;
 import com.roudane.order.infra_order.adapter.input.rest.order.IOrderController;
@@ -10,18 +11,18 @@ import com.roudane.order.infra_order.adapter.input.rest.order.dto.OrderUpdateReq
 import com.roudane.order.infra_order.adapter.input.rest.order.dto.ShipOrderRequestDto; // Import ShipOrderRequestDto
 import com.roudane.order.infra_order.adapter.input.rest.order.mapper.IOrderMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatus; // Added for ResponseEntity.status()
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PutMapping; // Added for PutMapping
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.Set; // Added for Set
+import java.util.stream.Collectors; // Added for stream operations
 
 @RestController
 @RequestMapping("/v1/orders")
@@ -30,7 +31,7 @@ public class OrderControllerImpl implements IOrderController {
 
     private final OrderDomain orderDomain;
 
-    @PostMapping("/create")
+    @PostMapping("/create") // Annotation was present, keep it
     @Override
     public ResponseEntity<OrderCreateResponseDto> createOrder(@RequestBody final OrderCreateRequestDto orderCreateRequest) {
         OrderModel orderModelToCreate = IOrderMapper.INSTANCE.toModel(orderCreateRequest);
@@ -39,7 +40,7 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id}") // Annotation was present, keep it
     @Override
     public ResponseEntity<OrderDto> retrieverOrders(@PathVariable final Long id) {
         OrderModel orderModel = orderDomain.getOrder(id);
@@ -47,7 +48,7 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.ok(orderDto);
     }
 
-    @GetMapping("/all")
+    @GetMapping("/all") // New endpoint
     @Override
     public ResponseEntity<Set<OrderDto>> listOrders() {
         Set<OrderModel> orderModels = orderDomain.listOrder();
@@ -57,7 +58,7 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.ok(orderDtos);
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}") // New endpoint
     @Override
     public ResponseEntity<OrderDto> updateOrder(@PathVariable final Long id, @RequestBody final OrderUpdateRequestDto orderUpdateRequestDto) {
         OrderModel orderModelToUpdate = IOrderMapper.INSTANCE.toModel(orderUpdateRequestDto);
@@ -68,7 +69,7 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.ok(orderDto);
     }
 
-    @PostMapping("/{id}/cancel")
+    @PostMapping("/{id}/cancel") // New endpoint
     @Override
     public ResponseEntity<OrderDto> cancelOrder(@PathVariable final Long id) {
         OrderModel cancelledOrder = orderDomain.cancelOrder(id);
@@ -76,7 +77,7 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.ok(orderDto);
     }
 
-    @PostMapping("/{id}/pay")
+    @PostMapping("/{id}/pay") // New endpoint
     @Override
     public ResponseEntity<OrderDto> payOrder(@PathVariable final Long id) {
         OrderModel paidOrder = orderDomain.payOrder(id);

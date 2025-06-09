@@ -1,5 +1,6 @@
 package com.roudane.order.infra_order.adapter.output.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.roudane.order.domain_order.model.OrderStatus; // Assuming this enum can be used directly
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
