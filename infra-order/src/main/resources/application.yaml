@@ -1,0 +1,22 @@
+spring:
+  application:
+    name: infra-order
+  profiles:
+    active: h2
+  kafka:
+    bootstrap-servers: localhost:9092 # Default Kafka broker address
+    consumer:
+      group-id: order-service-group # Default consumer group ID
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*" # Trust all packages for JSON deserialization (adjust for production)
+        spring.json.use.type.headers: false # Recommended to be false if not using type headers explicitly
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+    topics:
+      order-created: order-created-events # Existing
+      inventory-reserved: inventory-reserved-events # New topic
+      order-shipped: order-shipped-events # New topic
