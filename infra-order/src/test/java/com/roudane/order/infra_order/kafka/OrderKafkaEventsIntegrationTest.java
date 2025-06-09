@@ -2,7 +2,6 @@ package com.roudane.order.infra_order.kafka;
 
 import com.roudane.order.domain_order.event.InventoryReservedEvent;
 import com.roudane.order.domain_order.event.OrderCreatedEvent;
-import com.roudane.order.domain_order.model.OrderItemModel;
 import com.roudane.order.domain_order.model.OrderModel;
 import com.roudane.order.domain_order.model.OrderStatus;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
@@ -17,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate; // For calling controller
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -27,15 +25,13 @@ import org.springframework.test.annotation.DirtiesContext; // To reset context f
 import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.springframework.kafka.listener.DefaultErrorHandler; // For configuring error handler
+
 import org.springframework.kafka.listener.KafkaMessageListenerContainer; // For listener container
 import org.springframework.kafka.listener.MessageListener; // For listener
 import org.springframework.kafka.listener.ContainerProperties; // For container properties

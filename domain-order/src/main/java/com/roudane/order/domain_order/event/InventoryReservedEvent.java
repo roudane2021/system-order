@@ -11,6 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InventoryReservedEvent {
     private Long orderId;
-    private boolean reservationConfirmed; // Or an enum for more statuses
-    // Add any other relevant fields, e.g., item-specific reservation details if needed
+    private boolean reservationConfirmed;
 }

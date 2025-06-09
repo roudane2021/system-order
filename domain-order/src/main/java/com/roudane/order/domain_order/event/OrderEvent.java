@@ -1,27 +1,24 @@
 package com.roudane.order.domain_order.event;
 
+import com.roudane.order.domain_order.model.OrderItemModel;
+import com.roudane.order.domain_order.model.OrderStatus; // Assuming status is also sent
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.List;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class OrderEvent {
-    private String orderId;
-    private String reason;
-
-    private String carrier;
-    private String trackingNumber;
-
-    private String customerId;
-    private LocalDateTime eventDate;
-    private Set<OrderItemEvent> items;
-
-    private OrderEventType orderEventType;
+    private Long orderId;
+    private Long customerId;
+    private LocalDateTime orderDate;
+    private OrderStatus status; // Current status of the order
+    private List<OrderItemModel> items;
+    // Add any other relevant fields from OrderModel if needed
 }

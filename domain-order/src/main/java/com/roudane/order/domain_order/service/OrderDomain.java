@@ -1,6 +1,8 @@
 package com.roudane.order.domain_order.service;
 
 
+import com.roudane.order.domain_order.event.OrderEvent;
+import com.roudane.order.domain_order.event.OrderShippedEvent;
 import com.roudane.order.domain_order.exception.OrderInvalidException;
 import com.roudane.order.domain_order.exception.OrderNotFoundException;
 import com.roudane.order.domain_order.model.OrderModel;
@@ -9,12 +11,10 @@ import com.roudane.order.domain_order.port.input.*;
 import com.roudane.order.domain_order.port.output.event.IOrderEventPublisherOutPort;
 import com.roudane.order.domain_order.port.output.logger.ILoggerPort;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
-import com.roudane.order.domain_order.event.OrderCreatedEvent;
-import com.roudane.order.domain_order.event.OrderShippedEvent; // Added import
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 
-import java.time.LocalDateTime; // Added import
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Set;
 
@@ -46,7 +46,7 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         // orderEventPublisherOutPort.publisherEventOrder(orderModel);
 
         // Publish OrderCreatedEvent
-        OrderCreatedEvent event = OrderCreatedEvent.builder()
+        OrderEvent event = OrderEvent.builder()
                 .orderId(savedOrder.getId())
                 .customerId(savedOrder.getCustomerId())
                 .orderDate(savedOrder.getOrderDate())
@@ -100,6 +100,15 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
 
 
+        // Publish OrderUpdatedEvent
+        OrderEvent event = OrderEvent.builder()
+                .orderId(updatedOrder.getId())
+                .customerId(updatedOrder.getCustomerId())
+                .orderDate(updatedOrder.getOrderDate())
+                .status(updatedOrder.getStatus())
+                .items(updatedOrder.getItems()) // Assuming items are part of the event
+                .build();
+        orderEventPublisherOutPort.publishOrderUpdatedEvent(event);
 
 
         loggerPort.info("Order updated successfully with ID: " + updatedOrder.getId());
@@ -114,12 +123,19 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
                     return new OrderNotFoundException("Order with ID " + orderId + " not found, cannot cancel.");
                 });
 
-        // Add logic to check if order can be cancelled (e.g., not already shipped) if necessary
-        // For now, directly setting to CANCELLED
         orderModel.setStatus(OrderStatus.CANCELLED);
         OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel); // Assuming updateOrder handles status changes
 
-       // orderEventPublisherOutPort.publisherEventOrder(updatedOrder); // Pass the updated order
+        // Publish OrderUpdatedEvent
+        OrderEvent event = OrderEvent.builder()
+                .orderId(updatedOrder.getId())
+                .customerId(updatedOrder.getCustomerId())
+                .orderDate(updatedOrder.getOrderDate())
+                .status(updatedOrder.getStatus())
+                .items(updatedOrder.getItems()) // Assuming items are part of the event
+                .build();
+        orderEventPublisherOutPort.publishOrderUpdatedEvent(event);
+
         loggerPort.info("Order with ID: " + orderId + " cancelled successfully.");
         return updatedOrder;
     }
@@ -132,17 +148,15 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
                     return new OrderNotFoundException("Order with ID " + orderId + " not found, cannot pay.");
                 });
 
-        // Add logic to check if order can be paid (e.g., is in CREATED status) if necessary
-        // For now, directly setting to PAID
         orderModel.setStatus(OrderStatus.PAID);
-        OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel); // Assuming updateOrder handles status changes
+        OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
 
         //orderEventPublisherOutPort.publisherEventOrder(updatedOrder); // Pass the updated order
         loggerPort.info("Order with ID: " + orderId + " paid successfully.");
         return updatedOrder;
     }
 
-    // New method implementation:
+
     @Override
     public OrderModel confirmOrder(Long orderId) {
         loggerPort.info("Attempting to confirm order with ID: " + orderId);
@@ -153,24 +167,14 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
                     return new RuntimeException("Order with ID " + orderId + " not found, cannot confirm.");
                 });
 
-        // Add logic to check if order can be confirmed (e.g., is in CREATED status)
-        if (orderModel.getStatus() != OrderStatus.CREATED) {
-            loggerPort.warn("Order "+ orderId +" cannot be confirmed as its status is {}" + orderModel.getStatus());
-            // Or throw an exception, or handle as per business rules
-            return orderModel; // Or throw InvalidOrderStatusChangeException
-        }
-
-        orderModel.setStatus(OrderStatus.PROCESSING); // Or a new status like CONFIRMED
+        orderModel.setStatus(OrderStatus.PROCESSING);
         OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
-
-        // Optionally, publish another event like OrderConfirmedEvent if needed by other services
-        // For now, just updating status.
 
         loggerPort.info("Order with ID: " + orderId + " confirmed successfully, status set to PROCESSING.");
         return updatedOrder;
     }
 
-    // New method implementation:
+
     @Override
     public OrderModel shipOrder(Long orderId, String trackingNumber) {
         loggerPort.info("Attempting to ship order with ID:  " + orderId +"with tracking: {}" + trackingNumber);
