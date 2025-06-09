@@ -19,22 +19,22 @@ import java.util.stream.Collectors;
 public class DefaultOrderPersistenceAdapter implements IOrderPersistenceOutPort {
 
     private final OrderJpaRepository orderJpaRepository;
-
+    private final PersistenceOrderMapper persistenceOrderMapper;
 
     @Override
     public OrderModel createOrder(OrderModel orderModel) {
-        OrderEntity orderEntity = PersistenceOrderMapper.INSTANCE.toEntity(orderModel);
+        OrderEntity orderEntity = persistenceOrderMapper.toEntity(orderModel);
         if (orderEntity.getItems() != null) {
             orderEntity.getItems().forEach(item -> item.setOrder(orderEntity));
         }
         OrderEntity savedEntity = orderJpaRepository.save(orderEntity);
-        return PersistenceOrderMapper.INSTANCE.toModel(savedEntity);
+        return persistenceOrderMapper.toModel(savedEntity);
     }
 
     @Override
     public Optional<OrderModel> findOrderById(Long orderID) {
         return orderJpaRepository.findById(orderID)
-                .map(PersistenceOrderMapper.INSTANCE::toModel);
+                .map(persistenceOrderMapper::toModel);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class DefaultOrderPersistenceAdapter implements IOrderPersistenceOutPort 
     @Override
     public Set<OrderModel> findAllOrders() {
         return orderJpaRepository.findAll().stream()
-                .map(PersistenceOrderMapper.INSTANCE::toModel)
+                .map(persistenceOrderMapper::toModel)
                 .collect(Collectors.toSet());
     }
 
@@ -55,11 +55,11 @@ public class DefaultOrderPersistenceAdapter implements IOrderPersistenceOutPort 
         if (orderModel.getId() == null || !orderJpaRepository.existsById(orderModel.getId())) {
             throw new RuntimeException("Order with ID " + orderModel.getId() + " not found, cannot update."); // Consider a domain specific exception
         }
-        OrderEntity orderEntity = PersistenceOrderMapper.INSTANCE.toEntity(orderModel);
+        OrderEntity orderEntity = persistenceOrderMapper.toEntity(orderModel);
         if (orderEntity.getItems() != null) {
             orderEntity.getItems().forEach(item -> item.setOrder(orderEntity));
         }
         OrderEntity updatedEntity = orderJpaRepository.save(orderEntity);
-        return PersistenceOrderMapper.INSTANCE.toModel(updatedEntity);
+        return persistenceOrderMapper.toModel(updatedEntity);
     }
 }
