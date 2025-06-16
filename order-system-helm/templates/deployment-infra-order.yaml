@@ -1,0 +1,67 @@
+# spring-app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: infra-order
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infra-order
+  template:
+    metadata:
+      labels:
+        app: infra-order
+    spec:
+      initContainers:
+        - name: wait-for-oracle
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for Oracle to be ready..."
+              until nc -z oracle-xe 1521; do
+                echo "Oracle not yet available, sleeping..."
+                sleep 5
+              done
+              echo "Oracle is available, starting app."
+      containers:
+        - name: infra-order
+          image: localhost:5000/infra_order:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8787
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.configMap.infraOrder}}
+                  key: SPRING_PROFILES_ACTIVE
+            - name: KAFKA_HOST1
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraOrder }}
+                  key: KAFKA_HOST1
+            - name: KAFKA_HOST2
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraOrder }}
+                  key: KAFKA_HOST2
+            - name: BD_ORACLE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraOrder }}
+                  key: BD_ORACLE_HOST
+            - name: BD_ORACLE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.bdOracle }}
+                  key: APP_USER
+            - name: BD_ORACLE_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.bdOracle }}
+                  key: APP_USER_PASSWORD
+

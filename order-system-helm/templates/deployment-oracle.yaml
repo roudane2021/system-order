@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oracle-xe
+  namespace: {{ .Release.Namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oracle-xe
+  template:
+    metadata:
+      labels:
+        app: oracle-xe
+    spec:
+      containers:
+        - name: oracle-xe
+          image: gvenzl/oracle-xe
+          ports:
+            - containerPort: 1521
+          env:
+            - name: ORACLE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.bdOracle }}
+                  key: ORACLE_PASSWORD
+
+            - name: APP_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.bdOracle }}
+                  key: APP_USER
+
+            - name: APP_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.bdOracle }}
+                  key: APP_USER_PASSWORD
+
+          volumeMounts:
+            - name: oracle-volume
+              mountPath: /opt/oracle/oradata
+
+      volumes:
+        - name: oracle-volume
+          persistentVolumeClaim:
+            claimName: order-system-pvc

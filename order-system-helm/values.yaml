@@ -1,0 +1,7 @@
+configMap:
+  kafkaCluster: configmap-cluster-kafka
+  bdOracle: configmap-bd-oracle
+  infraOrder: configmap-infra-order
+
+secret:
+  bdOracle: secret-oracle

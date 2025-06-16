@@ -31,7 +31,6 @@ import java.util.stream.Collectors; // Added for stream operations
 public class OrderControllerImpl implements IOrderController {
 
     private final OrderDomain orderDomain;
-    // private final IOrderMapper orderMapper; // Mapper should be injected if componentModel="spring"
 
     @PostMapping("/create") // Annotation was present, keep it
     @Override
@@ -42,7 +41,7 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping("/{id}") // Annotation was present, keep it
+    @GetMapping("/retriever/{id}") // Annotation was present, keep it
     @Override
     public ResponseEntity<OrderDto> retrieverOrders(@PathVariable final Long id) {
         OrderModel orderModel = orderDomain.getOrder(id);

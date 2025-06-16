@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.configMap.kafkaCluster }}
+  namespace: {{ .Release.Namespace }}
+data:
+  KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+  KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "2"
+  KAFKA_BROKER_ID_BROKER1: "1"
+  KAFKA_ADVERTISED_LISTENERS_BROKER1: "PLAINTEXT://kafka-broker1:9092"
+  KAFKA_BROKER_ID_BROKER2: "2"
+  KAFKA_ADVERTISED_LISTENERS_BROKER2: "PLAINTEXT://kafka-broker2:9093"
+  ZOOKEEPER_CLIENT_PORT: "2181"

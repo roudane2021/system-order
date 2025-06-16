@@ -4,7 +4,7 @@ spring:
   profiles:
     active: h2
   kafka:
-    bootstrap-servers: localhost:9092,localhost:9093
+    bootstrap-servers: ${KAFKA_HOST1:localhost}:9092,${KAFKA_HOST2:localhost}:9093
     consumer:
       group-id: ${KAFKA_GROUP_ID:order-service-group}
       auto-offset-reset: earliest
@@ -23,3 +23,6 @@ spring:
       order-updated: order-updated-events
       order-cancelled: order-cancelled-events
       inventory-reserved: inventory-reserved-events
+
+server:
+  port: 8787
