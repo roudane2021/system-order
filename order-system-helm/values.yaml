@@ -14,3 +14,35 @@ pods:
     hostIngress: order-dev.example
     image: localhost:5000/infra_order:latest
     imagePullPolicy: Always
+
+infraInventory:
+  name: infra-inventory
+  replicaCount: 1
+  image:
+    repository: your-docker-registry/infra-inventory # Placeholder
+    pullPolicy: IfNotPresent
+    tag: latest # Placeholder, should be managed by CI/CD
+  service:
+    type: ClusterIP
+    port: 8080 # Port for actuator/health if exposed, not for primary app functionality
+  resources:
+    requests:
+      cpu: "200m"
+      memory: "512Mi"
+    limits:
+      cpu: "500m"
+      memory: "1Gi"
+  # Configuration for application.properties overrides or environment variables
+  # Kafka topics are in application.properties but could be centralized here or in a global ConfigMap
+  config:
+    springProfilesActive: "oracle,kubernetes" # Activate oracle and potentially a kubernetes specific profile
+    # Example of overriding a property:
+    # serverPort: "8080"
+  # Environment variables from secrets or configmaps
+  # Assumes 'oracle-credentials' secret exists, similar to infra-order
+  envFrom:
+    - secretRef:
+        name: oracle-credentials # From existing secret-oracle-env.yaml
+  # env:
+  #   - name: KAFKA_BROKERS
+  #     value: "your-kafka-brokers:9092" # This should ideally come from a common ConfigMap or values
