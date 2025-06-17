@@ -2,9 +2,10 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ .Values.configMap.infraOrder }}
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.namespace }}
 data:
   SPRING_PROFILES_ACTIVE: "oracle"
   KAFKA_HOST1: "kafka-broker1"
   KAFKA_HOST2: "kafka-broker2"
   BD_ORACLE_HOST: oracle-xe
+  APP_USER: rachid

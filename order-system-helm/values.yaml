@@ -1,7 +1,16 @@
 configMap:
-  kafkaCluster: configmap-cluster-kafka
-  bdOracle: configmap-bd-oracle
   infraOrder: configmap-infra-order
 
 secret:
-  bdOracle: secret-oracle
+  infraOrder: secret-infra-order
+
+namespace: order-dev
+
+
+
+pods:
+  infraOrder:
+    port: 8787
+    hostIngress: order-dev.example
+    image: localhost:5000/infra_order:latest
+    imagePullPolicy: Always

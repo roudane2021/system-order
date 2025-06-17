@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: infra-order
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.namespace }}
 spec:
   replicas: 1
   selector:
@@ -14,25 +14,12 @@ spec:
       labels:
         app: infra-order
     spec:
-      initContainers:
-        - name: wait-for-oracle
-          image: busybox
-          command:
-            - sh
-            - -c
-            - |
-              echo "Waiting for Oracle to be ready..."
-              until nc -z oracle-xe 1521; do
-                echo "Oracle not yet available, sleeping..."
-                sleep 5
-              done
-              echo "Oracle is available, starting app."
       containers:
         - name: infra-order
-          image: localhost:5000/infra_order:latest
-          imagePullPolicy: Always
+          image: {{ .Values.pods.infraOrder.image  }}
+          imagePullPolicy: {{ .Values.pods.infraOrder.imagePullPolicy  }}
           ports:
-            - containerPort: 8787
+            - containerPort: {{ .Values.pods.infraOrder.port  }}
           env:
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
@@ -57,11 +44,11 @@ spec:
             - name: BD_ORACLE_USER
               valueFrom:
                 configMapKeyRef:
-                  name: {{ .Values.configMap.bdOracle }}
+                  name: {{ .Values.configMap.infraOrder }}
                   key: APP_USER
             - name: BD_ORACLE_USER_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secret.bdOracle }}
+                  name: {{ .Values.secret.infraOrder }}
                   key: APP_USER_PASSWORD
 
