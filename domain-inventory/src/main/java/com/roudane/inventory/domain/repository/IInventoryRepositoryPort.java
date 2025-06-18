@@ -4,7 +4,7 @@ import com.roudane.inventory.domain.model.InventoryItem;
 import java.util.Optional;
 import java.util.List;
 
-public interface InventoryRepository {
+public interface IInventoryRepositoryPort {
     Optional<InventoryItem> findByProductId(String productId);
     InventoryItem save(InventoryItem inventoryItem);
     List<InventoryItem> saveAll(List<InventoryItem> inventoryItems);

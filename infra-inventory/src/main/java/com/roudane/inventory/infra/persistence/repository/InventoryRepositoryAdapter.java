@@ -1,19 +1,19 @@
 package com.roudane.inventory.infra.persistence.repository;
 
 import com.roudane.inventory.domain.model.InventoryItem;
-import com.roudane.inventory.domain.repository.InventoryRepository;
+import com.roudane.inventory.domain.repository.IInventoryRepositoryPort;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component; // Use @Component or @Repository
 import java.util.List;
 import java.util.Optional;
 
 @Component // Or @Repository, functionally similar for this case
-public class InventoryRepositoryImpl implements InventoryRepository {
+public class InventoryRepositoryAdapter implements IInventoryRepositoryPort {
 
     private final JpaInventoryItemRepository jpaRepository;
 
     @Autowired
-    public InventoryRepositoryImpl(JpaInventoryItemRepository jpaRepository) {
+    public InventoryRepositoryAdapter(JpaInventoryItemRepository jpaRepository) {
         this.jpaRepository = jpaRepository;
     }
 
