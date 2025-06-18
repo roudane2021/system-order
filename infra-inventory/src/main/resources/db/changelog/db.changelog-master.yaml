@@ -1,0 +1,6 @@
+databaseChangeLog:
+  - includeAll:
+      path: db/changelog/changes/
+      # Alternatively, list individual files:
+      # - include:
+      #     file: db/changelog/changes/001-create-inventory-items-table.yaml

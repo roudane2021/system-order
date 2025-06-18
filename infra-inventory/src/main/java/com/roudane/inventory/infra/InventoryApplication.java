@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 // Scan for components in domain and infra layers. Adjust basePackages as needed.
 @ComponentScan(basePackages = {"com.roudane.inventory.domain", "com.roudane.inventory.infra"})
 // Scan for JPA entities, assuming InventoryItem might become an @Entity
-@EntityScan(basePackages = {"com.roudane.inventory.domain.model"})
+@EntityScan(basePackages = {"com.roudane.inventory.infra.persistence.entity"})
 // Enable JPA repositories, assuming repository interfaces are in this path or sub-packages
 @EnableJpaRepositories(basePackages = {"com.roudane.inventory.infra.persistence.repository"})
 public class InventoryApplication {

@@ -1,23 +1,9 @@
 package com.roudane.inventory.domain.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Column;
-import javax.persistence.Table;
 import java.util.Objects;
 
-@Entity
-@Table(name = "inventory_items")
 public class InventoryItem {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false, unique = true)
     private String productId;
-    @Column(nullable = false)
     private int quantity;
     // Assuming a unique identifier for an inventory record, if needed.
     // For now, productId might be sufficient if we only store total quantity per product.
@@ -31,13 +17,6 @@ public class InventoryItem {
     }
 
     // Getters
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getProductId() {
         return productId;
     }

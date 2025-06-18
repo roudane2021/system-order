@@ -10,4 +10,5 @@ public interface IInventoryRepositoryPort {
     List<InventoryItem> saveAll(List<InventoryItem> inventoryItems);
     // May need methods to find multiple products at once for efficiency
     List<InventoryItem> findByProductIdIn(List<String> productIds);
+    List<InventoryItem> findAll();
 }

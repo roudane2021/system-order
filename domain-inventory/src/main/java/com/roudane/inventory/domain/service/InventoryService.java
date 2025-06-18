@@ -117,4 +117,39 @@ public class InventoryService implements IInventoryServiceInPort {
         inventoryRepository.saveAll(itemsToUpdate);
         log.info("Inventory released successfully for orderId: {}. Items: {}", event.getOrderId(), itemsToRelease);
     }
+
+    @Override
+    public Optional<InventoryItem> findInventoryByProductId(String productId) {
+        log.debug("Finding inventory for productId: {}", productId);
+        return inventoryRepository.findByProductId(productId);
+    }
+
+    @Override
+    public List<InventoryItem> findAllInventoryItems() {
+        log.debug("Finding all inventory items");
+        return inventoryRepository.findAll();
+    }
+
+    @Override
+    public void adjustStock(String productId, int quantityChange, String reason) {
+        log.info("Adjusting stock for productId: {} by {}. Reason: {}", productId, quantityChange, reason);
+        InventoryItem item = inventoryRepository.findByProductId(productId)
+                .orElseThrow(() -> new InventoryDomainException("Cannot adjust stock. Item not found for productId: " + productId));
+
+        if (item.getQuantity() + quantityChange < 0) {
+            throw new InventoryDomainException("Stock adjustment for productId: " + productId + " would result in negative quantity.");
+        }
+        // Using existing increment/decrement which might have their own logic/validation
+        // Or directly set: item.setQuantity(item.getQuantity() + quantityChange);
+        if (quantityChange > 0) {
+            item.incrementQuantity(quantityChange);
+        } else if (quantityChange < 0) {
+            item.decrementQuantity(Math.abs(quantityChange));
+        }
+
+        inventoryRepository.save(item);
+        log.info("Stock for productId: {} adjusted. New quantity: {}.", productId, item.getQuantity());
+        // Optionally, publish an InventoryManuallyAdjustedEvent here via eventPublisherPort if defined
+        // e.g., eventPublisherPort.publish(new InventoryManuallyAdjustedEvent(productId, item.getQuantity(), quantityChange, reason));
+    }
 }
