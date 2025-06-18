@@ -1,0 +1,18 @@
+# H2 Database
+spring:
+  datasource:
+    url: jdbc:h2:mem:inventorydb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: sa
+    password: '' # YAML empty string
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+# Kafka
+# Spring key is repeated, YAML will merge this under the existing spring key.
+# (Tooling note: The create_file_with_block will create a new file, not merge. The YAML structure itself should be valid for Spring Boot to merge at runtime)
+  kafka:
+    bootstrap-servers: localhost:9092

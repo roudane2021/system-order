@@ -1,0 +1,17 @@
+# Oracle Database
+spring:
+  datasource:
+    url: ${DB_URL:jdbc:oracle:thin:@//localhost:1521/XEPDB1}
+    username: ${DB_USERNAME:system}
+    password: ${DB_PASSWORD:oracle}
+    driverClassName: oracle.jdbc.OracleDriver
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+    hibernate:
+      ddl-auto: update
+
+# Kafka
+# Spring key is repeated for Kafka config
+# (Tooling note: The create_file_with_block will create a new file, not merge. The YAML structure itself should be valid for Spring Boot to merge at runtime)
+  kafka:
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
