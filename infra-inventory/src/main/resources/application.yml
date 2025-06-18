@@ -7,9 +7,6 @@ spring:
       group-id: inventory-service-group
   profiles:
     active: h2-local
-  liquibase:
-    change-log: classpath:/db/changelog/db.changelog-master.yaml
-    enabled: true # Default is true if liquibase-core is on classpath
 
 # Topic Names
 order:
@@ -22,3 +19,6 @@ inventory:
     topic:
       reserved: inventory-reserved-events
       depleted: inventory-depleted-events
+
+server:
+  port: 8888
