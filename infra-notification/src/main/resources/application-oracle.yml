@@ -2,7 +2,7 @@
 spring:
   datasource:
     # Replace with actual Oracle connection details
-    url: jdbc:oracle:thin:@//${BD_ORACLE_HOST:localhost}:1522/XEPDB1
+    url: jdbc:oracle:thin:@//${BD_ORACLE_HOST:localhost}:1523/XEPDB1
     driverClassName: oracle.jdbc.OracleDriver
     username: ${BD_ORACLE_USER:rachid}
     password: ${BD_ORACLE_USER_PASSWORD:EnovaBeit@1993}

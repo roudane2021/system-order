@@ -1,47 +1,33 @@
 package com.roudane.order.domain_notification.service;
 
-import com.roudane.order.domain_notification.model.NotificationModel;
-import com.roudane.order.domain_notification.port.input.ICreateNotificationUseCase;
-import com.roudane.order.domain_notification.port.input.IGetNotificationUseCase;
-import com.roudane.order.domain_notification.port.input.IListNotificationUseCase;
-import com.roudane.order.domain_notification.port.input.IUpdateNotificationUseCase;
+import com.roudane.order.domain_notification.port.input.IHandleNotificationEventUseCase;
+import com.roudane.order.domain_order.event.OrderEvent;
+import com.roudane.order.domain_order.event.OrderShippedEvent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Set;
+// @Service // Removed @Service annotation
+public class NotificationDomain implements  IHandleNotificationEventUseCase {
 
-public class NotificationDomain implements ICreateNotificationUseCase, IListNotificationUseCase,
-        IGetNotificationUseCase, IUpdateNotificationUseCase {
-    /**
-     * @param NotificationModel
-     * @return
-     */
+    private static final Logger log = LoggerFactory.getLogger(NotificationDomain.class);
+
+
+
+    // Implementation for IHandleNotificationEventUseCase
     @Override
-    public NotificationModel createOrder(NotificationModel NotificationModel) {
-        return null;
+    public void handleOrderCreatedEvent(OrderEvent event) { // Changed parameter type
+        // TODO: Implement logic to process the event and send notification to the customer
+        log.info("Received OrderCreatedEvent: Order ID: {}, Customer ID: {}", event.getOrderId(), event.getCustomerId());
+        // Example: Send email, SMS, or create an internal notification record
+        // For now, just logging.
+        // Potentially use createOrder() if a notification record needs to be persisted.
     }
 
-    /**
-     * @param notificationID
-     * @return
-     */
     @Override
-    public NotificationModel getOrder(Long notificationID) {
-        return null;
-    }
-
-    /**
-     * @return
-     */
-    @Override
-    public Set<NotificationModel> listOrder() {
-        return null;
-    }
-
-    /**
-     * @param NotificationModel
-     * @return
-     */
-    @Override
-    public NotificationModel updateOrder(NotificationModel NotificationModel) {
-        return null;
+    public void handleOrderShippedEvent(OrderShippedEvent event) { // Changed parameter type
+        // TODO: Implement logic to process the event and send notification to the customer
+        log.info("Received OrderShippedEvent: Order ID: {}, Tracking: {}", event.getOrderId(), event.getTrackingNumber());
+        // Example: Send email, SMS, or create an internal notification record
+        // For now, just logging.
     }
 }

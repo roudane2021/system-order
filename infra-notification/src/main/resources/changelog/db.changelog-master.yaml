@@ -1,5 +1,7 @@
 databaseChangeLog:
   - include:
-      file: db/changelog/changesets/001-initial-schema.yaml
+      file: changesets/001-initial-schema.yaml
   - include:
-      file: db/changelog/changesets/002-add-seq-schema.yaml
+      file: changesets/002-add-seq-schema.yaml
+  - include:
+      file: changesets/003-notification-schema.yaml
