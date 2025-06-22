@@ -8,13 +8,13 @@ import com.roudane.order.domain_notification.port.input.IUpdateNotificationUseCa
 import com.roudane.order.domain_notification.port.input.IHandleNotificationEventUseCase; // Added import
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
-import com.roudane.order.domain_order.event.OrderEvent; // Moved import
-import com.roudane.order.domain_order.event.OrderShippedEvent; // Moved import
+// import org.springframework.stereotype.Service; // Removed Spring import
+import com.roudane.order.domain_order.event.OrderEvent;
+import com.roudane.order.domain_order.event.OrderShippedEvent;
 
 import java.util.Set;
 
-@Service
+// @Service // Removed @Service annotation
 public class NotificationDomain implements ICreateNotificationUseCase, IListNotificationUseCase,
         IGetNotificationUseCase, IUpdateNotificationUseCase, IHandleNotificationEventUseCase {
 

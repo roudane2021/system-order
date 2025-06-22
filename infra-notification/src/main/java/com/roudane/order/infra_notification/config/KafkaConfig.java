@@ -12,6 +12,8 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
+import com.roudane.order.domain_notification.service.NotificationDomain; // Import NotificationDomain
+import com.roudane.order.domain_notification.port.input.IHandleNotificationEventUseCase; // Import IHandleNotificationEventUseCase
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,9 @@ public class KafkaConfig {
 
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
+
+    @Value("${spring.kafka.consumer.group-id}") // Inject group-id from properties
+    private String consumerGroupId;
 
     @Bean
     public ProducerFactory<String, Object> producerFactory() {
@@ -41,7 +46,7 @@ public class KafkaConfig {
     public ConsumerFactory<String, Object> consumerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        configProps.put(ConsumerConfig.GROUP_ID_CONFIG, "notification_group");
+        configProps.put(ConsumerConfig.GROUP_ID_CONFIG, consumerGroupId); // Use injected group-id
         configProps.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         configProps.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
         configProps.put(JsonDeserializer.TRUSTED_PACKAGES, "*"); // Trust all packages for deserialization
@@ -53,5 +58,10 @@ public class KafkaConfig {
         ConcurrentKafkaListenerContainerFactory<String, Object> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(consumerFactory());
         return factory;
+    }
+
+    @Bean // Bean definition for NotificationDomain
+    public IHandleNotificationEventUseCase notificationDomain() {
+        return new NotificationDomain();
     }
 }
