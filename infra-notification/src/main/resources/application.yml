@@ -1,0 +1,24 @@
+# Spring
+spring:
+  application:
+    name: infra-inventory
+  kafka:
+    consumer:
+      group-id: inventory-service-group
+  profiles:
+    active: h2-local
+
+# Topic Names
+order:
+  events:
+    topic:
+      created: order-created-events
+      cancelled: order-cancelled-events
+inventory:
+  events:
+    topic:
+      reserved: inventory-reserved-events
+      depleted: inventory-depleted-events
+
+server:
+  port: 8888
