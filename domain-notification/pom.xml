@@ -12,6 +12,11 @@
     <url>http://maven.apache.org</url>
 
     <dependencies>
+        <dependency> <!-- Added dependency on domain-order -->
+            <groupId>com.roudane.order</groupId>
+            <artifactId>domain-order</artifactId>
+            <version>${project.version}</version> <!-- Use project version for consistency -->
+        </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
