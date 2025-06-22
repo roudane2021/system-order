@@ -1,38 +1,26 @@
 package com.roudane.inventory.domain.model;
 
+import lombok.Data;
+
 import java.util.Objects;
 
+@Data
 public class InventoryItem {
     private String productId;
     private int quantity;
     // Assuming a unique identifier for an inventory record, if needed.
     // For now, productId might be sufficient if we only store total quantity per product.
-    // private Long id;
+    private Long id;
 
     public InventoryItem() {}
 
-    public InventoryItem(String productId, int quantity) {
+    public InventoryItem(String productId, int quantity, Long id) {
         this.productId = productId;
         this.quantity = quantity;
+        this.id = id;
     }
 
-    // Getters
-    public String getProductId() {
-        return productId;
-    }
 
-    public int getQuantity() {
-        return quantity;
-    }
-
-    // Setters
-    public void setProductId(String productId) {
-        this.productId = productId;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
-    }
 
     // Business logic methods can be added here e.g.
     public void decrementQuantity(int amount) {

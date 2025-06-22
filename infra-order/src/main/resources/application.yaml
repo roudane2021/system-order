@@ -3,20 +3,13 @@ spring:
     name: infra-order
   profiles:
     active: h2
+  # Kafka
+  # Spring key is repeated for Kafka config
+  # (Tooling note: The create_file_with_block will create a new file, not merge. The YAML structure itself should be valid for Spring Boot to merge at runtime)
   kafka:
-    bootstrap-servers: ${KAFKA_HOST1:localhost}:9092,${KAFKA_HOST2:localhost}:9093
     consumer:
-      group-id: ${KAFKA_GROUP_ID:order-service-group}
-      auto-offset-reset: earliest
-      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
-      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      properties:
-        spring.json.trusted.packages: "*"
-        spring.json.use.type.headers: false
-        spring.json.value.default.type: com.roudane.order.domain_order.event.InventoryReservedEvent
-    producer:
-      key-serializer: org.apache.kafka.common.serialization.StringSerializer
-      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      group-id: inventory-service-group
+    bootstrap-servers: ${KAFKA_BROKERS:localhost:9092}
     topics:
       order-created: order-created-events
       order-shipped: order-shipped-events

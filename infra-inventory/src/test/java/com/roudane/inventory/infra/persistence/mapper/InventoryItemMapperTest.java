@@ -16,8 +16,12 @@ class InventoryItemMapperTest {
 
     @Test
     void shouldMapEntityToDomain() {
-        InventoryItemEntity entity = new InventoryItemEntity("prod123", 10);
-        entity.setId(1L);
+        InventoryItemEntity entity = InventoryItemEntity.builder()
+                .id(1L)
+                .productId("prod123")
+                .quantity(10)
+                .build();
+
 
         InventoryItem domain = mapper.toDomain(entity);
 
@@ -51,8 +55,14 @@ class InventoryItemMapperTest {
 
     @Test
     void shouldMapEntityListToDomainList() {
-        InventoryItemEntity entity1 = new InventoryItemEntity("prod1", 5);
-        InventoryItemEntity entity2 = new InventoryItemEntity("prod2", 8);
+        InventoryItemEntity entity1 =  InventoryItemEntity.builder()
+                .productId("prod5")
+                .quantity(10)
+                .build();
+        InventoryItemEntity entity2 = InventoryItemEntity.builder()
+                .productId("prod8")
+                .quantity(8)
+                .build();
         List<InventoryItemEntity> entities = Arrays.asList(entity1, entity2);
 
         List<InventoryItem> domains = mapper.toDomainList(entities);

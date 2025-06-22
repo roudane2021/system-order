@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      id: 1 # Keep the same ID and author for this logical change
-      author: jules (liquibase-integration)
+      id: 101
+      author: rachid
       changes:
         - sqlFile:
-            path: db/changelog/sql/001-initial-schema.sql
+            path: db/changelog/changes/001-initial-schema.sql

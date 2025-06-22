@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
-      id: 2
-      author: jules (liquibase-integration)
+      id: 102
+      author: rachid
       changes:
         - sqlFile:
-            path: db/changelog/sql/002-add-seq-schema.sql
+            path: db/changelog/changes/002-add-seq-schema.sql

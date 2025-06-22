@@ -40,7 +40,7 @@ public class InventoryService implements IInventoryServiceInPort {
             // Or throw new InventoryDomainException("Order has no items.");
             // Depending on how strict the validation should be.
             // For now, let's assume this could be a valid scenario handled by an empty InventoryReservedEvent.
-            eventPublisherPort.publish(new InventoryReservedEvent(event.getOrderId(), new ArrayList<>()));
+            eventPublisherPort.publish(InventoryReservedEvent.builder().orderId(event.getOrderId()).reservationConfirmed(false).build());
             return;
         }
 
@@ -79,7 +79,7 @@ public class InventoryService implements IInventoryServiceInPort {
         // If all items can be reserved
         inventoryRepository.saveAll(itemsToUpdate);
         log.info("Inventory reserved successfully for orderId: {}. Items: {}", event.getOrderId(), successfullyReservedItems);
-        eventPublisherPort.publish(new InventoryReservedEvent(event.getOrderId(), successfullyReservedItems));
+        eventPublisherPort.publish(InventoryReservedEvent.builder().orderId(event.getOrderId()).reservationConfirmed(true).build());
     }
 
     @Override
@@ -108,7 +108,7 @@ public class InventoryService implements IInventoryServiceInPort {
                 // It might mean an item that was never in inventory or was removed.
                 // For now, we can create a new inventory record or log a warning.
                 log.warn("Attempting to release item not found in inventory: productId {}. Creating new record.", itemToRelease.getProductId());
-                inventoryItem = new InventoryItem(itemToRelease.getProductId(), itemToRelease.getQuantity());
+                inventoryItem = new InventoryItem(itemToRelease.getProductId(), itemToRelease.getQuantity(), 0l);
             } else {
                 inventoryItem.incrementQuantity(itemToRelease.getQuantity());
             }
