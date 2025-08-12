@@ -5,7 +5,6 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   SPRING_PROFILES_ACTIVE: "oracle"
-  KAFKA_HOST1: "kafka-broker1"
-  KAFKA_HOST2: "kafka-broker2"
+  KAFKA_BROKERS: "kafka-broker1:9092,kafka-broker1:9092"
   BD_ORACLE_HOST: oracle-xe
   APP_USER: rachid

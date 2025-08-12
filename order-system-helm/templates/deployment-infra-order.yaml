@@ -26,16 +26,11 @@ spec:
                 configMapKeyRef:
                   name: {{.Values.configMap.infraOrder}}
                   key: SPRING_PROFILES_ACTIVE
-            - name: KAFKA_HOST1
+            - name: KAFKA_BROKERS
               valueFrom:
                 configMapKeyRef:
                   name: {{ .Values.configMap.infraOrder }}
-                  key: KAFKA_HOST1
-            - name: KAFKA_HOST2
-              valueFrom:
-                configMapKeyRef:
-                  name: {{ .Values.configMap.infraOrder }}
-                  key: KAFKA_HOST2
+                  key: KAFKA_BROKERS
             - name: BD_ORACLE_HOST
               valueFrom:
                 configMapKeyRef:
