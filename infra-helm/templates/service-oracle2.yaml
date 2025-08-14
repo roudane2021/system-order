@@ -8,7 +8,7 @@ spec:
     app: oracle-xe2
   ports:
     - name: oracle
-      port: 1521          # Port que tu exposes dans le cluster
+      port: 1521        # Port que tu exposes dans le cluster
       targetPort: 1521     # Port utilisé dans le container
   type: ClusterIP
 

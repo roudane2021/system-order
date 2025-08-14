@@ -1,0 +1,49 @@
+# spring-app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: infra-inventory
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infra-inventory
+  template:
+    metadata:
+      labels:
+        app: infra-inventory
+    spec:
+      containers:
+        - name: infra-inventory
+          image: {{ .Values.pods.infraInventory.image  }}
+          imagePullPolicy: {{ .Values.pods.infraInventory.imagePullPolicy  }}
+          ports:
+            - containerPort: {{ .Values.pods.infraInventory.port  }}
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              valueFrom:
+                configMapKeyRef:
+                  name: {{.Values.configMap.infraInventory}}
+                  key: SPRING_PROFILES_ACTIVE
+            - name: KAFKA_BROKERS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraInventory }}
+                  key: KAFKA_BROKERS
+            - name: BD_ORACLE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraInventory }}
+                  key: BD_ORACLE_HOST
+            - name: BD_ORACLE_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraInventory }}
+                  key: APP_USER
+            - name: BD_ORACLE_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secret.infraOrder }}
+                  key: APP_USER_PASSWORD
+

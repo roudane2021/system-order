@@ -4,10 +4,10 @@ metadata:
   name: {{ .Values.configMap.kafkaCluster }}
   namespace: {{ .Values.namespace }}
 data:
-  KAFKA_ZOOKEEPER_CONNECT: "zookeeper:2181"
+  KAFKA_ZOOKEEPER_CONNECT: "zookeeper.infra-order-dev.svc.cluster.local:2181"
   KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "2"
   KAFKA_BROKER_ID_BROKER1: "1"
-  KAFKA_ADVERTISED_LISTENERS_BROKER1: "PLAINTEXT://kafka-broker1:9092"
+  KAFKA_ADVERTISED_LISTENERS_BROKER1: "PLAINTEXT://kafka-broker1.infra-order-dev.svc.cluster.local:9092"
   KAFKA_BROKER_ID_BROKER2: "2"
-  KAFKA_ADVERTISED_LISTENERS_BROKER2: "PLAINTEXT://kafka-broker2:9093"
+  KAFKA_ADVERTISED_LISTENERS_BROKER2: "PLAINTEXT://kafka-broker2.infra-order-dev.svc.cluster.local:9093"
   ZOOKEEPER_CLIENT_PORT: "2181"
