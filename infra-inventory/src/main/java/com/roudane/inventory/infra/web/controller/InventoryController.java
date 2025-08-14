@@ -25,6 +25,7 @@ public class InventoryController {
         this.inventoryWebMapper = inventoryWebMapper;
     }
 
+
     @GetMapping("/{productId}")
     public ResponseEntity<InventoryItemDto> getInventoryByProductId(@PathVariable String productId) {
         // Assuming IInventoryServiceInPort will have a method like findByProductId

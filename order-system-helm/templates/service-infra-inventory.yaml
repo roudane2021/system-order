@@ -1,22 +1,13 @@
-{{- if .Values.infraInventory }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ .Values.infraInventory.name }}-service
-  labels:
-    app: {{ .Values.infraInventory.name }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version }}
-    release: {{ .Release.Name }}
-    heritage: {{ .Release.Service }}
+  name: infra-inventory
+  namespace: {{ .Values.namespace }}
 spec:
-  type: {{ .Values.infraInventory.service.type }}
-  ports:
-    - port: {{ .Values.infraInventory.service.port }}
-      targetPort: http # Should match the 'name' of the port in deployment container spec
-      protocol: TCP
-      name: http
   selector:
-    app: {{ .Values.infraInventory.name }}
-    release: {{ .Release.Name }}
----
-{{- end }}
+    app: infra-inventory
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: {{ .Values.pods.infraInventory.port  }}
+  type: ClusterIP

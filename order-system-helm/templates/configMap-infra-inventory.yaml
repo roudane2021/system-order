@@ -1,10 +1,10 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Values.configMap.infraOrder }}
+  name: {{ .Values.configMap.infraInventory }}
   namespace: {{ .Values.namespace }}
 data:
   SPRING_PROFILES_ACTIVE: "oracle"
   KAFKA_BROKERS: "kafka-broker1.infra-order-dev.svc.cluster.local:9092,kafka-broker2.infra-order-dev.svc.cluster.local:9093"
-  BD_ORACLE_HOST: oracle-xe.infra-order-dev.svc.cluster.local:1521
+  BD_ORACLE_HOST: oracle-xe2.infra-order-dev.svc.cluster.local:1521
   APP_USER: rachid

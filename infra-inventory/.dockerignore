@@ -1,6 +1,5 @@
 .git
-.idea
-target/
-**/src/test/
-*.log
-.DS_Store
+.gitignore
+Dockerfile
+README.md
+*.iml

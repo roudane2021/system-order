@@ -2,7 +2,7 @@ configMap:
   kafkaCluster: configmap-cluster-kafka
   bdOracle: configmap-bd-oracle
 
-namespace: order-dev
+namespace: infra-order-dev
 
 secret:
   bdOracle: secret-oracle
