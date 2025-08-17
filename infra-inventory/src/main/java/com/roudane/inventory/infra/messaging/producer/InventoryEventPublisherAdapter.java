@@ -1,8 +1,11 @@
 package com.roudane.inventory.infra.messaging.producer;
 
-import com.roudane.inventory.domain.event.InventoryDepletedEvent;
-import com.roudane.inventory.domain.event.InventoryReservedEvent;
-import com.roudane.inventory.domain.port.out.IInventoryEventPublisherOutPort;
+import com.roudane.transverse.event.InventoryDepletedEvent;
+import com.roudane.transverse.event.InventoryReservedEvent;
+import com.roudane.inventory.domain.port.output.event.IInventoryEventPublisherOutPort;
+import org.apache.kafka.common.KafkaException;
+import org.apache.kafka.common.errors.SerializationException;
+import org.apache.kafka.common.errors.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +34,41 @@ public class InventoryEventPublisherAdapter implements IInventoryEventPublisherO
     @Override
     public void publish(InventoryReservedEvent event) {
         log.info("Sending InventoryReservedEvent for orderId: {} to topic: {}", event.getOrderId(), inventoryReservedTopic);
-        kafkaTemplate.send(inventoryReservedTopic, event.getOrderId(), event);
+        publishEvent(inventoryReservedTopic, event.getOrderId(), event);
     }
 
     @Override
     public void publish(InventoryDepletedEvent event) {
         log.info("Sending InventoryDepletedEvent for orderId: {} to topic: {}", event.getOrderId(), inventoryDepletedTopic);
-        kafkaTemplate.send(inventoryDepletedTopic, event.getOrderId(), event);
+        publishEvent(inventoryDepletedTopic, event.getOrderId(), event);
+    }
+
+    private void publishEvent(String topic, Long orderId, Object event) {
+        log.info("Publishing {} for orderId: {}", topic, orderId);
+        kafkaTemplate.send(topic, String.valueOf(orderId), event)
+                .addCallback(
+                        result -> log.info("Successfully published {} for orderId: {}", topic, orderId),
+                        ex -> {
+                            log.error("Failed to publish {} for orderId: {}", topic, orderId, ex);
+                            handleKafkaFailure(event, ex);
+                        }
+                );
+    }
+
+    public void handleKafkaFailure(Object event, Throwable ex) {
+        String eventInfo = event != null ? event.toString() : "null";
+
+        if (ex instanceof SerializationException) {
+            log.error("Serialization error while publishing event: {}", eventInfo, ex);
+        } else if (ex instanceof TimeoutException) {
+            log.error("Timeout error while publishing event: {}", eventInfo, ex);
+
+        } else if (ex instanceof KafkaException) {
+            log.error("Kafka exception while publishing event: {}", eventInfo, ex);
+        } else {
+            log.error("Unknown error while publishing event: {}", eventInfo, ex);
+
+        }
+
     }
 }

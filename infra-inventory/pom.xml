@@ -13,7 +13,7 @@
     <artifactId>infra-inventory</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <name>infra-inventory</name>
-    <description>Demo project for Spring Boot</description>
+    <description>Inventory infrastructure layer for the Order System</description>
     <properties>
         <mapstruct-version>1.6.3</mapstruct-version>
         <lombok-version>1.18.28</lombok-version>

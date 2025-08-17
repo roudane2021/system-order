@@ -1,6 +1,6 @@
 package com.roudane.order.infra_order.messaging.consumer;
 
-import com.roudane.order.domain_order.event.InventoryReservedEvent;
+import com.roudane.transverse.event.InventoryReservedEvent;
 import com.roudane.order.domain_order.port.input.IConfirmOrderUseCase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,11 +28,10 @@ public class InventoryEventConsumer {
                 LOGGER.info("Order {} processed for inventory confirmation.", event.getOrderId());
             } catch (Exception e) {
                 LOGGER.error("Error processing inventory confirmation for orderId {}: {}", event.getOrderId(), e.getMessage(), e);
-                // Add dead-letter queue (DLQ) handling or other retry mechanisms if needed
+
             }
         } else {
             LOGGER.warn("Inventory reservation failed or was not confirmed for orderId: {}. Further action might be needed (e.g., cancel order).", event.getOrderId());
-            // Implement logic to handle failed reservation (e.g., cancel order, notify user)
         }
     }
 }
