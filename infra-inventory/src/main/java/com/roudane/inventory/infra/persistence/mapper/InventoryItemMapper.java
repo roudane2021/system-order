@@ -8,13 +8,13 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring") // Generates a Spring bean
+@Mapper(componentModel = "spring")
 public interface InventoryItemMapper {
 
-    // Instance for manual use if needed, though Spring injection is preferred
-    // InventoryItemMapper INSTANCE = Mappers.getMapper(InventoryItemMapper.class);
 
-    // No specific @Mapping needed if field names are identical
+    InventoryItemMapper INSTANCE = Mappers.getMapper(InventoryItemMapper.class);
+
+
     InventoryItemEntity toEntity(InventoryItem inventoryItem);
 
     InventoryItem toDomain(InventoryItemEntity inventoryItemEntity);

@@ -19,12 +19,11 @@ public class OrderItemEntity {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_item_seq_gen")
     @SequenceGenerator(name = "order_item_seq_gen", sequenceName = "order_item_seq", allocationSize = 1)
     private Long id;
-    // private Long orderId; // Replaced by ManyToOne relationship
     private Long productId;
     private int quantity;
     private BigDecimal price;
 
     @ManyToOne
-    // @JoinColumn(name = "order_id") // MapStruct might need consistent naming or explicit mapping if this is different from OrderEntity's mappedBy
+    // @JoinColumn(name = "order_id")
     private OrderEntity order;
 }

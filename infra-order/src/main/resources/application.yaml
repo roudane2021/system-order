@@ -4,8 +4,6 @@ spring:
   profiles:
     active: h2
   # Kafka
-  # Spring key is repeated for Kafka config
-  # (Tooling note: The create_file_with_block will create a new file, not merge. The YAML structure itself should be valid for Spring Boot to merge at runtime)
   kafka:
     consumer:
       group-id: inventory-service-group

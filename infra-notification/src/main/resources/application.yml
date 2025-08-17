@@ -1,36 +1,25 @@
 # Spring
 spring:
   application:
-    name: notification-service # Corrected application name
+    name: notification-service
   kafka:
-    bootstrap-servers: localhost:9092 # Default Kafka address
+    bootstrap-servers: localhost:9092
     consumer:
-      group-id: notification-service-group # Corrected group-id for notification service
-  profiles:
-    active: h2-local
-  liquibase:
-    change-log: classpath:changelog/db.changelog-master.yaml
+      group-id: notification-service-group
 
 # Topic Names
-# General notification events topic (can be more specific later if needed)
-notification:
-  events:
-    topic: notification-events
 
-# Specific lifecycle event topics that the notification service will listen to
 order:
   events:
     topic:
       created: order-created-events
-      shipped: order-shipped-events # Added OrderShippedEvent topic
-      # Add other order lifecycle events here, e.g., delivered, cancelled
+      shipped: order-shipped-events
       cancelled: order-cancelled-events
 inventory:
   events:
     topic:
-      # Assuming notification service might be interested in inventory events too
       reserved: inventory-reserved-events
       depleted: inventory-depleted-events
 
 server:
-  port: 8082 # Changed port to avoid conflict if other services run on 8888 or 8080
+  port: 9090

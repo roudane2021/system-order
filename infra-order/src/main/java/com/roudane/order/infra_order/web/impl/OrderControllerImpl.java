@@ -21,7 +21,7 @@ public class OrderControllerImpl implements IOrderController {
 
     private final OrderDomain orderDomain;
 
-    @PostMapping("/create") // Annotation was present, keep it
+    @PostMapping("/create")
     @Override
     public ResponseEntity<OrderCreateResponseDto> createOrder(@RequestBody final OrderCreateRequestDto orderCreateRequest) {
         OrderModel orderModelToCreate = IOrderMapper.INSTANCE.toModel(orderCreateRequest);
@@ -30,7 +30,7 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDto);
     }
 
-    @GetMapping("/retriever/{id}") // Annotation was present, keep it
+    @GetMapping("/retriever/{id}")
     @Override
     public ResponseEntity<OrderDto> retrieverOrders(@PathVariable final Long id) {
         OrderModel orderModel = orderDomain.getOrder(id);
@@ -38,7 +38,7 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.ok(orderDto);
     }
 
-    @GetMapping("/all") // New endpoint
+    @GetMapping("/all")
     @Override
     public ResponseEntity<Set<OrderDto>> listOrders() {
         Set<OrderModel> orderModels = orderDomain.listOrder();
@@ -48,18 +48,18 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.ok(orderDtos);
     }
 
-    @PutMapping("/{id}") // New endpoint
+    @PutMapping("/{id}")
     @Override
     public ResponseEntity<OrderDto> updateOrder(@PathVariable final Long id, @RequestBody final OrderUpdateRequestDto orderUpdateRequestDto) {
         OrderModel orderModelToUpdate = IOrderMapper.INSTANCE.toModel(orderUpdateRequestDto);
-        orderModelToUpdate.setId(id); // Set the ID from path variable
+        orderModelToUpdate.setId(id);
 
         OrderModel updatedOrder = orderDomain.updateOrder(orderModelToUpdate);
         final OrderDto orderDto = IOrderMapper.INSTANCE.toDto(updatedOrder);
         return ResponseEntity.ok(orderDto);
     }
 
-    @PostMapping("/{id}/cancel") // New endpoint
+    @PostMapping("/{id}/cancel")
     @Override
     public ResponseEntity<OrderDto> cancelOrder(@PathVariable final Long id) {
         OrderModel cancelledOrder = orderDomain.cancelOrder(id);
@@ -67,7 +67,7 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.ok(orderDto);
     }
 
-    @PostMapping("/{id}/pay") // New endpoint
+    @PostMapping("/{id}/pay")
     @Override
     public ResponseEntity<OrderDto> payOrder(@PathVariable final Long id) {
         OrderModel paidOrder = orderDomain.payOrder(id);
@@ -75,10 +75,9 @@ public class OrderControllerImpl implements IOrderController {
         return ResponseEntity.ok(orderDto);
     }
 
-    @PostMapping("/{id}/ship") // New endpoint
+    @PostMapping("/{id}/ship")
     @Override
     public ResponseEntity<OrderDto> shipOrder(@PathVariable final Long id, @RequestBody final ShipOrderRequestDto shipOrderRequestDto) {
-        // Assuming OrderDomain implements IShipOrderUseCase
         OrderModel shippedOrderModel = orderDomain.shipOrder(id, shipOrderRequestDto.getTrackingNumber());
         final OrderDto orderDto = IOrderMapper.INSTANCE.toDto(shippedOrderModel);
         return ResponseEntity.ok(orderDto);

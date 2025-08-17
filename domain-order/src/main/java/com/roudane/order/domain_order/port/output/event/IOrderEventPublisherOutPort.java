@@ -1,11 +1,11 @@
 package com.roudane.order.domain_order.port.output.event;
 
-import com.roudane.order.domain_order.event.OrderEvent;
-import com.roudane.order.domain_order.event.OrderShippedEvent;
+import com.roudane.transverse.event.OrderCreatedEvent;
+import com.roudane.transverse.event.OrderShippedEvent;
 
 public interface IOrderEventPublisherOutPort {
-    void publishOrderCreatedEvent(OrderEvent event);
+    void publishOrderCreatedEvent(OrderCreatedEvent event);
     void publishOrderShippedEvent(OrderShippedEvent event);
-    void publishOrderCancelledEvent(final OrderEvent event);
-    void publishOrderUpdatedEvent(final OrderEvent event);
+    void publishOrderCancelledEvent(final OrderCreatedEvent event);
+    void publishOrderUpdatedEvent(final OrderCreatedEvent event);
 }

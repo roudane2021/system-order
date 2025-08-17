@@ -1,7 +1,7 @@
 package com.roudane.inventory.infra.messaging.config;
 
-import com.roudane.inventory.domain.event.OrderCancelledEvent;
-import com.roudane.inventory.domain.event.OrderCreatedEvent;
+import com.roudane.transverse.event.OrderCancelledEvent;
+import com.roudane.transverse.event.OrderCreatedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;

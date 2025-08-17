@@ -1,6 +1,6 @@
 package com.roudane.order.infra_order.messaging.config;
 
-import com.roudane.order.domain_order.event.InventoryReservedEvent;
+import com.roudane.transverse.event.InventoryReservedEvent;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,15 +24,15 @@ public class KafkaConsumerConfig {
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
 
-    // Generic consumer factory for JSON events
+
     private <T> ConsumerFactory<String, T> createConsumerFactory(Class<T> eventTypeClass) {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         // Configure JsonDeserializer for the specific event type
         JsonDeserializer<T> jsonDeserializer = new JsonDeserializer<>(eventTypeClass);
-        jsonDeserializer.setRemoveTypeHeaders(false); // Or true, depending on producer
-        jsonDeserializer.addTrustedPackages("*"); // Trust all packages, or configure specific ones
+        jsonDeserializer.setRemoveTypeHeaders(false);
+        jsonDeserializer.addTrustedPackages("*");
         jsonDeserializer.setUseTypeMapperForKey(true);
 
 

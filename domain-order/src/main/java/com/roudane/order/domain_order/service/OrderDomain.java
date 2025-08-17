@@ -1,8 +1,10 @@
 package com.roudane.order.domain_order.service;
 
 
-import com.roudane.order.domain_order.event.OrderEvent;
-import com.roudane.order.domain_order.event.OrderShippedEvent;
+import com.roudane.order.domain_order.model.OrderItemModel;
+import com.roudane.transverse.event.OrderCreatedEvent;
+import com.roudane.transverse.event.OrderItemEvent;
+import com.roudane.transverse.event.OrderShippedEvent;
 import com.roudane.order.domain_order.exception.OrderInvalidException;
 import com.roudane.order.domain_order.exception.OrderNotFoundException;
 import com.roudane.order.domain_order.model.OrderModel;
@@ -15,8 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IListOrderUseCase, IUpdateOrderUseCase, ICancelOrderUseCase, IPayOrderUseCase, IConfirmOrderUseCase, IShipOrderUseCase {
@@ -42,16 +46,14 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         // Enregistrement de la commande
         final OrderModel savedOrder = orderPersistenceOutPort.createOrder(orderModel);
 
-        // Publication d'un événement
-        // orderEventPublisherOutPort.publisherEventOrder(orderModel);
+
 
         // Publish OrderCreatedEvent
-        OrderEvent event = OrderEvent.builder()
+        OrderCreatedEvent event = OrderCreatedEvent.builder()
                 .orderId(savedOrder.getId())
                 .customerId(savedOrder.getCustomerId())
                 .orderDate(savedOrder.getOrderDate())
-                .status(savedOrder.getStatus())
-                .items(savedOrder.getItems()) // Assuming items are part of the event
+                .items(toEventList(savedOrder.getItems()))
                 .build();
         orderEventPublisherOutPort.publishOrderCreatedEvent(event);
 
@@ -101,12 +103,11 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
 
 
         // Publish OrderUpdatedEvent
-        OrderEvent event = OrderEvent.builder()
+        OrderCreatedEvent event = OrderCreatedEvent.builder()
                 .orderId(updatedOrder.getId())
                 .customerId(updatedOrder.getCustomerId())
                 .orderDate(updatedOrder.getOrderDate())
-                .status(updatedOrder.getStatus())
-                .items(updatedOrder.getItems()) // Assuming items are part of the event
+                .items(toEventList(updatedOrder.getItems()))
                 .build();
         orderEventPublisherOutPort.publishOrderUpdatedEvent(event);
 
@@ -124,15 +125,14 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
                 });
 
         orderModel.setStatus(OrderStatus.CANCELLED);
-        OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel); // Assuming updateOrder handles status changes
+        OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
 
         // Publish OrderUpdatedEvent
-        OrderEvent event = OrderEvent.builder()
+        OrderCreatedEvent event = OrderCreatedEvent.builder()
                 .orderId(updatedOrder.getId())
                 .customerId(updatedOrder.getCustomerId())
                 .orderDate(updatedOrder.getOrderDate())
-                .status(updatedOrder.getStatus())
-                .items(updatedOrder.getItems()) // Assuming items are part of the event
+                .items(toEventList(updatedOrder.getItems())) // Assuming items are part of the event
                 .build();
         orderEventPublisherOutPort.publishOrderUpdatedEvent(event);
 
@@ -163,7 +163,6 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
                 .orElseThrow(() -> {
                     loggerPort.warn("Order not found for confirmation: " + orderId);
-                    // Consider using a more specific domain exception
                     return new RuntimeException("Order with ID " + orderId + " not found, cannot confirm.");
                 });
 
@@ -181,34 +180,40 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
                 .orElseThrow(() -> {
                     loggerPort.warn("Order not found for shipping: {}" + orderId);
-                    return new RuntimeException("Order with ID " + orderId + " not found, cannot ship."); // Domain specific exception
+                    return new RuntimeException("Order with ID " + orderId + " not found, cannot ship.");
                 });
 
-        // Add logic to check if order can be shipped (e.g., is in PROCESSING/CONFIRMED status)
-        if (orderModel.getStatus() != OrderStatus.PROCESSING && orderModel.getStatus() != OrderStatus.PAID) { // Assuming PAID orders can also be shipped
+        if (orderModel.getStatus() != OrderStatus.PROCESSING && orderModel.getStatus() != OrderStatus.PAID) {
             loggerPort.warn("Order "+ orderId +" cannot be shipped as its status is {}" +  orderModel.getStatus());
-            // Or throw InvalidOrderStatusChangeException
-            // For now, let's throw an exception if not in a shippable state.
+
             throw new RuntimeException("Order " + orderId + " is in status " + orderModel.getStatus() + " and cannot be shipped.");
         }
 
-        // In a real system, you might have a specific field for trackingNumber in OrderModel.
-        // For now, we'll assume it's managed externally or just used for the event.
-        // If OrderModel needs a trackingNumber field, it should be added there.
-        // OrderModel currentOrderModel = orderModel; // If no direct fields to update on OrderModel besides status
 
-        orderModel.setStatus(OrderStatus.SHIPPED); // Assuming SHIPPED is a valid status
+        orderModel.setStatus(OrderStatus.SHIPPED);
         OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
 
         // Publish OrderShippedEvent
         OrderShippedEvent event = OrderShippedEvent.builder()
                 .orderId(updatedOrder.getId())
-                .shippingDate(LocalDateTime.now()) // Assuming shipping date is now
+                .shippingDate(LocalDateTime.now())
                 .trackingNumber(trackingNumber)
                 .build();
-        orderEventPublisherOutPort.publishOrderShippedEvent(event); // New method on publisher port
+        orderEventPublisherOutPort.publishOrderShippedEvent(event);
 
         loggerPort.info("Order with ID: " + updatedOrder.getId() + "shipped successfully, status set to SHIPPED.");
         return updatedOrder;
+    }
+
+    public static List<OrderItemEvent> toEventList(List<OrderItemModel> modelList) {
+        return modelList.stream()
+                .map(model -> OrderItemEvent.builder()
+                        .id(model.getId())
+                        .orderId(model.getOrderId())
+                        .productId(model.getProductId())
+                        .quantity(model.getQuantity())
+                        .price(model.getPrice())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

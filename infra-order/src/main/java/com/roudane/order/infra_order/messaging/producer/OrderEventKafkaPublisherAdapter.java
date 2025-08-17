@@ -1,14 +1,13 @@
 package com.roudane.order.infra_order.messaging.producer;
 
-import com.roudane.order.domain_order.event.OrderEvent;
-import com.roudane.order.domain_order.event.OrderShippedEvent;
+import com.roudane.transverse.event.OrderCreatedEvent;
+import com.roudane.transverse.event.OrderShippedEvent;
 import com.roudane.order.domain_order.port.output.event.IOrderEventPublisherOutPort;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.errors.TimeoutException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
@@ -32,38 +31,37 @@ public class OrderEventKafkaPublisherAdapter implements IOrderEventPublisherOutP
     @Value("${kafka.topics.order-updated:order-updated-events}")
     private String orderUpdatedTopic;
 
-    @Autowired
     public OrderEventKafkaPublisherAdapter(KafkaTemplate<String, Object> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
-    public void publishOrderCreatedEvent(final OrderEvent event) {
-        publishEvent(orderCreatedTopic, event.getOrderId(), event, "OrderCreatedEvent");
+    public void publishOrderCreatedEvent(final OrderCreatedEvent event) {
+        publishEvent(orderCreatedTopic, event.getOrderId(), event);
     }
 
     @Override
     public void publishOrderShippedEvent(final OrderShippedEvent event) {
-        publishEvent(orderShippedTopic, event.getOrderId(), event, "OrderShippedEvent");
+        publishEvent(orderShippedTopic, event.getOrderId(), event);
     }
 
     @Override
-    public void publishOrderCancelledEvent(final OrderEvent event) {
-        publishEvent(orderCancelledTopic, event.getOrderId(), event, "OrderCancelledEvent");
+    public void publishOrderCancelledEvent(final OrderCreatedEvent event) {
+        publishEvent(orderCancelledTopic, event.getOrderId(), event);
     }
 
     @Override
-    public void publishOrderUpdatedEvent(final OrderEvent event) {
-        publishEvent(orderUpdatedTopic, event.getOrderId(), event, "OrderUpdatedEvent");
+    public void publishOrderUpdatedEvent(final OrderCreatedEvent event) {
+        publishEvent(orderUpdatedTopic, event.getOrderId(), event);
     }
 
-    private void publishEvent(String topic, Long orderId, Object event, String eventName) {
-        LOGGER.info("Publishing {} for orderId: {}", eventName, orderId);
+    private void publishEvent(String topic, Long orderId, Object event) {
+        LOGGER.info("Publishing {} for orderId: {}", topic, orderId);
         kafkaTemplate.send(topic, String.valueOf(orderId), event)
                 .addCallback(
-                        result -> LOGGER.info("Successfully published {} for orderId: {}", eventName, orderId),
+                        result -> LOGGER.info("Successfully published {} for orderId: {}", topic, orderId),
                         ex -> {
-                            LOGGER.error("Failed to publish {} for orderId: {}", eventName, orderId, ex);
+                            LOGGER.error("Failed to publish {} for orderId: {}", topic, orderId, ex);
                             handleKafkaFailure(event, ex);
                         }
                 );
@@ -74,15 +72,11 @@ public class OrderEventKafkaPublisherAdapter implements IOrderEventPublisherOutP
 
         if (ex instanceof SerializationException) {
             LOGGER.error("Serialization error while publishing event: {}", eventInfo, ex);
-            // Ici, tu peux par exemple ignorer ou stocker l'événement pour analyse
         } else if (ex instanceof TimeoutException) {
             LOGGER.error("Timeout error while publishing event: {}", eventInfo, ex);
-            // Peut-être une ré-essai ou stockage pour traitement ultérieur
 
         } else if (ex instanceof KafkaException) {
             LOGGER.error("Kafka exception while publishing event: {}", eventInfo, ex);
-            // Traitement générique
-
         } else {
             LOGGER.error("Unknown error while publishing event: {}", eventInfo, ex);
 
