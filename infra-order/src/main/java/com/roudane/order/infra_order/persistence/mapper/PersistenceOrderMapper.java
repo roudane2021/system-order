@@ -19,7 +19,7 @@ public interface PersistenceOrderMapper {
     OrderItemEntity toEntity(OrderItemModel orderItemModel);
     List<OrderItemEntity> toEntityList(List<OrderItemModel> orderItemModels);
 
-    // @Mapping(target = "items", qualifiedByName = "toEntityList")
+
     OrderEntity toEntity(OrderModel orderModel);
 
     // OrderEntity to OrderModel

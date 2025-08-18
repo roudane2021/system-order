@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: infra-notification
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: infra-notification
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: {{ .Values.pods.infraNotification.port  }}
+  type: ClusterIP
