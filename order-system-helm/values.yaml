@@ -1,6 +1,7 @@
 configMap:
   infraOrder: configmap-infra-order
   infraInventory: configmap-infra-inventory
+  infraNotification: configmap-infra-notification
 
 secret:
   infraOrder: secret-infra-order
@@ -19,5 +20,10 @@ pods:
     port: 8888
     hostIngress: inventory-dev.example
     image: localhost:5000/infra_inventory:latest
+    imagePullPolicy: Always
+  infraNotification:
+    port: 9090
+    hostIngress: notification-dev.example
+    image: localhost:5000/infra_notification:latest
     imagePullPolicy: Always
 

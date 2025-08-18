@@ -30,14 +30,12 @@ public class KafkaConsumerConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        // Configure JsonDeserializer for the specific event type
+        // Configure JsonDeserializer
         JsonDeserializer<T> jsonDeserializer = new JsonDeserializer<>(eventTypeClass);
-        jsonDeserializer.setRemoveTypeHeaders(false); // Or true, depending on producer
-        jsonDeserializer.addTrustedPackages("*"); // Trust all packages, or configure specific ones
+        jsonDeserializer.setRemoveTypeHeaders(false);
+        jsonDeserializer.addTrustedPackages("*");
         jsonDeserializer.setUseTypeMapperForKey(true);
 
-
-        // Use ErrorHandlingDeserializer to handle potential deserialization issues
         ErrorHandlingDeserializer<T> errorHandlingDeserializer = new ErrorHandlingDeserializer<>(jsonDeserializer);
 
 
@@ -47,7 +45,7 @@ public class KafkaConsumerConfig {
                 errorHandlingDeserializer);
     }
 
-    @Bean
+    @Bean("orderCreatedEventContainerFactory")
     public ConcurrentKafkaListenerContainerFactory<String, OrderCreatedEvent> orderCreatedEventContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, OrderCreatedEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(createConsumerFactory(OrderCreatedEvent.class));

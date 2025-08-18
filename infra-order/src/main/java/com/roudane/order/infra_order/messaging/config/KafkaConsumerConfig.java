@@ -46,7 +46,7 @@ public class KafkaConsumerConfig {
                 errorHandlingDeserializer);
     }
 
-    @Bean
+    @Bean("InventoryReservedEventContainerFactory")
     public ConcurrentKafkaListenerContainerFactory<String, InventoryReservedEvent> InventoryReservedEventContainerFactory() {
         ConcurrentKafkaListenerContainerFactory<String, InventoryReservedEvent> factory = new ConcurrentKafkaListenerContainerFactory<>();
         factory.setConsumerFactory(createConsumerFactory(InventoryReservedEvent.class));

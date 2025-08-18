@@ -1,0 +1,29 @@
+# spring-app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: infra-notification
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: infra-notification
+  template:
+    metadata:
+      labels:
+        app: infra-notification
+    spec:
+      containers:
+        - name: infra-notification
+          image: {{ .Values.pods.infraNotification.image  }}
+          imagePullPolicy: {{ .Values.pods.infraNotification.imagePullPolicy  }}
+          ports:
+            - containerPort: {{ .Values.pods.infraNotification.port  }}
+          env:
+            - name: KAFKA_BROKERS
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraNotification }}
+                  key: KAFKA_BROKERS
+
