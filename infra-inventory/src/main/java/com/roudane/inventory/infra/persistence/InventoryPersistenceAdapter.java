@@ -1,24 +1,22 @@
-package com.roudane.inventory.infra.persistence.repository;
+package com.roudane.inventory.infra.persistence;
 
 import com.roudane.inventory.domain.model.InventoryItem;
 import com.roudane.inventory.domain.port.output.persistence.IInventoryPersistenceOutPort;
 import com.roudane.inventory.infra.persistence.entity.InventoryItemEntity;
 import com.roudane.inventory.infra.persistence.mapper.InventoryItemMapper;
+import com.roudane.inventory.infra.persistence.repository.InventoryItemRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
 
 @Component
-public class InventoryRepositoryAdapter implements IInventoryPersistenceOutPort {
+@RequiredArgsConstructor
+public class InventoryPersistenceAdapter implements IInventoryPersistenceOutPort {
 
-    private final JpaInventoryItemRepository jpaRepository;
+    private final InventoryItemRepository jpaRepository;
 
-
-
-    public InventoryRepositoryAdapter(JpaInventoryItemRepository jpaRepository) {
-        this.jpaRepository = jpaRepository;
-    }
 
     @Override
     public Optional<InventoryItem> findByProductId(String productId) {

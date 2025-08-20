@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.List;
 
 @Repository
-public interface JpaInventoryItemRepository extends JpaRepository<InventoryItemEntity, Long> {
+public interface InventoryItemRepository extends JpaRepository<InventoryItemEntity, Long> {
     Optional<InventoryItemEntity> findByProductId(String productId);
     List<InventoryItemEntity> findByProductIdIn(List<String> productIds);
 }

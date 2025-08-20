@@ -4,6 +4,7 @@ import com.roudane.inventory.domain.port.input.IGetInventoryUserCase;
 import com.roudane.inventory.domain.port.input.IHandleOrderCreatedUseCase;
 import com.roudane.inventory.domain.port.input.IHhandleOrderCancelledUseCase;
 import com.roudane.inventory.domain.port.input.IUpdateStockUserCase;
+import com.roudane.inventory.domain.port.output.logger.ILoggerPort;
 import com.roudane.transverse.event.*;
 import com.roudane.inventory.domain.model.InventoryItem;
 import com.roudane.inventory.domain.exception.InventoryDomainException;
@@ -16,9 +17,11 @@ import java.util.ArrayList;
 
 import com.roudane.inventory.domain.port.output.event.IInventoryEventPublisherOutPort;
 import com.roudane.inventory.domain.port.output.persistence.IInventoryPersistenceOutPort;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@RequiredArgsConstructor
 public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreatedUseCase, IHhandleOrderCancelledUseCase, IUpdateStockUserCase {
 
     private static final Logger log = LoggerFactory.getLogger(InventoryDomain.class);
@@ -26,11 +29,7 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
     private final IInventoryPersistenceOutPort inventoryPersistenceOutPort;
     private final IInventoryEventPublisherOutPort eventPublisherPort;
 
-    // Constructor injection
-    public InventoryDomain(IInventoryPersistenceOutPort inventoryPersistenceOutPort, IInventoryEventPublisherOutPort eventPublisherPort) {
-        this.inventoryPersistenceOutPort = inventoryPersistenceOutPort;
-        this.eventPublisherPort = eventPublisherPort;
-    }
+
 
     @Override
     public void handleOrderCreated(OrderCreatedEvent event) {

@@ -1,21 +1,20 @@
 package com.roudane.order.infra_order.messaging.producer;
 
+import com.roudane.order.domain_order.port.output.event.IOrderEventPublisherOutPort;
 import com.roudane.transverse.event.OrderCreatedEvent;
 import com.roudane.transverse.event.OrderShippedEvent;
-import com.roudane.order.domain_order.port.output.event.IOrderEventPublisherOutPort;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.errors.TimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class OrderEventKafkaPublisherAdapter implements IOrderEventPublisherOutPort {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(OrderEventKafkaPublisherAdapter.class);
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
@@ -56,12 +55,10 @@ public class OrderEventKafkaPublisherAdapter implements IOrderEventPublisherOutP
     }
 
     private void publishEvent(String topic, Long orderId, Object event) {
-        LOGGER.info("Publishing {} for orderId: {}", topic, orderId);
         kafkaTemplate.send(topic, String.valueOf(orderId), event)
                 .addCallback(
-                        result -> LOGGER.info("Successfully published {} for orderId: {}", topic, orderId),
+                        result -> log.info("Successfully published {} for orderId: {}", topic, orderId),
                         ex -> {
-                            LOGGER.error("Failed to publish {} for orderId: {}", topic, orderId, ex);
                             handleKafkaFailure(event, ex);
                         }
                 );
@@ -71,14 +68,14 @@ public class OrderEventKafkaPublisherAdapter implements IOrderEventPublisherOutP
         String eventInfo = event != null ? event.toString() : "null";
 
         if (ex instanceof SerializationException) {
-            LOGGER.error("Serialization error while publishing event: {}", eventInfo, ex);
+            log.error("Serialization error while publishing event: {}", eventInfo, ex);
         } else if (ex instanceof TimeoutException) {
-            LOGGER.error("Timeout error while publishing event: {}", eventInfo, ex);
+            log.error("Timeout error while publishing event: {}", eventInfo, ex);
 
         } else if (ex instanceof KafkaException) {
-            LOGGER.error("Kafka exception while publishing event: {}", eventInfo, ex);
+            log.error("Kafka exception while publishing event: {}", eventInfo, ex);
         } else {
-            LOGGER.error("Unknown error while publishing event: {}", eventInfo, ex);
+            log.error("Unknown error while publishing event: {}", eventInfo, ex);
 
         }
 
