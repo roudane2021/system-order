@@ -1,6 +1,4 @@
-package com.roudane.order.infra_order.transverse.logging;
-
-
+package com.roudane.inventory.infra.transverse.logging;
 
 import com.roudane.transverse.enums.Layer;
 import lombok.extern.slf4j.Slf4j;
@@ -19,22 +17,22 @@ import java.util.stream.IntStream;
 public class LoggingAspect {
 
 
-    @Around("execution(* com.roudane.order.infra_order.web.impl..*(..))")
+    @Around("execution(* com.roudane.inventory.infra.web.impl..*(..))")
     public Object ControllerMethods(final ProceedingJoinPoint joinPoint) throws Throwable {
         return logExecution(Layer.CONTROLLER, joinPoint);
     }
 
-    @Around("execution(* com.roudane.order.infra_order.messaging.consumer..*(..))")
+    @Around("execution(* com.roudane.inventory.infra.messaging.consumer..*(..))")
     public Object ConsumerMethods(final ProceedingJoinPoint joinPoint) throws Throwable {
         return logExecution(Layer.CONSUMER, joinPoint);
     }
 
-    @Around("execution(* com.roudane.order.infra_order.messaging.producer..*(..))")
+    @Around("execution(* com.roudane.inventory.infra.messaging.producer..*(..))")
     public Object ProducerMethods(final ProceedingJoinPoint joinPoint) throws Throwable {
         return logExecution(Layer.PRODUCER, joinPoint);
     }
 
-    @Around("execution(* com.roudane.order.infra_order.persistence..*(..))")
+    @Around("execution(* com.roudane.inventory.infra.persistence..*(..))")
     public Object PersistenceMethods(final ProceedingJoinPoint joinPoint) throws Throwable {
         return logExecution(Layer.PERSISTENCE, joinPoint);
     }
@@ -62,9 +60,9 @@ public class LoggingAspect {
     }
 
     private String buildArgsString(Object[] args) {
-      if ((args == null || args.length == 0) ) { return ""; }
+        if ((args == null || args.length == 0) ) { return ""; }
         return IntStream.range(0, args.length)
-                        .mapToObj(i -> String.format(" arg ( %s ) = %s", i +1, args[i]))
-                        .collect(Collectors.joining(", "));
+                .mapToObj(i -> String.format(" arg ( %s ) = %s", i +1, args[i]))
+                .collect(Collectors.joining(", "));
     }
 }

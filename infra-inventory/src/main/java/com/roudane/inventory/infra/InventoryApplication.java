@@ -1,7 +1,5 @@
 package com.roudane.inventory.infra;
 
-import com.roudane.inventory.infra.persistence.entity.InventoryItemEntity;
-import com.roudane.inventory.infra.persistence.repository.JpaInventoryItemRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -9,8 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-
-import java.util.List;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.roudane.inventory.domain", "com.roudane.inventory.infra"})

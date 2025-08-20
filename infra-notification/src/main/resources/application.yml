@@ -23,3 +23,7 @@ inventory:
 
 server:
   port: 9090
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %X{className}::%X{methodName} - %msg%n"

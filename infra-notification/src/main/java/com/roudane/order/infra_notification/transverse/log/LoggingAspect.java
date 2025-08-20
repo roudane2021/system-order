@@ -1,6 +1,4 @@
-package com.roudane.order.infra_order.transverse.logging;
-
-
+package com.roudane.order.infra_notification.transverse.log;
 
 import com.roudane.transverse.enums.Layer;
 import lombok.extern.slf4j.Slf4j;
@@ -19,25 +17,12 @@ import java.util.stream.IntStream;
 public class LoggingAspect {
 
 
-    @Around("execution(* com.roudane.order.infra_order.web.impl..*(..))")
-    public Object ControllerMethods(final ProceedingJoinPoint joinPoint) throws Throwable {
-        return logExecution(Layer.CONTROLLER, joinPoint);
-    }
 
-    @Around("execution(* com.roudane.order.infra_order.messaging.consumer..*(..))")
+    @Around("execution(* com.roudane.order.infra_notification.messaging.consumer..*(..))")
     public Object ConsumerMethods(final ProceedingJoinPoint joinPoint) throws Throwable {
         return logExecution(Layer.CONSUMER, joinPoint);
     }
 
-    @Around("execution(* com.roudane.order.infra_order.messaging.producer..*(..))")
-    public Object ProducerMethods(final ProceedingJoinPoint joinPoint) throws Throwable {
-        return logExecution(Layer.PRODUCER, joinPoint);
-    }
-
-    @Around("execution(* com.roudane.order.infra_order.persistence..*(..))")
-    public Object PersistenceMethods(final ProceedingJoinPoint joinPoint) throws Throwable {
-        return logExecution(Layer.PERSISTENCE, joinPoint);
-    }
 
     private  Object  logExecution(final Layer layer, final ProceedingJoinPoint joinPoint) throws Throwable {
         String methodName = joinPoint.getSignature().getName();
@@ -62,9 +47,9 @@ public class LoggingAspect {
     }
 
     private String buildArgsString(Object[] args) {
-      if ((args == null || args.length == 0) ) { return ""; }
+        if ((args == null || args.length == 0) ) { return ""; }
         return IntStream.range(0, args.length)
-                        .mapToObj(i -> String.format(" arg ( %s ) = %s", i +1, args[i]))
-                        .collect(Collectors.joining(", "));
+                .mapToObj(i -> String.format(" arg ( %s ) = %s", i +1, args[i]))
+                .collect(Collectors.joining(", "));
     }
 }

@@ -1,22 +1,22 @@
 package com.roudane.inventory.infra.messaging.producer;
 
+import com.roudane.inventory.domain.port.output.event.IInventoryEventPublisherOutPort;
 import com.roudane.transverse.event.InventoryDepletedEvent;
 import com.roudane.transverse.event.InventoryReservedEvent;
-import com.roudane.inventory.domain.port.output.event.IInventoryEventPublisherOutPort;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.KafkaException;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.errors.TimeoutException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Component
 public class InventoryEventPublisherAdapter implements IInventoryEventPublisherOutPort {
 
-    private static final Logger log = LoggerFactory.getLogger(InventoryEventPublisherAdapter.class);
+
 
     @Value("${inventory.events.topic.reserved}")
     private String inventoryReservedTopic;
@@ -44,7 +44,6 @@ public class InventoryEventPublisherAdapter implements IInventoryEventPublisherO
     }
 
     private void publishEvent(String topic, Long orderId, Object event) {
-        log.info("Publishing {} for orderId: {}", topic, orderId);
         kafkaTemplate.send(topic, String.valueOf(orderId), event)
                 .addCallback(
                         result -> log.info("Successfully published {} for orderId: {}", topic, orderId),

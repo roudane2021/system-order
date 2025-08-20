@@ -7,6 +7,7 @@ import com.roudane.order.infra_order.web.IOrderController;
 import com.roudane.order.infra_order.web.dto.*;
 import com.roudane.order.infra_order.web.mapper.IOrderMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestController
 @RequestMapping("/v1/orders")
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class OrderControllerImpl implements IOrderController {
 
     private final OrderDomain orderDomain;
 
-    @PostMapping("/create")
+    @PostMapping
     @Override
     public ResponseEntity<OrderCreateResponseDto> createOrder(@RequestBody final OrderCreateRequestDto orderCreateRequest) {
         OrderModel orderModelToCreate = IOrderMapper.INSTANCE.toModel(orderCreateRequest);
