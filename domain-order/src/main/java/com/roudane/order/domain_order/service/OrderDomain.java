@@ -5,14 +5,15 @@ import com.roudane.order.domain_order.model.OrderItemModel;
 import com.roudane.transverse.event.OrderCreatedEvent;
 import com.roudane.transverse.event.OrderItemEvent;
 import com.roudane.transverse.event.OrderShippedEvent;
-import com.roudane.order.domain_order.exception.OrderInvalidException;
-import com.roudane.order.domain_order.exception.OrderNotFoundException;
 import com.roudane.order.domain_order.model.OrderModel;
 import com.roudane.order.domain_order.model.OrderStatus;
 import com.roudane.order.domain_order.port.input.*;
 import com.roudane.order.domain_order.port.output.event.IOrderEventPublisherOutPort;
 import com.roudane.order.domain_order.port.output.logger.ILoggerPort;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
+import com.roudane.transverse.exception.BadRequestException;
+import com.roudane.transverse.exception.InternalErrorException;
+import com.roudane.transverse.exception.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -34,13 +35,13 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
      *
      * @param orderModel the order model to be created.
      * @return the created order model with its ID.
-     * @throws OrderInvalidException if the order model is null or has no items.
+     * @throws BadRequestException if the order model is null or has no items.
      */
     @Override
     public OrderModel createOrder(final OrderModel orderModel) {
         loggerPort.debug("Creating order: " + orderModel);
         if (Objects.isNull(orderModel) || CollectionUtils.isEmpty(orderModel.getItems())) {
-            throw new OrderInvalidException("OrderModel is invalid");
+            throw new BadRequestException("OrderModel is invalid");
         }
         orderModel.setStatus(OrderStatus.CREATED);
         // Enregistrement de la commande
@@ -70,7 +71,7 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         loggerPort.debug("Fetching order with ID: " + orderID);
 
         return orderPersistenceOutPort.findOrderById(orderID)
-                .orElseThrow(() -> new OrderNotFoundException("Order with ID " + orderID + " not found"));
+                .orElseThrow(() -> new NotFoundException("Order with ID " + orderID + " not found"));
     }
 
     /**
@@ -91,12 +92,12 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         loggerPort.debug("Updating order with ID: " + orderModel);
 
         if (orderModel == null || orderModel.getId() == null) {
-            throw new OrderInvalidException("OrderModel or ID is null");
+            throw new BadRequestException("OrderModel or ID is null");
         }
 
         // Vérifier si la commande existe
         OrderModel existingOrder = orderPersistenceOutPort.findOrderById(orderModel.getId())
-                .orElseThrow(() -> new OrderNotFoundException("Order with ID " + orderModel.getId() + " not found"));
+                .orElseThrow(() -> new NotFoundException("Order with ID " + orderModel.getId() + " not found"));
 
         // Mettre à jour les informations
         OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
@@ -121,7 +122,7 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
                 .orElseThrow(() -> {
                     loggerPort.warn("Order not found for cancellation: " + orderId);
-                    return new OrderNotFoundException("Order with ID " + orderId + " not found, cannot cancel.");
+                    return new NotFoundException("Order with ID " + orderId + " not found, cannot cancel.");
                 });
 
         orderModel.setStatus(OrderStatus.CANCELLED);
@@ -132,7 +133,7 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
                 .orderId(updatedOrder.getId())
                 .customerId(updatedOrder.getCustomerId())
                 .orderDate(updatedOrder.getOrderDate())
-                .items(toEventList(updatedOrder.getItems())) // Assuming items are part of the event
+                .items(toEventList(updatedOrder.getItems()))
                 .build();
         orderEventPublisherOutPort.publishOrderUpdatedEvent(event);
 
@@ -145,13 +146,13 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
                 .orElseThrow(() -> {
                     loggerPort.warn("Order not found for payment: " + orderId);
-                    return new OrderNotFoundException("Order with ID " + orderId + " not found, cannot pay.");
+                    return new NotFoundException("Order with ID " + orderId + " not found, cannot pay.");
                 });
 
         orderModel.setStatus(OrderStatus.PAID);
         OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
 
-        //orderEventPublisherOutPort.publisherEventOrder(updatedOrder); // Pass the updated order
+        //orderEventPublisherOutPort.publisherEventOrder(updatedOrder);
         loggerPort.info("Order with ID: " + orderId + " paid successfully.");
         return updatedOrder;
     }
@@ -163,7 +164,7 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
                 .orElseThrow(() -> {
                     loggerPort.warn("Order not found for confirmation: " + orderId);
-                    return new RuntimeException("Order with ID " + orderId + " not found, cannot confirm.");
+                    return new NotFoundException("Order with ID " + orderId + " not found, cannot confirm.");
                 });
 
         orderModel.setStatus(OrderStatus.PROCESSING);
@@ -180,13 +181,13 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
         OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
                 .orElseThrow(() -> {
                     loggerPort.warn("Order not found for shipping: {}" + orderId);
-                    return new RuntimeException("Order with ID " + orderId + " not found, cannot ship.");
+                    return new NotFoundException("Order with ID " + orderId + " not found, cannot ship.");
                 });
 
         if (orderModel.getStatus() != OrderStatus.PROCESSING && orderModel.getStatus() != OrderStatus.PAID) {
             loggerPort.warn("Order "+ orderId +" cannot be shipped as its status is {}" +  orderModel.getStatus());
 
-            throw new RuntimeException("Order " + orderId + " is in status " + orderModel.getStatus() + " and cannot be shipped.");
+            throw new InternalErrorException("Order " + orderId + " is in status " + orderModel.getStatus() + " and cannot be shipped.");
         }
 
 

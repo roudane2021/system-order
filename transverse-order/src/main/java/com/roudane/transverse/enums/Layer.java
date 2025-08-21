@@ -4,5 +4,6 @@ public enum Layer {
     CONTROLLER,
     CONSUMER,
     PRODUCER,
-    PERSISTENCE
+    PERSISTENCE,
+    ExceptionHandler
 }

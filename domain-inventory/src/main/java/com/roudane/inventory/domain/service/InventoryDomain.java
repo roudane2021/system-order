@@ -1,25 +1,23 @@
 package com.roudane.inventory.domain.service;
 
+import com.roudane.inventory.domain.model.InventoryItem;
 import com.roudane.inventory.domain.port.input.IGetInventoryUserCase;
 import com.roudane.inventory.domain.port.input.IHandleOrderCreatedUseCase;
 import com.roudane.inventory.domain.port.input.IHhandleOrderCancelledUseCase;
 import com.roudane.inventory.domain.port.input.IUpdateStockUserCase;
-import com.roudane.inventory.domain.port.output.logger.ILoggerPort;
+import com.roudane.inventory.domain.port.output.event.IInventoryEventPublisherOutPort;
+import com.roudane.inventory.domain.port.output.persistence.IInventoryPersistenceOutPort;
 import com.roudane.transverse.event.*;
-import com.roudane.inventory.domain.model.InventoryItem;
-import com.roudane.inventory.domain.exception.InventoryDomainException;
+import com.roudane.transverse.exception.InternalErrorException;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.ArrayList;
-
-import com.roudane.inventory.domain.port.output.event.IInventoryEventPublisherOutPort;
-import com.roudane.inventory.domain.port.output.persistence.IInventoryPersistenceOutPort;
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @RequiredArgsConstructor
 public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreatedUseCase, IHhandleOrderCancelledUseCase, IUpdateStockUserCase {
@@ -129,10 +127,10 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
     public void adjustStock(String productId, int quantityChange, String reason) {
         log.info("Adjusting stock for productId: {} by {}. Reason: {}", productId, quantityChange, reason);
         InventoryItem item = inventoryPersistenceOutPort.findByProductId(productId)
-                .orElseThrow(() -> new InventoryDomainException("Cannot adjust stock. Item not found for productId: " + productId));
+                .orElseThrow(() -> new InternalErrorException("Cannot adjust stock. Item not found for productId: " + productId));
 
         if (item.getQuantity() + quantityChange < 0) {
-            throw new InventoryDomainException("Stock adjustment for productId: " + productId + " would result in negative quantity.");
+            throw new InternalErrorException("Stock adjustment for productId: " + productId + " would result in negative quantity.");
         }
         if (quantityChange > 0) {
             item.incrementQuantity(quantityChange);
