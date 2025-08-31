@@ -2,6 +2,7 @@ package com.roudane.order.domain_order.service;
 
 
 import com.roudane.order.domain_order.model.OrderItemModel;
+import com.roudane.transverse.criteria.CriteriaApplication;
 import com.roudane.transverse.event.OrderCreatedEvent;
 import com.roudane.transverse.event.OrderItemEvent;
 import com.roudane.transverse.event.OrderShippedEvent;
@@ -14,6 +15,7 @@ import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceO
 import com.roudane.transverse.exception.BadRequestException;
 import com.roudane.transverse.exception.InternalErrorException;
 import com.roudane.transverse.exception.NotFoundException;
+import com.roudane.transverse.module.PageResult;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 
@@ -81,6 +83,12 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IList
     public Set<OrderModel> listOrder() {
         loggerPort.debug("Fetching all orders");
         return orderPersistenceOutPort.findAllOrders();
+    }
+
+    @Override
+    public PageResult<OrderModel> findOrderCriteria(final List<CriteriaApplication> criteriaApplications, final int page, final int size) {
+        loggerPort.debug("Fetching all orders");
+        return orderPersistenceOutPort.findOrderCriteria(criteriaApplications, page , size);
     }
 
     /**

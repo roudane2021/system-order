@@ -1,5 +1,6 @@
 package com.roudane.order.infra.persistence.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +24,8 @@ public class OrderItemEntity {
     private int quantity;
     private BigDecimal price;
 
-    @ManyToOne
-    // @JoinColumn(name = "order_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "order_id")
+    @JsonIgnore
     private OrderEntity order;
 }

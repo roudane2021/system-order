@@ -7,7 +7,7 @@ spring:
     username: ${BD_ORACLE_USER:rachid}
     password: ${BD_ORACLE_USER_PASSWORD:EnovaBeit@1993}
   jpa:
-    database-platform: org.hibernate.dialect.OracleDialect
+    database-platform: org.hibernate.dialect.Oracle12cDialect
     hibernate:
       ddl-auto: none # Changed from 'validate' to 'none'
     show-sql: true

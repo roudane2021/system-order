@@ -6,6 +6,8 @@ import com.roudane.order.domain_order.service.OrderDomain;
 import com.roudane.order.infra.web.IOrderController;
 import com.roudane.order.infra.web.dto.*;
 import com.roudane.order.infra.web.mapper.IOrderMapper;
+import com.roudane.transverse.criteria.CriteriaApplication;
+import com.roudane.transverse.module.PageResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -49,6 +52,15 @@ public class OrderControllerImpl implements IOrderController {
                 .map(IOrderMapper.INSTANCE::toDto)
                 .collect(Collectors.toSet());
         return ResponseEntity.ok(orderDtos);
+    }
+
+    @PostMapping("/criteria")
+    @Override
+    public ResponseEntity<PageResult<OrderDto>> listOrders(@Valid @RequestBody final List<CriteriaApplication> criteriaApplications,
+                                                           @RequestParam(name = "page", required = false, defaultValue = "0") int page,
+                                                           @RequestParam(name = "size", required = false, defaultValue = "10") int size) {
+        PageResult<OrderDto> orderModels = orderDomain.findOrderCriteria(criteriaApplications, page , size).map(IOrderMapper.INSTANCE::toDto);
+        return ResponseEntity.ok(orderModels);
     }
 
     @PutMapping("/{id}")

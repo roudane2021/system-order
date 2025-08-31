@@ -1,10 +1,14 @@
 package com.roudane.order.infra.web;
 
-// Assuming an OrderUpdateRequestDto will be created later for the update operation
 
+
+import com.roudane.order.domain_order.model.OrderModel;
 import com.roudane.order.infra.web.dto.*;
+import com.roudane.transverse.criteria.CriteriaApplication;
+import com.roudane.transverse.module.PageResult;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
 import java.util.Set;
 
 public interface IOrderController {
@@ -14,6 +18,8 @@ public interface IOrderController {
     ResponseEntity<OrderDto> retrieverOrders(final Long id);
 
     ResponseEntity<Set<OrderDto>> listOrders();
+
+    ResponseEntity<PageResult<OrderDto>> listOrders(final List<CriteriaApplication> criteriaApplications, final int page, final int size);
 
     ResponseEntity<OrderDto> updateOrder(final Long id, final OrderUpdateRequestDto orderUpdateRequestDto);
 
