@@ -27,7 +27,7 @@ public class OrderEntity {
     private OrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @ToString.Exclude // Add this
-    @EqualsAndHashCode.Exclude // Add this
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private List<OrderItemEntity> items;
 }
