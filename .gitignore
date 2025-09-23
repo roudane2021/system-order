@@ -17,3 +17,6 @@ domain-inventory/target/*
 infra-inventory/target/*
 domain-notification/target/*
 infra-notification/target/*
+order-ihm/node_modules/*
+order-ihm/.angular/*
+order-ihm/.vscode/*
