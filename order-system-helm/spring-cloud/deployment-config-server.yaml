@@ -1,0 +1,24 @@
+# spring-app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-server
+  namespace: order-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-server
+  template:
+    metadata:
+      labels:
+        app: config-server
+    spec:
+      containers:
+        - name: config-server
+          image: localhost:5000/config-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9101
+
+

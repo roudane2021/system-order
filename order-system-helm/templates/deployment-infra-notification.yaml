@@ -26,4 +26,14 @@ spec:
                 configMapKeyRef:
                   name: {{ .Values.configMap.infraNotification }}
                   key: KAFKA_BROKERS
+            - name: CONFIG_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraNotification }}
+                  key: CONFIG_SERVER_URL
+            - name: EUREKA_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraNotification }}
+                  key: EUREKA_SERVER_URL
 

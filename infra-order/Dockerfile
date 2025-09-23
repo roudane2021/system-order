@@ -1,7 +1,6 @@
-FROM eclipse-temurin:17-jdk-alpine
-WORKDIR /app
-COPY  ./target/*.jar infra-order.jar
+FROM gcr.io/distroless/java17
+COPY ./target/*.jar app.jar
 ENV SPRING_PROFILE=oracle
 
 ENV BD_ORACLE_HOST=oracle_xe
-ENTRYPOINT ["java", "-jar", "infra-order.jar"]
+ENTRYPOINT ["java", "-jar", "/app.jar"]

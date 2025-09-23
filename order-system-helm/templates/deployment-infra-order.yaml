@@ -20,6 +20,13 @@ spec:
           imagePullPolicy: {{ .Values.pods.infraOrder.imagePullPolicy  }}
           ports:
             - containerPort: {{ .Values.pods.infraOrder.port  }}
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
           env:
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
@@ -46,4 +53,14 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secret.infraOrder }}
                   key: APP_USER_PASSWORD
+            - name: CONFIG_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraOrder }}
+                  key: CONFIG_SERVER_URL
+            - name: EUREKA_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraOrder }}
+                  key: EUREKA_SERVER_URL
 

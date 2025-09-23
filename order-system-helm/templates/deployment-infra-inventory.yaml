@@ -46,4 +46,14 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secret.infraOrder }}
                   key: APP_USER_PASSWORD
+            - name: CONFIG_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraInventory }}
+                  key: CONFIG_SERVER_URL
+            - name: EUREKA_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ .Values.configMap.infraInventory }}
+                  key: EUREKA_SERVER_URL
 

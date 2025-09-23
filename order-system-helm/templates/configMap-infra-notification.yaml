@@ -5,3 +5,5 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   KAFKA_BROKERS: "kafka-broker1.infra-order-dev.svc.cluster.local:9092,kafka-broker2.infra-order-dev.svc.cluster.local:9093"
+  CONFIG_SERVER_URL: http://config-server.order-dev.svc.cluster.local
+  EUREKA_SERVER_URL: http://eureka-server.order-dev.svc.cluster.local/eureka/

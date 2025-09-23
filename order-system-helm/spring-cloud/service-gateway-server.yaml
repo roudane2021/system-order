@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-server
+  namespace: order-dev
+spec:
+  selector:
+    app: gateway-server
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 9103
+  type: ClusterIP

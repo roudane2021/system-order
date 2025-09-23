@@ -1,4 +1,4 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM gcr.io/distroless/java17
 WORKDIR /app
 COPY  ./target/*.jar infra-notification.jar
 

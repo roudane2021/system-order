@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-eureka-server
+  namespace: order-dev
+data:
+  CONFIG_SERVER_URL: http://config-server.order-dev.svc.cluster.local

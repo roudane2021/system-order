@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: infra-order
+  profiles:
+    active: oracle
+  cloud:
+    config:
+      uri: ${CONFIG_SERVER_URL:http://localhost:9101}
+      label: main
+
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%t] %X{className}::%X{methodName} - %msg%n"
