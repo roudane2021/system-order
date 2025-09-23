@@ -2,6 +2,9 @@ configMap:
   infraOrder: configmap-infra-order
   infraInventory: configmap-infra-inventory
   infraNotification: configmap-infra-notification
+  configServer: configmap-config-server
+  eurekaServer: configmap-eureka-server
+  gatewayServer: configmap-gateway-server
 
 secret:
   infraOrder: secret-infra-order
@@ -25,5 +28,17 @@ pods:
     port: 9090
     hostIngress: notification-dev.example
     image: localhost:5000/infra_notification:latest
+    imagePullPolicy: Always
+  configServer:
+    port: 9101
+    image: localhost:5000/config-server:latest
+    imagePullPolicy: Always
+  eurekaServer:
+    port: 9102
+    image: localhost:5000/eureka-server:latest
+    imagePullPolicy: Always
+  gatewayServer:
+    port: 9103
+    image: localhost:5000/gateway-server:latest
     imagePullPolicy: Always
 

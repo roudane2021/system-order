@@ -5,24 +5,16 @@ set -e
 DOCKERFILE_INFRA_INVENTORY_PATH="./infra-inventory"
 DOCKERFILE_INFRA_ORDER_PATH="./infra-order"
 DOCKERFILE_INFRA_NOTIFICATION_PATH="./infra-notification"
+DOCKERFILE_CONFIG_SERVER_PATH="./config-server"
+DOCKERFILE_EUREKA_SERVER_PATH="./eureka-server"
+DOCKERFILE_GATEWAY_SERVER_PATH="./gateway-server"
 IMAGE_INFRA_ORDER_NAME="localhost:5000/infra_order"
 IMAGE_INFRA_INVENTORY_NAME="localhost:5000/infra_inventory"
 IMAGE_INFRA_NOTIFICATION_NAME="localhost:5000/infra_notification"
+IMAGE_CONFIG_SERVER_NAME="localhost:5000/config-server"
+IMAGE_EUREKA_SERVER_NAME="localhost:5000/eureka-server"
+IMAGE_GATEWAY_NAME="localhost:5000/gateway-server"
 
-if [ ! -f "$DOCKERFILE_INFRA_ORDER_PATH/Dockerfile" ] || [ ! -r "$DOCKERFILE_INFRA_ORDER_PATH/Dockerfile" ]; then
-    echo "Erreur: $DOCKERFILE_INFRA_ORDER_PATH n'est pas lisible ou n'existe pas"
-  exit 1
-fi
-
-
-
-# 1. Vérifie et démarre minikube
-if ! minikube status | grep -q "Running"; then
-  echo "Minikube non démarré. Lancement..."
-  minikube start
-else
-  echo "Minikube déjà en cours."
-fi
 
 # 2. Active l'addon
 echo "Activation des addons registry et ingress..."
@@ -53,25 +45,65 @@ echo "Maven clean install INVENTORY"
 
 
 # 8. Build de l'image
-echo "Construction de l'image Docker..."
+echo "Construction de l'image INVENTORY Docker..."
 #docker build -t $IMAGE_INFRA_INVENTORY_NAME -f "$DOCKERFILE_INFRA_INVENTORY_PATH/Dockerfile" $DOCKERFILE_INFRA_INVENTORY_PATH
 
 # 9. Push de l'image
-echo "Push vers le registre local..."
+echo "Push vers le registre INVENTORY local..."
 #docker push $IMAGE_INFRA_INVENTORY_NAME
 
 # 10. build Maven
 echo "Maven clean install NOTIFICATION"
-mvn clean install -Dskiptests=true -f "$DOCKERFILE_INFRA_NOTIFICATION_PATH/pom.xml"
+#mvn clean install -Dskiptests=true -f "$DOCKERFILE_INFRA_NOTIFICATION_PATH/pom.xml"
 
 
 # 11. Build de l'image
-echo "Construction de l'image Docker..."
-docker build -t $IMAGE_INFRA_NOTIFICATION_NAME -f "$DOCKERFILE_INFRA_NOTIFICATION_PATH/Dockerfile" $DOCKERFILE_INFRA_NOTIFICATION_PATH
+echo "Construction de l'image NOTIFICATION Docker..."
+#docker build -t $IMAGE_INFRA_NOTIFICATION_NAME -f "$DOCKERFILE_INFRA_NOTIFICATION_PATH/Dockerfile" $DOCKERFILE_INFRA_NOTIFICATION_PATH
 
 # 12. Push de l'image
-echo "Push vers le registre local..."
-docker push $IMAGE_INFRA_NOTIFICATION_NAME
+echo "Push vers le registre NOTIFICATION local..."
+#docker push $IMAGE_INFRA_NOTIFICATION_NAME
+
+
+# 10. build Maven
+echo "Maven clean install Config Server"
+#mvn clean install -Dskiptests=true -f "$DOCKERFILE_CONFIG_SERVER_PATH/pom.xml"
+
+
+# 11. Build de l'image
+echo "Construction de l'image Config Server Docker..."
+docker build -t $IMAGE_CONFIG_SERVER_NAME -f "$DOCKERFILE_CONFIG_SERVER_PATH/Dockerfile" $DOCKERFILE_CONFIG_SERVER_PATH
+
+# 12. Push de l'image
+echo "Push vers le registre Config Server local..."
+docker push $IMAGE_CONFIG_SERVER_NAME
+
+# 10. build Maven
+echo "Maven clean install eureka Server"
+#mvn clean install -Dskiptests=true -f "$DOCKERFILE_EUREKA_SERVER_PATH/pom.xml"
+
+
+# 11. Build de l'image
+echo "Construction de l'image eureka Server Docker..."
+docker build -t $IMAGE_EUREKA_SERVER_NAME -f "$DOCKERFILE_EUREKA_SERVER_PATH/Dockerfile" $DOCKERFILE_EUREKA_SERVER_PATH
+
+# 12. Push de l'image
+echo "Push vers le registre eureka Server local..."
+docker push $IMAGE_EUREKA_SERVER_NAME
+
+# 10. build Maven
+echo "Maven clean install GATEWAY Server"
+#mvn clean install -Dskiptests=true -f "$DOCKERFILE_GATEWAY_SERVER_PATH/pom.xml"
+
+
+# 11. Build de l'image
+echo "Construction de l'image GATEWAY  Server Docker..."
+docker build -t $IMAGE_GATEWAY_NAME -f "$DOCKERFILE_GATEWAY_SERVER_PATH/Dockerfile" $DOCKERFILE_GATEWAY_SERVER_PATH
+
+# 12. Push de l'image
+echo "Push vers le registre GATEWAY  Server local..."
+docker push $IMAGE_GATEWAY_NAME
 
 # 13. Tunnel
 echo "Création du tunnel Minikube (ctrl+C pour stopper)..."

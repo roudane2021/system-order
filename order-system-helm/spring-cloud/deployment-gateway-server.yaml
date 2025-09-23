@@ -1,0 +1,34 @@
+# spring-app.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-server
+  namespace: order-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-server
+  template:
+    metadata:
+      labels:
+        app: gateway-server
+    spec:
+      containers:
+        - name: gateway-server
+          image: localhost:5000/gateway-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9103
+          env:
+            - name: CONFIG_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-gateway-server
+                  key: CONFIG_SERVER_URL
+            - name: EUREKA_SERVER_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: configmap-gateway-server
+                  key: EUREKA_SERVER_URL
+

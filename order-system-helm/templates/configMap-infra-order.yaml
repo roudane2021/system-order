@@ -8,3 +8,5 @@ data:
   KAFKA_BROKERS: "kafka-broker1.infra-order-dev.svc.cluster.local:9092,kafka-broker2.infra-order-dev.svc.cluster.local:9093"
   BD_ORACLE_HOST: oracle-xe.infra-order-dev.svc.cluster.local:1521
   APP_USER: rachid
+  CONFIG_SERVER_URL: http://config-server.order-dev.svc.cluster.local
+  EUREKA_SERVER_URL: http://eureka-server.order-dev.svc.cluster.local/eureka/
