@@ -1,0 +1,60 @@
+<ng-container *ngIf="order$ | async as orders; else loading">
+  <div class="orders-table">
+<table mat-table [dataSource]="orders" class="mat-elevation-z8">
+
+  <!-- Order Number -->
+  <ng-container matColumnDef="orderNumber">
+    <th mat-header-cell *matHeaderCellDef> Numéro </th>
+    <td mat-cell *matCellDef="let order"> {{order.orderNumber}} </td>
+  </ng-container>
+
+  <!-- Order Date -->
+  <ng-container matColumnDef="orderDate">
+    <th mat-header-cell *matHeaderCellDef> Date </th>
+    <td mat-cell *matCellDef="let order"> {{order.orderDate | date:'short'}} </td>
+  </ng-container>
+
+  <!-- Customer ID -->
+  <ng-container matColumnDef="customerId">
+    <th mat-header-cell *matHeaderCellDef> Client </th>
+    <td mat-cell *matCellDef="let order"> {{order.lastName}} </td>
+  </ng-container>
+
+  <!-- Status -->
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef> Statut </th>
+    <td mat-cell *matCellDef="let order"> {{order.status}} </td>
+  </ng-container>
+
+  <!-- Colonne Actions -->
+<ng-container matColumnDef="actions">
+  <th mat-header-cell *matHeaderCellDef> Actions </th>
+  <td mat-cell *matCellDef="let order">
+    <button mat-icon-button color="primary" (click)="viewDetails(order); $event.stopPropagation()">
+      <mat-icon>visibility</mat-icon>
+    </button>
+    <button mat-icon-button color="warn" (click)="deleteOrder(order); $event.stopPropagation()">
+      <mat-icon>delete</mat-icon>
+    </button>
+  </td>
+</ng-container>
+
+  <!-- Header & Rows -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="viewDetails(row)" ></tr>
+</table>
+</div>
+     <!-- 🔹 Bouton en bas à gauche -->
+    <div class="bottom-left">
+      <button mat-fab color="primary" (click)="createDetails()" >
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+</ng-container>
+
+<ng-template #loading>
+  <div class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Chargement des commandes...</p>
+  </div>
+</ng-template>

@@ -1,0 +1,19 @@
+<mat-sidenav-container class="sidenav-container">
+
+  <!-- 🔹 Panneau latéral -->
+  <mat-sidenav #sidePanel mode="side" position="end"  class="side-panel" [fixedInViewport]="true">
+    <!-- Conteneur pour le composant dynamique -->
+    <ng-container #dynamicHost></ng-container>
+  </mat-sidenav>
+
+  <!-- 🔹 Contenu principal -->
+  <mat-sidenav-content>
+    <app-table-filter (criteriaChange)="onCriteriaReceived($event)"></app-table-filter>
+    <app-table-display ></app-table-display>
+    <app-table-pagination (pageChange)="onPageReceived($event)"></app-table-pagination>
+
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+

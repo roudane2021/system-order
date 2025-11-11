@@ -20,3 +20,4 @@ infra-notification/target/*
 order-ihm/node_modules/*
 order-ihm/.angular/*
 order-ihm/.vscode/*
+/order-ihm/node_modules/
