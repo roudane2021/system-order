@@ -1,0 +1,67 @@
+<form [formGroup]="updateItemForm" (ngSubmit)="onSubmitForm()" novalidate>
+    <mat-dialog-content>
+        <div [formGroup]="personalInfoForm">
+            <h2>Informations personnelles</h2>
+            <mat-form-field>
+                <input matInput placeholder="Prénom" formControlName="prenom">
+                <mat-error *ngIf="personalInfoForm.get('prenom')?.invalid">{{getErrorMessage(personalInfoForm.get('prenom')! )}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Nom" formControlName="nom">
+                <mat-error *ngIf="personalInfoForm.get('nom')?.invalid">{{getErrorMessage(personalInfoForm.get('nom')! )}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Ville" formControlName="ville">
+                <mat-error *ngIf="personalInfoForm.get('ville')?.invalid">{{getErrorMessage(personalInfoForm.get('ville')! )}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Nationalité" formControlName="nationalite">
+                <mat-error *ngIf="personalInfoForm.get('nationalite')?.invalid">{{getErrorMessage(personalInfoForm.get('nationalite')! )}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Email" formControlName="email">
+                <mat-error *ngIf="personalInfoForm.get('email')?.invalid">{{getErrorMessage(personalInfoForm.get('email')! )}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput placeholder="Téléphone" formControlName="phone">
+                <mat-error *ngIf="personalInfoForm.get('phone')?.invalid">{{getErrorMessage(personalInfoForm.get('phone')! )}}</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div [formGroup]="loginInfoForm">
+            <h2>Informations de connexion</h2>
+            <mat-form-field>
+                <input matInput placeholder="Nom d'utilisateur" formControlName="username">
+                <mat-error *ngIf="loginInfoForm.get('username')?.invalid">{{getErrorMessage(loginInfoForm.get('username')! )}}</mat-error>
+            </mat-form-field>
+            <mat-form-field>
+                <input matInput type="password" placeholder="Mot de passe" formControlName="password">
+                <mat-error *ngIf="loginInfoForm.get('password')?.invalid">{{getErrorMessage(loginInfoForm.get('password')! )}}</mat-error>
+            </mat-form-field>
+        </div>
+
+        <div formArrayName="items">
+            <h2>Items</h2>
+            <button mat-stroked-button type="button" (click)="addInventoryItem()">Ajouter un item</button>
+            <div *ngFor="let item of inventoryItemsForm.controls; let i=index" [formGroupName]="i" class="item-row">
+                <mat-form-field>
+                    <input matInput placeholder="ID Produit" formControlName="productId">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="number" placeholder="Quantité" formControlName="quantity">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput type="number" placeholder="Prix" formControlName="price">
+                </mat-form-field>
+                <button mat-icon-button type="button" (click)="removeInventoryItem(i)">
+                    <mat-icon>remove_circle</mat-icon>
+                </button>
+            </div>
+        </div>
+
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-raised-button type="submit" color="primary">Enregistrer</button>
+        <button mat-raised-button type="button" (click)="onClose()">Fermer</button>
+    </mat-dialog-actions>
+</form>

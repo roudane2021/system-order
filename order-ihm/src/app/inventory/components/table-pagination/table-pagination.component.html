@@ -1,0 +1,5 @@
+<mat-paginator [length]="(page$ | async)?.totalElements"
+               [pageSize]="(page$ | async)?.size"
+               [pageIndex]="(page$ | async)?.page"
+               (page)="onPageChange($event)">
+</mat-paginator>
