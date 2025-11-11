@@ -1,0 +1,112 @@
+<mat-card [formGroup]="createOrderForm" >
+  <!-- 🔹 Bouton fermer (en haut à droite) -->
+  <div >
+    <button mat-icon-button color="warn" (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+    <mat-card-title> Creation d'une Commande</mat-card-title>
+
+  <mat-card   class="form-card" formGroupName="personalInfo" >
+        <mat-card-subtitle>Informationss personnelles</mat-card-subtitle>
+      <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="start start" class="form-row">
+            <mat-form-field appearance="fill" fxFlex="45">
+                <mat-label>Prénom</mat-label>
+                <input type="text" matInput formControlName="prenom">
+                <mat-error>Ce champ est requis</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" fxFlex="45">
+                <mat-label>Nom</mat-label>
+                <input type="text" matInput formControlName="nom">
+                <mat-error>Ce champ est requis</mat-error>
+            </mat-form-field>
+
+                 <mat-form-field appearance="fill" fxFlex="45">
+                <mat-label>Ville</mat-label>
+                <input type="text" matInput formControlName="ville">
+                <mat-error>Ce champ est requis</mat-error>
+            </mat-form-field>
+            <mat-form-field appearance="fill" fxFlex="45">
+                <mat-label>Nationalité</mat-label>
+                <input type="text" matInput formControlName="nationalite">
+                <mat-error>Ce champ est requis</mat-error>
+            </mat-form-field>
+        </div>
+          </mat-card>
+              <mat-card class="form-card">
+        <mat-card-subtitle>Comment préférez-vous que l'on vous contacte ?</mat-card-subtitle>
+        <mat-radio-group [formControl]="contactPreferenceCtrl">
+            <mat-radio-button value="email">Mail</mat-radio-button>
+            <mat-radio-button value="phone">Téléphone</mat-radio-button>
+        </mat-radio-group>
+    </mat-card>
+
+     <mat-card class="form-card" [formGroup]="emailForm" *ngIf="showEmail$|async" >
+            <mat-card-subtitle>Email</mat-card-subtitle>
+            <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="start start" class="form-row">
+                <mat-form-field appearance="fill" fxFlex="45">
+                    <mat-label>Adresse mail</mat-label>
+                    <input type="text" matInput formControlName="email">
+                    <mat-error>{{getErrorMessage(emailCtrl)}}</mat-error>
+
+                  <!--  <small class="error-text" *ngIf="emailForm.errors?.['confirmEqual'] 
+                   && (confirmEmailCtrl.touched && emailCtrl.touched)">
+                        Les deux adresses ne correspondent pas</small>-->
+                    <small class="error-text" *ngIf="showEmailError$|async"> Les deux adresses ne correspondent pas</small>
+                </mat-form-field>
+                <mat-form-field appearance="fill" fxFlex="45">
+                    <mat-label>Confirmer votre adresse mail</mat-label>
+                    <input type="text" matInput formControlName="confirmEmail">
+                    <mat-error>{{getErrorMessage(confirmEmailCtrl)}}</mat-error>
+                </mat-form-field>
+            </div>
+        </mat-card>
+
+         <mat-card class="form-card" *ngIf="showPhone$|async">
+        <mat-card-subtitle>Téléphone</mat-card-subtitle>
+        <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="start start" class="form-row">
+        <mat-form-field appearance="fill" fxFlex="45">
+            <mat-label>Numéro de téléphone</mat-label>
+            <input type="text" matInput [formControl]="phoneCtrl">
+            <mat-error>{{getErrorMessage(phoneCtrl)}}</mat-error>
+        </mat-form-field>
+        </div>
+    </mat-card>
+
+      <mat-card class="form-card" [formGroup]="loginInfoForm">
+        <mat-card-subtitle>Informations de connexion</mat-card-subtitle>
+         <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="start start" class="form-row">
+        <mat-form-field appearance="fill" fxFlex="45">
+            <mat-label>Nom d'utilisateur</mat-label>
+            <input type="text" matInput formControlName="username">
+            <mat-error>Ce champ est requis</mat-error>
+        </mat-form-field>
+        </div>
+        <div fxLayout="row wrap" fxLayoutGap="20px" fxLayoutAlign="start start" class="form-row">
+            <mat-form-field appearance="fill" fxFlex="45">
+                <mat-label>Mot de passe</mat-label>
+                <input type="password" matInput formControlName="password">
+                <mat-error>{{getErrorMessage(passwordCtrl)}}</mat-error>
+                 <small class="error-text" *ngIf="showPasswordError$|async"> Les deux passwords ne correspondent pas</small>
+            </mat-form-field>
+            <mat-form-field appearance="fill" fxFlex="45">
+                <mat-label>Confirmer votre mot de passe</mat-label>
+                <input type="password" matInput formControlName="confirmPassword">
+                <mat-error>{{getErrorMessage(confirmPasswordCtrl)}}</mat-error>
+            </mat-form-field>
+        </div>
+    </mat-card>
+    <mat-card formArrayName="items">
+  <mat-card-subtitle>Articles de la commande</mat-card-subtitle>
+  <ng-container *ngFor="let item of orderItemsForm.controls; let i = index" >
+  <app-order-item [itemForm]="getOrderItemFormGroup(i)" [index]="i" (remove)="removeOrderItem($event)">
+</app-order-item>
+  </ng-container>
+<button mat-stroked-button color="primary" (click)="addOrderItem()">Ajouter un article</button>
+</mat-card>
+
+    <mat-card-actions >
+        <button mat-flat-button color="primary"  (click)="onSubmitForm()">ENREGISTRER</button>
+    </mat-card-actions>
+     
+</mat-card>

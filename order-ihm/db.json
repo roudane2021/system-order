@@ -1,0 +1,205 @@
+{
+  "orders": {
+    "content": [
+      {
+        "orderNumber": "ORD-001",
+        "orderDate": "2025-09-25T14:30:00",
+        "firstName": "Alice",
+        "lastName": "Martin",
+        "city": "Paris",
+        "nationality": "French",
+        "email": "alice.martin@example.com",
+        "userName": "alicem",
+        "password": "pass001",
+        "status": "CONFIRMED",
+        "items": [
+          { "productId": 101, "quantity": 2, "price": 19.99 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-002",
+        "orderDate": "2025-09-24T10:15:00",
+        "firstName": "Bob",
+        "lastName": "Durand",
+        "city": "Lyon",
+        "nationality": "French",
+        "phone": "+33 6 02 02 02 02",
+        "userName": "bobd",
+        "password": "pass002",
+        "status": "SHIPPED",
+        "items": [
+          { "productId": 102, "quantity": 3, "price": 15.5 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-003",
+        "orderDate": "2025-09-23T09:00:00",
+        "firstName": "Claire",
+        "lastName": "Lemoine",
+        "city": "Marseille",
+        "nationality": "French",
+        "email": "claire.lemoine@example.com",
+        "userName": "clairel",
+        "password": "pass003",
+        "status": "NEW",
+        "items": [
+          { "productId": 103, "quantity": 1, "price": 99.99 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-004",
+        "orderDate": "2025-09-22T11:45:00",
+        "firstName": "David",
+        "lastName": "Moreau",
+        "city": "Toulouse",
+        "nationality": "French",
+        "phone": "+33 6 04 04 04 04",
+        "userName": "davidm",
+        "password": "pass004",
+        "status": "PROCESSING",
+        "items": [
+          { "productId": 104, "quantity": 2, "price": 29.99 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-005",
+        "orderDate": "2025-09-21T16:20:00",
+        "firstName": "Emma",
+        "lastName": "Bernard",
+        "city": "Nice",
+        "nationality": "French",
+        "email": "emma.bernard@example.com",
+        "userName": "emmab",
+        "password": "pass005",
+        "status": "CANCELED",
+        "items": [
+          { "productId": 105, "quantity": 1, "price": 59.99 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-006",
+        "orderDate": "2025-09-20T13:10:00",
+        "firstName": "François",
+        "lastName": "Roux",
+        "city": "Nantes",
+        "nationality": "French",
+        "phone": "+33 6 06 06 06 06",
+        "userName": "francoisr",
+        "password": "pass006",
+        "status": "DELIVERED",
+        "items": [
+          { "productId": 106, "quantity": 4, "price": 12.5 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-007",
+        "orderDate": "2025-09-19T08:40:00",
+        "firstName": "Gabrielle",
+        "lastName": "Faure",
+        "city": "Strasbourg",
+        "nationality": "French",
+        "email": "gabrielle.faure@example.com",
+        "userName": "gabriellef",
+        "password": "pass007",
+        "status": "NEW",
+        "items": [
+          { "productId": 107, "quantity": 2, "price": 34.99 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-008",
+        "orderDate": "2025-09-18T18:25:00",
+        "firstName": "Hugo",
+        "lastName": "Chevalier",
+        "city": "Bordeaux",
+        "nationality": "French",
+        "phone": "+33 6 08 08 08 08",
+        "userName": "hugoc",
+        "password": "pass008",
+        "status": "PROCESSING",
+        "items": [
+          { "productId": 108, "quantity": 1, "price": 79.99 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-009",
+        "orderDate": "2025-09-17T20:00:00",
+        "firstName": "Isabelle",
+        "lastName": "Garnier",
+        "city": "Lille",
+        "nationality": "French",
+        "email": "isabelle.garnier@example.com",
+        "userName": "isabelleg",
+        "password": "pass009",
+        "status": "CONFIRMED",
+        "items": [
+          { "productId": 109, "quantity": 3, "price": 22.0 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-010",
+        "orderDate": "2025-09-16T07:30:00",
+        "firstName": "Julien",
+        "lastName": "Perrot",
+        "city": "Grenoble",
+        "nationality": "French",
+        "phone": "+33 6 10 10 10 10",
+        "userName": "julienp",
+        "password": "pass010",
+        "status": "SHIPPED",
+        "items": [
+          { "productId": 110, "quantity": 2, "price": 45.0 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-011",
+        "orderDate": "2025-09-15T12:00:00",
+        "firstName": "Karine",
+        "lastName": "Blanc",
+        "city": "Dijon",
+        "nationality": "French",
+        "email": "karine.blanc@example.com",
+        "userName": "karineb",
+        "password": "pass011",
+        "status": "DELIVERED",
+        "items": [
+          { "productId": 111, "quantity": 1, "price": 99.0 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-012",
+        "orderDate": "2025-09-14T14:10:00",
+        "firstName": "Laurent",
+        "lastName": "Masson",
+        "city": "Tours",
+        "nationality": "French",
+        "phone": "+33 6 12 12 12 12",
+        "userName": "laurentm",
+        "password": "pass012",
+        "status": "CANCELED",
+        "items": [
+          { "productId": 112, "quantity": 2, "price": 39.99 }
+        ]
+      },
+      {
+        "orderNumber": "ORD-013",
+        "orderDate": "2025-09-13T09:55:00",
+        "firstName": "Manon",
+        "lastName": "Petit",
+        "city": "Lille",
+        "nationality": "French",
+        "email": "manon.petit@example.com",
+        "userName": "manonp",
+        "password": "pass013",
+        "status": "NEW",
+        "items": [
+          { "productId": 113, "quantity": 1, "price": 49.99 }
+        ]
+      }
+    ],
+    "page": 0,
+    "size": 13,
+    "totalElements": 13,
+    "totalPages": 1
+  }
+}

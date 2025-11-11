@@ -1,0 +1,29 @@
+<div [formGroup]="itemForm" fxLayout="row wrap" fxLayoutGap="10px" class="form-row">
+  <mat-form-field appearance="fill" fxFlex="30">
+    <mat-label>ID Produit</mat-label>
+    <input matInput type="number" formControlName="productId">
+    <mat-error >
+      Produit requis
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" fxFlex="20">
+    <mat-label>Quantité</mat-label>
+    <input matInput type="number" formControlName="quantity">
+    <mat-error >
+      Quantité ≥ 1 requise
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" fxFlex="30">
+    <mat-label>Prix</mat-label>
+    <input matInput type="number" formControlName="price">
+    <mat-error >
+      Prix ≥ 0 requis
+    </mat-error>
+  </mat-form-field>
+
+  <button mat-icon-button color="warn" (click)="onRemove()">
+    <mat-icon>delete</mat-icon>
+  </button>
+</div>

@@ -1,0 +1,16 @@
+.side-panel {
+  width: 45%;
+  max-width: 45vw; // 80% de la largeur de l’écran
+  min-width: 20em;
+  padding: 16px;
+  box-sizing: border-box;
+  overflow: auto;
+  transition: width 0.3s ease;
+}
+
+.close-button-container {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+

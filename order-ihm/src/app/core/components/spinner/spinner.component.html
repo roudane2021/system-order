@@ -1,0 +1,8 @@
+<div class="spinner-backdrop" *ngIf="spinnerService.isLoading$|async">
+  <mat-progress-spinner
+    [diameter]="diameter"
+    [color]="color"
+    mode="indeterminate">
+  </mat-progress-spinner>
+  <p>{{ message }}</p>
+</div>

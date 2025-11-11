@@ -1,0 +1,65 @@
+<div fxLayout="row" [formGroup]="filtreForm" fxLayoutGap="32px" fxLayoutAlign="start start" class="filter-row">
+
+  <div fxFlex="25" fxLayout="column" fxLayoutGap="8px">
+    <mat-form-field appearance="outline">
+      <mat-label>Nom</mat-label>
+      <input matInput formControlName="orderNumberValue" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Opérateur</mat-label>
+      <mat-select formControlName="orderNumberOperator" >
+        <mat-option *ngFor="let op of operatorOptions" [value]="op">{{ op }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div fxFlex="25" fxLayout="column" fxLayoutGap="8px">
+    <mat-form-field appearance="outline">
+      <mat-label>Statut</mat-label>
+      <input matInput formControlName="orderDateValue"/>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Opérateur</mat-label>
+      <mat-select formControlName="orderDateOperator" >
+        <mat-option *ngFor="let op of operatorOptions" [value]="op">{{ op }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div fxFlex="25" fxLayout="column" fxLayoutGap="8px">
+    <mat-form-field appearance="outline">
+      <mat-label>Quantité</mat-label>
+      <input matInput formControlName="customerIdValue" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Opérateur</mat-label>
+      <mat-select formControlName="customerIdOperator" >
+        <mat-option *ngFor="let op of operatorOptions" [value]="op">{{ op }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div fxFlex="25" fxLayout="column" fxLayoutGap="8px">
+    <mat-form-field appearance="outline">
+      <mat-label>Catégorie</mat-label>
+      <input matInput formControlName="statusValue" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Opérateur</mat-label>
+      <mat-select formControlName="statusOperator" >
+        <mat-option *ngFor="let op of operatorOptions" [value]="op">{{ op }}</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <div fxFlex="25" fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+  <button mat-raised-button color="primary" (click)="chercher()" >
+    Chercher
+  </button>
+  <button mat-stroked-button color="warn" (click)="reinitialiser()" >
+    Réinitialiser
+  </button>
+</div>
+
+
+</div>

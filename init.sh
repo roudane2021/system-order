@@ -21,9 +21,11 @@ echo "Activation des addons registry et ingress..."
 minikube addons enable registry
 minikube addons enable ingress
 
-#echo "Port-forward du registre local (localhost:5000)..."
+echo "Port-forward du registre local (localhost:5000)..."
 #k port-forward --namespace kube-system service/registry 5000:80 >/dev/null 2>&1 &
 #PORT_FORWARD_PID=$!
+
+
 
 
 # 5. build Maven
@@ -33,11 +35,11 @@ echo "Maven clean install Order"
 
 # 5. Build de l'image
 echo "Construction de l'image Docker..."
-#docker build -t $IMAGE_INFRA_ORDER_NAME -f "$DOCKERFILE_INFRA_ORDER_PATH/Dockerfile" $DOCKERFILE_INFRA_ORDER_PATH
+docker build -t $IMAGE_INFRA_ORDER_NAME -f "$DOCKERFILE_INFRA_ORDER_PATH/Dockerfile" $DOCKERFILE_INFRA_ORDER_PATH
 
 # 6. Push de l'image
 echo "Push vers le registre local..."
-#docker push $IMAGE_INFRA_ORDER_NAME
+docker push $IMAGE_INFRA_ORDER_NAME
 
 # 7. build Maven
 echo "Maven clean install INVENTORY"
@@ -46,11 +48,11 @@ echo "Maven clean install INVENTORY"
 
 # 8. Build de l'image
 echo "Construction de l'image INVENTORY Docker..."
-#docker build -t $IMAGE_INFRA_INVENTORY_NAME -f "$DOCKERFILE_INFRA_INVENTORY_PATH/Dockerfile" $DOCKERFILE_INFRA_INVENTORY_PATH
+docker build -t $IMAGE_INFRA_INVENTORY_NAME -f "$DOCKERFILE_INFRA_INVENTORY_PATH/Dockerfile" $DOCKERFILE_INFRA_INVENTORY_PATH
 
 # 9. Push de l'image
 echo "Push vers le registre INVENTORY local..."
-#docker push $IMAGE_INFRA_INVENTORY_NAME
+docker push $IMAGE_INFRA_INVENTORY_NAME
 
 # 10. build Maven
 echo "Maven clean install NOTIFICATION"
@@ -59,11 +61,11 @@ echo "Maven clean install NOTIFICATION"
 
 # 11. Build de l'image
 echo "Construction de l'image NOTIFICATION Docker..."
-#docker build -t $IMAGE_INFRA_NOTIFICATION_NAME -f "$DOCKERFILE_INFRA_NOTIFICATION_PATH/Dockerfile" $DOCKERFILE_INFRA_NOTIFICATION_PATH
+docker build -t $IMAGE_INFRA_NOTIFICATION_NAME -f "$DOCKERFILE_INFRA_NOTIFICATION_PATH/Dockerfile" $DOCKERFILE_INFRA_NOTIFICATION_PATH
 
 # 12. Push de l'image
 echo "Push vers le registre NOTIFICATION local..."
-#docker push $IMAGE_INFRA_NOTIFICATION_NAME
+docker push $IMAGE_INFRA_NOTIFICATION_NAME
 
 
 # 10. build Maven
