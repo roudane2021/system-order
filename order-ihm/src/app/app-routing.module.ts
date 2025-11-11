@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: 'order', loadChildren: () => import('./order/order.module').then(m => m.OrderModule) },
+  { path: 'inventory', loadChildren: () => import('./inventory/inventory.module').then(m => m.InventoryModule) },
   { path: '**', redirectTo: 'order'}
 ];
 
