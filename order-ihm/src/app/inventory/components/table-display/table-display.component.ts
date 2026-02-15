@@ -5,8 +5,8 @@ import { ActionService } from 'src/app/core/services/action.service';
 import { ActionType } from 'src/app/core/models/action.model';
 import { DialogService } from '../../../core/services/dialog.service';
 import { InventoryUiFacade } from '../../services/inventory.ui.facade';
-import { InventoryMessages } from '../../constants/inventory-messages';
 import { NotificationService } from '../../../core/services/notifiation.service';
+import { InventoryMessages } from '../../constants/inventory-messages';
 
 @Component({
   selector: 'app-table-display',

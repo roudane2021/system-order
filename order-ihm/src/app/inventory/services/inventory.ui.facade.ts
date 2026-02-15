@@ -1,11 +1,11 @@
 import { inject, Injectable } from "@angular/core";
 import { BehaviorSubject, catchError, combineLatest, EMPTY, map, Observable, Subject, switchMap, takeUntil, tap, throwError } from "rxjs";
 import { environment } from "src/environments/environment";
-import { AppError, Criteria, Inventory, InventoryItem, Page, PageResult } from "../models/inventory.model";
-import { FormGroup } from "@angular/forms";
+import { AppError, Criteria, Inventory, Page, PageResult } from "../models/inventory.model";
 import { InventoryBusinessFacade } from "./inventory.business.facade";
 import { DialogService } from "src/app/core/services/dialog.service";
-import { InventoryMessages } from "../constants/inventory-messages";
+import { InventoryMessages } from "srcs/app/inventory/constants/inventory-messages";
+
 
 @Injectable()
 export class InventoryUiFacade {

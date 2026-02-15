@@ -38,6 +38,18 @@ export interface Criteria {
     value: string;
 }
 
+export enum Operator {
+  EQUALS = 'EQUALS',
+  NOT_EQUALS = 'NOT_EQUALS',
+  LESS_THAN = 'LESS_THAN',
+  LESS_OR_EQUAL = 'LESS_OR_EQUAL',
+  GREATER_THAN = 'GREATER_THAN',
+  GREATER_OR_EQUAL = 'GREATER_OR_EQUAL',
+  IN = 'IN',
+  NOT_IN = 'NOT_IN',
+  LIKE = 'LIKE'
+}
+
 export interface AppError {
     message: string;
     code: number;

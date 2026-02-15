@@ -3,7 +3,9 @@ export const environment = {
   apiBaseUrl: 'http://localhost:3000',
   enableDebug: true,
   endpoints: {
-    orders: '/orders'
+    orders: '/orders',
+    inventory: '/orders'
+  
   },
   pagination: {
     defaultPage: 0,
