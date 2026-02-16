@@ -6,3 +6,9 @@ metadata:
 data:
   CONFIG_SERVER_URL: http://config-server.order-dev.svc.cluster.local
   EUREKA_SERVER_URL: http://eureka-server.order-dev.svc.cluster.local/eureka/
+  ORDER_SERVER_URL: infra-order.order-dev.svc.cluster.local
+  ORDER_PORT: 80
+  ORDER_USE_IP: false
+  INVENTORY_SERVER_URL: infra-inventory.order-dev.svc.cluster.local
+  INVENTORY_PORT: 80
+  INVENTORY_USE_IP: false
