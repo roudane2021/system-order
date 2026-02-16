@@ -1,0 +1,18 @@
+<form [formGroup]="filtreForm" (ngSubmit)="chercher()" class="filtre-container">
+    <div *ngFor="let field of fields" class="filtre-field">
+        <mat-form-field>
+            <mat-label>{{field}}</mat-label>
+            <input matInput [formControlName]="field + 'Value'">
+        </mat-form-field>
+        <mat-form-field>
+            <mat-label>Operator</mat-label>
+            <mat-select [formControlName]="field + 'Operator'">
+                <mat-option *ngFor="let op of operatorOptions" [value]="op">{{op}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="filtre-actions">
+        <button mat-raised-button color="primary" type="submit">Chercher</button>
+        <button mat-raised-button (click)="reinitialiser()">Réinitialiser</button>
+    </div>
+</form>
