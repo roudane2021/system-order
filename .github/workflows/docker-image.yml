@@ -25,7 +25,7 @@ jobs:
         run: mvn -B -DskipTests install
 
       - name: Upload JARs 
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with: 
          name: jars 
          path: '**/target/*.jar'
@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@v3
         
       - name: Download JARs 
-        uses: actions/download-artifact@v3 
+        uses: actions/download-artifact@v4
         with: 
          name: jars  #nom de dossier
 
