@@ -29,7 +29,7 @@ public class KafkaConsumerConfig {
         Map<String, Object> props = new HashMap<>();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         props.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        // Configure JsonDeserializer for the specific event type
+        // Configure JsonDeserializer for the specific event types
         JsonDeserializer<T> jsonDeserializer = new JsonDeserializer<>(eventTypeClass);
         jsonDeserializer.setRemoveTypeHeaders(false);
         jsonDeserializer.addTrustedPackages("*");
