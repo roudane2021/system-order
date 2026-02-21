@@ -16,7 +16,6 @@ jobs:
           - config-server
           - infra-order
 
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -33,6 +32,13 @@ jobs:
       - name: Skip if no changes
         if: steps.changes.outputs.changed != 'true'
         run: echo "No changes for ${{ matrix.service }}"
+
+      # 🟦 Compilation Maven AVANT le docker build
+      - name: Build JAR with Maven
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          cd ${{ matrix.service }}
+          mvn -B -DskipTests package
 
       - name: Login to Docker Hub
         if: steps.changes.outputs.changed == 'true'
