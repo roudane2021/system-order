@@ -36,7 +36,7 @@ public class KafkaConsumerConfig {
         jsonDeserializer.setUseTypeMapperForKey(true);
 
 
-        // Use ErrorHandlingDeserializer to handle potential deserialization issues
+        // Use ErrorHandlingDeserializer to handle potential deserialization  issues
         ErrorHandlingDeserializer<T> errorHandlingDeserializer = new ErrorHandlingDeserializer<>(jsonDeserializer);
 
 

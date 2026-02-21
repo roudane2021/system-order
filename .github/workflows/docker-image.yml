@@ -23,10 +23,16 @@ jobs:
 
       - name: Install all Maven modules
         run: mvn -B -DskipTests install
+
+      - name: Upload JARs 
+        uses: actions/upload-artifact@v3
+        with: 
+         name: jars 
+         path: '**/target/*.jar'
     
     outputs:
       maven_done: "true"
-      
+
   # JOB 2 : Build Docker par microservice (matrix)
   build-docker:
     needs: build-maven   # dépend du job Maven
@@ -44,6 +50,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+        
+      - name: Download JARs 
+        uses: actions/download-artifact@v3 
+        with: 
+         name: jars  #nom de dossier
 
       - name: Check if this service changed
         id: changes
