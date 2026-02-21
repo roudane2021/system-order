@@ -20,7 +20,7 @@
         <spring-cloud.version>2021.0.8</spring-cloud.version>
     </properties>
     <dependencies>
-        <!-- test 1-->
+        <!-- test -->
         <dependency>
             <groupId>com.roudane.order</groupId>
             <artifactId>domain-order</artifactId>
