@@ -35,15 +35,7 @@ jobs:
 
       - name: Build JAR with Maven
         if: steps.changes.outputs.changed == 'true'
-        run: |
-          cd transverse-order
-          mvn -B -DskipTests package
-
-      - name: Build JAR with Maven
-        if: steps.changes.outputs.changed == 'true'
-        run: |
-          cd domain-order
-          mvn -B -DskipTests package
+        run: mvn -B -DskipTests package
 
       - name: Build JAR with Maven
         if: steps.changes.outputs.changed == 'true'

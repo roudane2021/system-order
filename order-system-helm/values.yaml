@@ -17,28 +17,28 @@ pods:
   infraOrder:
     port: 8787
     hostIngress: order-dev.example
-    image: localhost:5000/infra_order:latest
+    image: roudane/infra_order:latest
     imagePullPolicy: Always
   infraInventory:
     port: 8888
     hostIngress: inventory-dev.example
-    image: localhost:5000/infra_inventory:latest
+    image: roudane/infra_inventory:latest
     imagePullPolicy: Always
   infraNotification:
     port: 9090
     hostIngress: notification-dev.example
-    image: localhost:5000/infra_notification:latest
+    image: roudane/infra_notification:latest
     imagePullPolicy: Always
   configServer:
     port: 9101
-    image: localhost:5000/config-server:latest
+    image: roudane/config-server:latest
     imagePullPolicy: Always
   eurekaServer:
     port: 9102
-    image: localhost:5000/eureka-server:latest
+    image: roudane/eureka-server:latest
     imagePullPolicy: Always
   gatewayServer:
     port: 9103
-    image: localhost:5000/gateway-server:latest
+    image: roudane/gateway-server:latest
     imagePullPolicy: Always
 
