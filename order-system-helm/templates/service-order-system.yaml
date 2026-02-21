@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-system
+  namespace: {{ .Values.namespace }}
+spec:
+  selector:
+    app: order-system
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: {{ .Values.pods.orderSystem.port  }}
+  type: ClusterIP

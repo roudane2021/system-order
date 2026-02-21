@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: gateway-server
-          image: localhost:5000/gateway-server:latest
+          image: roudane/gateway-server:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9103

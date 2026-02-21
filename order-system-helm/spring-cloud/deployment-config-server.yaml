@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: config-server
-          image: localhost:5000/config-server:latest
+          image: roudane/config-server:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9101

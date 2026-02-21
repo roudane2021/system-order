@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: eureka-server
-          image: localhost:5000/eureka-server:latest
+          image: roudane/eureka-server:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 9102
