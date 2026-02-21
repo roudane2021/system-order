@@ -6,7 +6,30 @@ on:
       - main
 
 jobs:
-  build:
+
+  # JOB 1 : Build Maven une seule fois
+  build-maven:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Cache Maven repository
+        uses: actions/cache@v3
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Install all Maven modules
+        run: mvn -B -DskipTests install
+    
+    outputs:
+      maven_done: "true"
+      
+  # JOB 2 : Build Docker par microservice (matrix)
+  build-docker:
+    needs: build-maven   # dépend du job Maven
     runs-on: ubuntu-latest
 
     strategy:
@@ -20,16 +43,7 @@ jobs:
           - infra-notification
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Cache Maven repository 
-        uses: actions/cache@v3 
-        with: 
-         path: ~/.m2/repository 
-         key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }} 
-         restore-keys: | 
-           ${{ runner.os }}-maven-
+      - uses: actions/checkout@v3
 
       - name: Check if this service changed
         id: changes
@@ -43,10 +57,6 @@ jobs:
       - name: Skip if no changes
         if: steps.changes.outputs.changed != 'true'
         run: echo "No changes for ${{ matrix.service }}"
-
-      - name: Build JAR with Maven
-        if: steps.changes.outputs.changed == 'true'
-        run: mvn -B -DskipTests package
 
       - name: Login to Docker Hub
         if: steps.changes.outputs.changed == 'true'
