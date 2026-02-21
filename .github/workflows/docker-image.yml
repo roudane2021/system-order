@@ -14,7 +14,10 @@ jobs:
         service:
           - eureka-server
           - config-server
+          - gateway-server
           - infra-order
+          - infra-inventory
+          - infra-notification
 
     steps:
       - name: Checkout code

@@ -17,17 +17,17 @@ pods:
   infraOrder:
     port: 8787
     hostIngress: order-dev.example
-    image: roudane/infra_order:latest
+    image: roudane/infra-order:latest
     imagePullPolicy: Always
   infraInventory:
     port: 8888
     hostIngress: inventory-dev.example
-    image: roudane/infra_inventory:latest
+    image: roudane/infra-inventory:latest
     imagePullPolicy: Always
   infraNotification:
     port: 9090
     hostIngress: notification-dev.example
-    image: roudane/infra_notification:latest
+    image: roudane/infra-notification:latest
     imagePullPolicy: Always
   configServer:
     port: 9101
