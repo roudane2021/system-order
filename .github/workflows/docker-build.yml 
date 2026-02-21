@@ -27,7 +27,7 @@ jobs:
         with:
           filters: |
             changed:
-              - 'microservices/${{ matrix.service }}/**'
+              - '${{ matrix.service }}/**'
               - 'frontend/**'
 
       - name: Skip if no changes
