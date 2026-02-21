@@ -33,6 +33,12 @@ jobs:
         if: steps.changes.outputs.changed != 'true'
         run: echo "No changes for ${{ matrix.service }}"
 
+      - name: Build JAR with Maven
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          cd domain-order
+          mvn -B -DskipTests package
+
       # 🟦 Compilation Maven AVANT le docker build
       - name: Build JAR with Maven
         if: steps.changes.outputs.changed == 'true'
