@@ -27,6 +27,11 @@
     <!-- Notification -->
     <module>infra-notification</module>
     <module>domain-notification</module>
+
+    <module>config-server</module>
+    <module>eureka-server</module>
+    <module>gateway-server</module>
+
   </modules>
 
   <dependencyManagement>
