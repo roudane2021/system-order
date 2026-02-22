@@ -63,7 +63,7 @@ jobs:
           filters: |
             changed:
               - '${{ matrix.service }}/**'
-              - 'frontend/**'
+              - 'order-ihm/**'
 
       - name: Skip if no changes
         if: steps.changes.outputs.changed != 'true'

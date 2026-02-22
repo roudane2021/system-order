@@ -1,5 +1,5 @@
 <mat-card [formGroup]="createOrderForm" >
-  <!-- 🔹 Bouton fermer (en haut à droite) -->
+  <!-- 🔹 Bouton fermer (en haut à droite) dd-->
   <div >
     <button mat-icon-button color="warn" (click)="onClose()">
       <mat-icon>close</mat-icon>
@@ -49,7 +49,7 @@
                     <input type="text" matInput formControlName="email">
                     <mat-error>{{getErrorMessage(emailCtrl)}}</mat-error>
 
-                  <!--  <small class="error-text" *ngIf="emailForm.errors?.['confirmEqual'] 
+                  <!--  <small class="error-text" *ngIf="emailForm.errors?.['confirmEqual']
                    && (confirmEmailCtrl.touched && emailCtrl.touched)">
                         Les deux adresses ne correspondent pas</small>-->
                     <small class="error-text" *ngIf="showEmailError$|async"> Les deux adresses ne correspondent pas</small>
@@ -108,5 +108,5 @@
     <mat-card-actions >
         <button mat-flat-button color="primary"  (click)="onSubmitForm()">ENREGISTRER</button>
     </mat-card-actions>
-     
+
 </mat-card>
