@@ -26,7 +26,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase, IListOrderUseCase, IUpdateOrderUseCase, ICancelOrderUseCase, IPayOrderUseCase, IConfirmOrderUseCase, IShipOrderUseCase {
+public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
+        IListOrderUseCase, IUpdateOrderUseCase, ICancelOrderUseCase,
+        IPayOrderUseCase, IConfirmOrderUseCase, IShipOrderUseCase {
 
     private final IOrderEventPublisherOutPort orderEventPublisherOutPort;
     private final IOrderPersistenceOutPort orderPersistenceOutPort;

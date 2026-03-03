@@ -13,11 +13,23 @@ spec:
       labels:
         app: oracle-xe
     spec:
+      initContainers:
+        - name: fix-permissions
+          image: busybox
+          command:
+            - sh
+            - -c
+            - "mkdir -p /opt/oracle/oradata && chown -R 54321:54321 /opt/oracle/oradata"
+          volumeMounts:
+            - name: oracle-volume
+              mountPath: /opt/oracle/oradata
+
       containers:
         - name: oracle-xe
           image: gvenzl/oracle-xe
           ports:
             - containerPort: 1521
+
           env:
             - name: ORACLE_PASSWORD
               valueFrom:

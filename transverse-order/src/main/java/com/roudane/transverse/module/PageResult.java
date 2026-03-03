@@ -25,7 +25,7 @@ public class PageResult<T> {
 
     public <R> PageResult<R> map(Function<T, R> mapper) {
 
-        List<R> mappedContent= Optional.ofNullable(this.content)
+        List<R> mappedContent = Optional.ofNullable(this.content)
                 .orElseGet(ArrayList::new)
                 .stream()
                 .map(mapper)

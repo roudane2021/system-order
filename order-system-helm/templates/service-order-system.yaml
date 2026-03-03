@@ -9,5 +9,5 @@ spec:
   ports:
     - protocol: TCP
       port: 80
-      targetPort: {{ .Values.pods.orderSystem.port  }}
+      targetPort: {{ .Values.pods.infraOrder.port  }}
   type: ClusterIP
