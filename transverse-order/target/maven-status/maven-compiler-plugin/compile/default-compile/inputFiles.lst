@@ -1,0 +1,17 @@
+/app/transverse-order/src/main/java/com/roudane/transverse/criteria/CriteriaApplication.java
+/app/transverse-order/src/main/java/com/roudane/transverse/module/Field.java
+/app/transverse-order/src/main/java/com/roudane/transverse/criteria/OperatorApplication.java
+/app/transverse-order/src/main/java/com/roudane/transverse/event/OrderShippedEvent.java
+/app/transverse-order/src/main/java/com/roudane/transverse/exception/NotFoundException.java
+/app/transverse-order/src/main/java/com/roudane/transverse/event/OrderCancelledEvent.java
+/app/transverse-order/src/main/java/com/roudane/transverse/module/ApiError.java
+/app/transverse-order/src/main/java/com/roudane/transverse/exception/InternalErrorException.java
+/app/transverse-order/src/main/java/com/roudane/transverse/event/OrderCreatedEvent.java
+/app/transverse-order/src/main/java/com/roudane/transverse/event/InventoryDepletedEvent.java
+/app/transverse-order/src/main/java/com/roudane/transverse/enums/Layer.java
+/app/transverse-order/src/main/java/com/roudane/transverse/enums/ErrorCode.java
+/app/transverse-order/src/main/java/com/roudane/transverse/exception/BusinessException.java
+/app/transverse-order/src/main/java/com/roudane/transverse/exception/BadRequestException.java
+/app/transverse-order/src/main/java/com/roudane/transverse/event/OrderItemEvent.java
+/app/transverse-order/src/main/java/com/roudane/transverse/event/InventoryReservedEvent.java
+/app/transverse-order/src/main/java/com/roudane/transverse/module/PageResult.java

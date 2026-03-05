@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003
+      author: Jules
+      changes:
+        - sqlFile:
+            path: db/changelog/sql/003-outbox-schema.sql
+            relativeToChangelogFile: false

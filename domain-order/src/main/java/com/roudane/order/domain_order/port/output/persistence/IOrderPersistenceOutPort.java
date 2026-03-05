@@ -15,5 +15,6 @@ public interface IOrderPersistenceOutPort {
     OrderModel getOrder(final Long orderID);
     OrderModel createOrder(final OrderModel orderModel);
     Optional<OrderModel> findOrderById(final Long orderID);
+    void saveOutbox(com.roudane.order.domain_order.model.OutboxModel outboxModel);
 
 }

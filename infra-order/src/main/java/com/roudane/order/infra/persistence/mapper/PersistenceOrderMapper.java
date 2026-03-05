@@ -2,8 +2,10 @@ package com.roudane.order.infra.persistence.mapper;
 
 import com.roudane.order.domain_order.model.OrderItemModel;
 import com.roudane.order.domain_order.model.OrderModel;
+import com.roudane.order.domain_order.model.OutboxModel;
 import com.roudane.order.infra.persistence.entity.OrderEntity;
 import com.roudane.order.infra.persistence.entity.OrderItemEntity;
+import com.roudane.order.infra.persistence.entity.OutboxEntity;
 import com.roudane.transverse.module.PageResult;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -31,6 +33,12 @@ public interface PersistenceOrderMapper {
 
     OrderModel toModel(OrderEntity orderEntity);
     List<OrderModel> toOrderModelList(List<OrderEntity> orderItemEntities);
+
+    @Mapping(target = "payload", ignore = true)
+    OutboxEntity toEntity(OutboxModel outboxModel);
+
+    @Mapping(target = "payload", ignore = true)
+    OutboxModel toModel(OutboxEntity outboxEntity);
 
     default PageResult<OrderModel> toPageResult(Page<OrderEntity> entityPage) {
         return PageResult.<OrderModel>builder()

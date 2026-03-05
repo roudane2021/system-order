@@ -1,11 +1,18 @@
 package com.roudane.order.infra.persistence;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.roudane.order.domain_order.model.OrderModel;
+import com.roudane.order.domain_order.model.OutboxModel;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
 import com.roudane.order.infra.persistence.entity.OrderEntity;
+import com.roudane.order.infra.persistence.entity.OutboxEntity;
 import com.roudane.order.infra.persistence.mapper.PersistenceOrderMapper;
 import com.roudane.order.infra.persistence.repository.OrderJpaRepository;
+import com.roudane.order.infra.persistence.repository.OutboxJpaRepository;
 import com.roudane.transverse.criteria.CriteriaApplication;
+import com.roudane.transverse.exception.InternalErrorException;
 import com.roudane.transverse.criteria.OperatorApplication;
 import com.roudane.transverse.exception.NotFoundException;
 import com.roudane.transverse.module.PageResult;
@@ -31,6 +38,8 @@ import java.util.stream.Collectors;
 public class OrderPersistenceAdapter implements IOrderPersistenceOutPort {
 
     private final OrderJpaRepository orderJpaRepository;
+    private final OutboxJpaRepository outboxJpaRepository;
+    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -84,6 +93,34 @@ public class OrderPersistenceAdapter implements IOrderPersistenceOutPort {
         }
         OrderEntity updatedEntity = orderJpaRepository.save(orderEntity);
         return PersistenceOrderMapper.INSTANCE.toModel(updatedEntity);
+    }
+
+    @Override
+    public void saveOutbox(OutboxModel outboxModel) {
+        OutboxEntity outboxEntity = PersistenceOrderMapper.INSTANCE.toEntity(outboxModel);
+        try {
+            outboxEntity.setPayload(objectMapper.writeValueAsString(outboxModel.getPayload()));
+        } catch (JsonProcessingException e) {
+            throw new InternalErrorException("Error serializing outbox payload: " + e.getMessage());
+        }
+        outboxJpaRepository.save(outboxEntity);
+    }
+
+    public List<OutboxModel> findPendingOutboxMessages() {
+        return outboxJpaRepository.findUnprocessedForUpdate().stream()
+                .map(entity -> {
+                    OutboxModel model = PersistenceOrderMapper.INSTANCE.toModel(entity);
+                    model.setPayload(entity.getPayload()); // Keep as String for OutboxProcessor to parse
+                    return model;
+                })
+                .collect(Collectors.toList());
+    }
+
+    public void markOutboxAsProcessed(Long id) {
+        outboxJpaRepository.findById(id).ifPresent(outboxEntity -> {
+            outboxEntity.setProcessed(true);
+            outboxJpaRepository.save(outboxEntity);
+        });
     }
 
     private Specification<OrderEntity> constructCriteria(final List<CriteriaApplication> criteriaApplications) {

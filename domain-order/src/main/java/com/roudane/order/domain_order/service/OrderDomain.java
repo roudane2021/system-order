@@ -2,6 +2,7 @@ package com.roudane.order.domain_order.service;
 
 
 import com.roudane.order.domain_order.model.OrderItemModel;
+import com.roudane.order.domain_order.model.OutboxModel;
 import com.roudane.transverse.criteria.CriteriaApplication;
 import com.roudane.transverse.event.*;
 import com.roudane.order.domain_order.model.OrderModel;
@@ -49,16 +50,24 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
         // Enregistrement de la commande
         final OrderModel savedOrder = orderPersistenceOutPort.createOrder(orderModel);
 
-
-
-        // Publish OrderCreatedEvent
+        // Publish OrderCreatedEvent via Outbox
         OrderCreatedEvent event = OrderCreatedEvent.builder()
                 .orderId(savedOrder.getId())
                 .customerId(savedOrder.getCustomerId())
                 .orderDate(savedOrder.getOrderDate())
                 .items(toEventList(savedOrder.getItems()))
                 .build();
-        orderEventPublisherOutPort.publishOrderCreatedEvent(event);
+
+        OutboxModel outboxModel = OutboxModel.builder()
+                .aggregateId(String.valueOf(savedOrder.getId()))
+                .aggregateType("ORDER")
+                .eventType("OrderCreatedEvent")
+                .payload(event)
+                .createdAt(LocalDateTime.now())
+                .processed(false)
+                .build();
+
+        orderPersistenceOutPort.saveOutbox(outboxModel);
 
         loggerPort.info("Order created successfully with ID: " + savedOrder.getId());
         return savedOrder;
