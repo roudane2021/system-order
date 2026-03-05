@@ -22,13 +22,13 @@ public class OrderEventConsumer {
 
     }
 
-    @KafkaListener(topics = "${order.events.topic.created}", containerFactory = "orderCreatedEventContainerFactory")
+    @KafkaListener(topics = "${order.events.topic.created}", containerFactory = "genericKafkaListenerContainerFactory")
     public void handleOrderCreated(OrderCreatedEvent event) {
             inventoryDomain.handleOrderCreated(event);
 
     }
 
-    @KafkaListener(topics = "${order.events.topic.cancelled}", containerFactory = "orderCancelledEventContainerFactory")
+    @KafkaListener(topics = "${order.events.topic.cancelled}", containerFactory = "genericKafkaListenerContainerFactory")
     public void handleOrderCancelled(OrderCancelledEvent event) {
             inventoryDomain.handleOrderCancelled(event);
     }
