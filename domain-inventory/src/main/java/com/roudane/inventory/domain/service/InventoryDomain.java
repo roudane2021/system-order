@@ -70,7 +70,10 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
 
         inventoryPersistenceOutPort.saveAll(itemsToUpdate);
         log.info("Inventory reserved successfully for orderId: {}. Items: {}", event.getOrderId(), successfullyReservedItems);
-        eventPublisherPort.publish(InventoryReservedEvent.builder().orderId(event.getOrderId()).reservationConfirmed(true).build());
+        eventPublisherPort.publish(InventoryReservedEvent.builder()
+                .orderId(event.getOrderId())
+                .reservationConfirmed(true)
+                .build());
     }
 
     @Override

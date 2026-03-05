@@ -3,9 +3,7 @@ package com.roudane.order.domain_order.service;
 
 import com.roudane.order.domain_order.model.OrderItemModel;
 import com.roudane.transverse.criteria.CriteriaApplication;
-import com.roudane.transverse.event.OrderCreatedEvent;
-import com.roudane.transverse.event.OrderItemEvent;
-import com.roudane.transverse.event.OrderShippedEvent;
+import com.roudane.transverse.event.*;
 import com.roudane.order.domain_order.model.OrderModel;
 import com.roudane.order.domain_order.model.OrderStatus;
 import com.roudane.order.domain_order.port.input.*;
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
         IListOrderUseCase, IUpdateOrderUseCase, ICancelOrderUseCase,
-        IPayOrderUseCase, IConfirmOrderUseCase, IShipOrderUseCase {
+        IPayOrderUseCase, IConfirmOrderUseCase, IShipOrderUseCase, IDepletedOrderUseCase {
 
     private final IOrderEventPublisherOutPort orderEventPublisherOutPort;
     private final IOrderPersistenceOutPort orderPersistenceOutPort;
@@ -169,20 +167,34 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
 
 
     @Override
-    public OrderModel confirmOrder(Long orderId) {
+    public OrderModel confirmOrder(final InventoryReservedEvent event) {
+
+        Objects.requireNonNull(event, "InventoryReservedEvent must not be null");
+        Objects.requireNonNull(event.getOrderId(), "orderId must not be null");
+
+        final Long orderId = event.getOrderId();
+
         loggerPort.info("Attempting to confirm order with ID: " + orderId);
-        OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
+
+        final OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
                 .orElseThrow(() -> {
                     loggerPort.warn("Order not found for confirmation: " + orderId);
                     return new NotFoundException("Order with ID " + orderId + " not found, cannot confirm.");
                 });
 
-        orderModel.setStatus(OrderStatus.PROCESSING);
-        OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
+        if (!event.isReservationConfirmed()) {
+            loggerPort.warn("Reservation not confirmed for orderId: {}. Cannot confirm order." +  orderId);
+            throw new NotFoundException("Inventory reservation not confirmed for orderId " + orderId);
+        }
 
-        loggerPort.info("Order with ID: " + orderId + " confirmed successfully, status set to PROCESSING.");
+        orderModel.setStatus(OrderStatus.PROCESSING);
+        final OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
+
+        loggerPort.info("Order with ID: {} confirmed successfully, status set to PROCESSING." + orderId);
+
         return updatedOrder;
     }
+
 
 
     @Override
@@ -227,4 +239,29 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
                         .build())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public OrderModel depletedOrder(final InventoryDepletedEvent event) {
+
+        Objects.requireNonNull(event, "InventoryDepletedEvent must not be null");
+        Objects.requireNonNull(event.getOrderId(), "orderId must not be null");
+
+        final Long orderId = event.getOrderId();
+
+        loggerPort.info("Attempting to mark order as DEPLETED for ID: " + orderId);
+
+        final OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
+                .orElseThrow(() -> {
+                    loggerPort.warn("Order not found for depletion: " + orderId);
+                    return new NotFoundException("Order with ID " + orderId + " not found, cannot mark as depleted.");
+                });
+
+        orderModel.setStatus(OrderStatus.DECLINED);
+        final OrderModel updatedOrder = orderPersistenceOutPort.updateOrder(orderModel);
+
+        loggerPort.info("Order with ID: " + orderId + " marked as DEPLETED successfully.");
+
+        return updatedOrder;
+    }
+
 }
