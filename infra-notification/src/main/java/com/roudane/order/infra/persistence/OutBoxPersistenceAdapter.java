@@ -1,22 +1,20 @@
 package com.roudane.order.infra.persistence;
 
-import com.roudane.transverse.model.OutboxModel;
-import com.roudane.order.domain_order.port.output.persistence.IOutBoxPersistenceOutPort;
+import com.roudane.order.domain_notification.port.output.persistence.IOutBoxPersistenceOutPort;
 import com.roudane.order.infra.persistence.entity.OutboxEntity;
 import com.roudane.order.infra.persistence.mapper.PersistenceOutBoxMapper;
 import com.roudane.order.infra.persistence.repository.OutboxJpaRepository;
 import com.roudane.transverse.enums.OutboxStatus;
+import com.roudane.transverse.model.OutboxModel;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.springframework.data.repository.query.Param;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import java.time.Duration;
 import java.util.List;
 
 @Component
@@ -31,15 +29,13 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
 
     @Override
     public void saveEvent(OutboxModel outboxModel) {
-        final OutboxEntity  outboxEntity = persistenceOutBoxMapper.toEntity(outboxModel);
-         outboxJpaRepository.save(outboxEntity);
+        final OutboxEntity outboxEntity = persistenceOutBoxMapper.toEntity(outboxModel);
+        outboxJpaRepository.save(outboxEntity);
     }
 
     @Override
     @Transactional
-    public List<OutboxModel> lockNextEvents(int limit,  int maxRetries, int delay) {
-
-        // 1. Récupérer les IDs des NEW (sans verrou)
+    public List<OutboxModel> lockNextEvents(int limit, int maxRetries, int delay) {
         List<Long> ids = outboxJpaRepository.findNextNewEvents(limit, maxRetries, delay)
                 .stream()
                 .map(OutboxEntity::getId)
@@ -49,7 +45,6 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
             return List.of();
         }
 
-        // 2. Verrouiller réellement les lignes (SKIP LOCKED)
         List<OutboxEntity> locked = entityManager.createNativeQuery("""
             SELECT *
             FROM outbox
@@ -60,16 +55,12 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
                 .getResultList();
 
         if (CollectionUtils.isEmpty(locked)) {
-            return List.of(); // un autre pod les a prises
+            return List.of();
         }
 
-        // 3. Mise en PROCESSING dans la même transaction
         locked.forEach(e -> e.setStatus(OutboxStatus.PROCESSING));
-
-        // forcer l’UPDATE avant libération des verrous Oracle
         entityManager.flush();
 
-        // 4. Conversion en modèle
         return locked.stream()
                 .map(OutboxEntity::toModel)
                 .toList();
@@ -85,7 +76,6 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
         entity.setRetryCount(entity.getRetryCount() + 1);
         entity.setErrorMessage(e.getMessage());
         entity.setErrorStacktrace(ExceptionUtils.getStackTrace(e));
-
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -98,5 +88,4 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
         entity.setErrorMessage(null);
         entity.setErrorStacktrace(null);
     }
-
 }

@@ -2,7 +2,7 @@ package com.roudane.order.domain_order.service;
 
 
 import com.roudane.order.domain_order.model.OrderItemModel;
-import com.roudane.order.domain_order.model.OutboxModel;
+import com.roudane.transverse.model.OutboxModel;
 import com.roudane.order.domain_order.port.output.json.IJsonOutPort;
 import com.roudane.order.domain_order.port.output.persistence.IOutBoxPersistenceOutPort;
 import com.roudane.transverse.criteria.CriteriaApplication;

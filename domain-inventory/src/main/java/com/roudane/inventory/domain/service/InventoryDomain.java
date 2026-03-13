@@ -5,10 +5,14 @@ import com.roudane.inventory.domain.port.input.IGetInventoryUserCase;
 import com.roudane.inventory.domain.port.input.IHandleOrderCreatedUseCase;
 import com.roudane.inventory.domain.port.input.IHhandleOrderCancelledUseCase;
 import com.roudane.inventory.domain.port.input.IUpdateStockUserCase;
-import com.roudane.inventory.domain.port.output.event.IInventoryEventPublisherOutPort;
+import com.roudane.inventory.domain.port.output.json.IJsonOutPort;
 import com.roudane.inventory.domain.port.output.persistence.IInventoryPersistenceOutPort;
+import com.roudane.inventory.domain.port.output.persistence.IOutBoxPersistenceOutPort;
+import com.roudane.transverse.enums.OutboxStatus;
 import com.roudane.transverse.event.*;
+import com.roudane.transverse.event.enums.OrderEventType;
 import com.roudane.transverse.exception.InternalErrorException;
+import com.roudane.transverse.model.OutboxModel;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +29,8 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
     private static final Logger log = LoggerFactory.getLogger(InventoryDomain.class);
 
     private final IInventoryPersistenceOutPort inventoryPersistenceOutPort;
-    private final IInventoryEventPublisherOutPort eventPublisherPort;
+    private final IOutBoxPersistenceOutPort outBoxPersistenceOutPort;
+    private final IJsonOutPort jsonOutPort;
 
 
 
@@ -35,7 +40,7 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
         List<OrderItemEvent> requestedItems = event.getItems();
         if (requestedItems == null || requestedItems.isEmpty()) {
             log.warn("OrderCreatedEvent for orderId: {} has no items.", event.getOrderId());
-            eventPublisherPort.publish(InventoryReservedEvent.builder().orderId(event.getOrderId()).reservationConfirmed(false).build());
+            publishEvent(InventoryReservedEvent.builder().orderId(event.getOrderId()).reservationConfirmed(false).build());
             return;
         }
 
@@ -59,7 +64,7 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
                                                        requestedItem.getQuantity(),
                                                        inventoryItem == null ? 0 : inventoryItem.getQuantity());
                 log.warn(depletionReason + " for orderId: {}", event.getOrderId());
-                eventPublisherPort.publish(new InventoryDepletedEvent(event.getOrderId(), depletionReason, requestedItems));
+                publishEvent(new InventoryDepletedEvent(event.getOrderId(), depletionReason, requestedItems));
                 return;
             }
 
@@ -70,10 +75,33 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
 
         inventoryPersistenceOutPort.saveAll(itemsToUpdate);
         log.info("Inventory reserved successfully for orderId: {}. Items: {}", event.getOrderId(), successfullyReservedItems);
-        eventPublisherPort.publish(InventoryReservedEvent.builder()
+        publishEvent(InventoryReservedEvent.builder()
                 .orderId(event.getOrderId())
                 .reservationConfirmed(true)
                 .build());
+    }
+
+    private void publishEvent(Object event) {
+        Long orderId = null;
+        OrderEventType eventType = null;
+        if (event instanceof InventoryReservedEvent e) {
+            orderId = e.getOrderId();
+            eventType = OrderEventType.INVENTORY_RESERVED;
+        } else if (event instanceof InventoryDepletedEvent e) {
+            orderId = e.getOrderId();
+            eventType = OrderEventType.INVENTORY_DEPLETED;
+        }
+
+        OutboxModel outboxModel = OutboxModel.builder()
+                .aggregateId(String.valueOf(orderId))
+                .aggregateType("INVENTORY")
+                .eventType(eventType)
+                .createdAt(java.time.LocalDateTime.now())
+                .status(OutboxStatus.NEW)
+                .payload(jsonOutPort.toJson(event))
+                .build();
+
+        outBoxPersistenceOutPort.saveEvent(outboxModel);
     }
 
     @Override

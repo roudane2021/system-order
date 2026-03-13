@@ -16,8 +16,10 @@
     <description>Inventory infrastructure layer for the Order System</description>
     <properties>
         <mapstruct-version>1.6.3</mapstruct-version>
-        <lombok-version>1.18.28</lombok-version>
+        <lombok-version>1.18.36</lombok-version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
     <dependencies>
         <dependency>
@@ -73,6 +75,11 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.kafka</groupId>

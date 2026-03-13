@@ -1,8 +1,8 @@
-package com.roudane.order.infra.persistence.entity;
+package com.roudane.inventory.infra.persistence.entity;
 
-import com.roudane.transverse.model.OutboxModel;
 import com.roudane.transverse.enums.OutboxStatus;
 import com.roudane.transverse.event.enums.OrderEventType;
+import com.roudane.transverse.model.OutboxModel;
 import lombok.*;
 
 import javax.persistence.*;
@@ -43,7 +43,7 @@ public class OutboxEntity {
 
     @Column
     @Enumerated(EnumType.STRING)
-    private  OutboxStatus status;
+    private OutboxStatus status;
 
     @Column(name = "retry_count", nullable = false)
     private int retryCount = 0;
@@ -57,7 +57,6 @@ public class OutboxEntity {
     @Column(name = "error_stacktrace")
     @Lob
     private String errorStacktrace;
-
 
     @PrePersist
     public void prePersist() {
