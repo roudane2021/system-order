@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 003-create-outbox-table
+      author: jules
+      changes:
+        - sqlFile:
+            path: db/changelog/changes/003-outbox-schema.sql
+            relativeToChangelogFile: false

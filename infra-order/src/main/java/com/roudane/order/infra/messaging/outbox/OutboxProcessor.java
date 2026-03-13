@@ -2,7 +2,7 @@ package com.roudane.order.infra.messaging.outbox;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.roudane.order.domain_order.model.OutboxModel;
+import com.roudane.transverse.model.OutboxModel;
 import com.roudane.order.domain_order.port.output.event.IOrderEventPublisherOutPort;
 import com.roudane.order.domain_order.port.output.json.IJsonOutPort;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
@@ -66,6 +66,11 @@ public class OutboxProcessor {
                     case ORDER_CANCELLED:
                         OrderCancelledEvent cancelled = (OrderCancelledEvent) jsonOutPort.readValue((String) event.getPayload(), OrderCancelledEvent.class);
                         orderEventPublisherOutPort.publishOrderCancelledEvent(cancelled);
+                        break;
+
+                    case ORDER_UPDATED:
+                        OrderCreatedEvent updated = (OrderCreatedEvent) jsonOutPort.readValue((String) event.getPayload(), OrderCreatedEvent.class);
+                        orderEventPublisherOutPort.publishOrderUpdatedEvent(updated);
                         break;
                 }
 

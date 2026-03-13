@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.roudane.order.domain_order.model.OrderItemModel;
 import com.roudane.order.domain_order.model.OrderModel;
-import com.roudane.order.domain_order.model.OutboxModel;
+import com.roudane.transverse.model.OutboxModel;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
 import com.roudane.order.infra.persistence.entity.OrderEntity;
 import com.roudane.order.infra.persistence.entity.OrderItemEntity;

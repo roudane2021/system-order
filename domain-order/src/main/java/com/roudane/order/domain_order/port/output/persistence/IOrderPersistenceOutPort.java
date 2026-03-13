@@ -1,7 +1,7 @@
 package com.roudane.order.domain_order.port.output.persistence;
 
 import com.roudane.order.domain_order.model.OrderModel;
-import com.roudane.order.domain_order.model.OutboxModel;
+import com.roudane.transverse.model.OutboxModel;
 import com.roudane.transverse.criteria.CriteriaApplication;
 import com.roudane.transverse.enums.OutboxStatus;
 import com.roudane.transverse.module.PageResult;

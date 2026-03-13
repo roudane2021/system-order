@@ -1,5 +1,7 @@
 package com.roudane.order.infra_notification.transverse.config;
 
+import com.roudane.order.domain_notification.port.output.json.IJsonOutPort;
+import com.roudane.order.domain_notification.port.output.persistence.IOutBoxPersistenceOutPort;
 import com.roudane.order.domain_notification.service.NotificationDomain;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class DomainBeanFactory {
 
     @Bean
-    public NotificationDomain inventoryDomain() {
-        return new NotificationDomain();
+    public NotificationDomain notificationDomain(IOutBoxPersistenceOutPort outBoxPersistenceOutPort, IJsonOutPort jsonOutPort) {
+        return new NotificationDomain(outBoxPersistenceOutPort, jsonOutPort);
     }
 }
