@@ -1,12 +1,13 @@
 com/roudane/transverse/event/InventoryReservedEvent.class
 com/roudane/transverse/module/PageResult$PageResultBuilder.class
 com/roudane/transverse/event/InventoryDepletedEvent$InventoryDepletedEventBuilder.class
+com/roudane/transverse/event/enums/OrderEventType.class
 com/roudane/transverse/module/ApiError$ApiErrorBuilder.class
 com/roudane/transverse/exception/InternalErrorException.class
-com/roudane/transverse/event/OrderItemEvent.class
 com/roudane/transverse/event/OrderCancelledEvent$OrderCancelledEventBuilder.class
-com/roudane/transverse/event/OrderItemEvent$OrderItemEventBuilder.class
+com/roudane/transverse/event/OrderItemEvent.class
 com/roudane/transverse/exception/BusinessException.class
+com/roudane/transverse/event/OrderItemEvent$OrderItemEventBuilder.class
 com/roudane/transverse/criteria/CriteriaApplication$CriteriaApplicationBuilder.class
 com/roudane/transverse/event/OrderShippedEvent$OrderShippedEventBuilder.class
 com/roudane/transverse/module/PageResult.class
@@ -18,6 +19,7 @@ com/roudane/transverse/exception/BadRequestException.class
 com/roudane/transverse/event/OrderShippedEvent.class
 com/roudane/transverse/criteria/OperatorApplication.class
 com/roudane/transverse/enums/Layer.class
+com/roudane/transverse/enums/OutboxStatus.class
 com/roudane/transverse/event/OrderCreatedEvent$OrderCreatedEventBuilder.class
 com/roudane/transverse/enums/ErrorCode.class
 com/roudane/transverse/module/ApiError.class

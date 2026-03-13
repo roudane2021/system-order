@@ -3,15 +3,21 @@ package com.roudane.order.infra.persistence;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.roudane.order.domain_order.model.OrderItemModel;
 import com.roudane.order.domain_order.model.OrderModel;
 import com.roudane.order.domain_order.model.OutboxModel;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
 import com.roudane.order.infra.persistence.entity.OrderEntity;
+import com.roudane.order.infra.persistence.entity.OrderItemEntity;
 import com.roudane.order.infra.persistence.entity.OutboxEntity;
 import com.roudane.order.infra.persistence.mapper.PersistenceOrderMapper;
 import com.roudane.order.infra.persistence.repository.OrderJpaRepository;
 import com.roudane.order.infra.persistence.repository.OutboxJpaRepository;
 import com.roudane.transverse.criteria.CriteriaApplication;
+import com.roudane.transverse.enums.OutboxStatus;
+import com.roudane.transverse.event.OrderCreatedEvent;
+import com.roudane.transverse.event.OrderItemEvent;
+import com.roudane.transverse.event.enums.OrderEventType;
 import com.roudane.transverse.exception.InternalErrorException;
 import com.roudane.transverse.criteria.OperatorApplication;
 import com.roudane.transverse.exception.NotFoundException;
@@ -23,23 +29,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.*;
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-@Transactional
 public class OrderPersistenceAdapter implements IOrderPersistenceOutPort {
 
     private final OrderJpaRepository orderJpaRepository;
-    private final OutboxJpaRepository outboxJpaRepository;
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
+
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -51,10 +58,12 @@ public class OrderPersistenceAdapter implements IOrderPersistenceOutPort {
             orderEntity.getItems().forEach(item -> item.setOrder(orderEntity));
         }
         OrderEntity savedEntity = orderJpaRepository.save(orderEntity);
+
         return PersistenceOrderMapper.INSTANCE.toModel(savedEntity);
     }
 
     @Override
+    @Transactional
     public Optional<OrderModel> findOrderById(Long orderID) {
         return orderJpaRepository.findById(orderID)
                 .map(PersistenceOrderMapper.INSTANCE::toModel);
@@ -62,12 +71,14 @@ public class OrderPersistenceAdapter implements IOrderPersistenceOutPort {
     }
 
     @Override
+    @Transactional
     public OrderModel getOrder(Long orderID) {
         return findOrderById(orderID)
                 .orElseThrow(() -> new NotFoundException("Order not found with ID: " + orderID));
     }
 
     @Override
+    @Transactional
     public Set<OrderModel> findAllOrders() {
         return orderJpaRepository.findAll().stream()
                 .map(PersistenceOrderMapper.INSTANCE::toModel)
@@ -75,6 +86,7 @@ public class OrderPersistenceAdapter implements IOrderPersistenceOutPort {
     }
 
     @Override
+    @Transactional
     public PageResult<OrderModel> findOrderCriteria(final List<CriteriaApplication> criteriaApplications, final int page, final int size) {
         final Specification<OrderEntity> specification = constructCriteria(criteriaApplications);
         PageRequest nextPageRequest = PageRequest.of(page, size);
@@ -83,6 +95,7 @@ public class OrderPersistenceAdapter implements IOrderPersistenceOutPort {
     }
 
     @Override
+    @Transactional
     public OrderModel updateOrder(OrderModel orderModel) {
         if (orderModel.getId() == null || !orderJpaRepository.existsById(orderModel.getId())) {
             throw new NotFoundException("Order with ID " + orderModel.getId() + " not found, cannot update."); // Consider a domain specific exception
@@ -95,33 +108,6 @@ public class OrderPersistenceAdapter implements IOrderPersistenceOutPort {
         return PersistenceOrderMapper.INSTANCE.toModel(updatedEntity);
     }
 
-    @Override
-    public void saveOutbox(OutboxModel outboxModel) {
-        OutboxEntity outboxEntity = PersistenceOrderMapper.INSTANCE.toEntity(outboxModel);
-        try {
-            outboxEntity.setPayload(objectMapper.writeValueAsString(outboxModel.getPayload()));
-        } catch (JsonProcessingException e) {
-            throw new InternalErrorException("Error serializing outbox payload: " + e.getMessage());
-        }
-        outboxJpaRepository.save(outboxEntity);
-    }
-
-    public List<OutboxModel> findPendingOutboxMessages() {
-        return outboxJpaRepository.findUnprocessedForUpdate().stream()
-                .map(entity -> {
-                    OutboxModel model = PersistenceOrderMapper.INSTANCE.toModel(entity);
-                    model.setPayload(entity.getPayload()); // Keep as String for OutboxProcessor to parse
-                    return model;
-                })
-                .collect(Collectors.toList());
-    }
-
-    public void markOutboxAsProcessed(Long id) {
-        outboxJpaRepository.findById(id).ifPresent(outboxEntity -> {
-            outboxEntity.setProcessed(true);
-            outboxJpaRepository.save(outboxEntity);
-        });
-    }
 
     private Specification<OrderEntity> constructCriteria(final List<CriteriaApplication> criteriaApplications) {
         final List<CriteriaApplication> criteriaApplicationsFilter = this.filterCriterias(criteriaApplications);
@@ -192,6 +178,18 @@ public class OrderPersistenceAdapter implements IOrderPersistenceOutPort {
             return element.getValue();
         }
 
+    }
+
+    public static List<OrderItemEvent> toEventList(List<OrderItemEntity> orderItemEntities) {
+        return orderItemEntities.stream()
+                .map(orderItemEntity -> OrderItemEvent.builder()
+                        .id(orderItemEntity.getId())
+                        .orderId(orderItemEntity.getOrder().getId())
+                        .productId(String.valueOf(orderItemEntity.getProductId()))
+                        .quantity(orderItemEntity.getQuantity())
+                        .price(orderItemEntity.getPrice())
+                        .build())
+                .collect(Collectors.toList());
     }
 
 

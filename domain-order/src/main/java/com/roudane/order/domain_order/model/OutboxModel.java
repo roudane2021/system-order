@@ -1,5 +1,7 @@
 package com.roudane.order.domain_order.model;
 
+import com.roudane.transverse.enums.OutboxStatus;
+import com.roudane.transverse.event.enums.OrderEventType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,11 +14,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class OutboxModel {
+
     private Long id;
     private String aggregateId;
     private String aggregateType;
-    private String eventType;
-    private Object payload;
+    private OrderEventType eventType;
+    private String payload;
     private LocalDateTime createdAt;
-    private boolean processed;
+    private LocalDateTime sentAt;
+    private OutboxStatus status;
+
 }

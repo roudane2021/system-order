@@ -8,5 +8,6 @@ CREATE TABLE outbox (
     event_type VARCHAR2(255) NOT NULL,
     payload CLOB NOT NULL,
     created_at TIMESTAMP NOT NULL,
-    processed NUMBER(1) DEFAULT 0 NOT NULL
+    sent_at   TIMESTAMP NULL,
+    STATUS     VARCHAR2(20)
 );

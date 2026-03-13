@@ -18,6 +18,8 @@
         <mapstruct-version>1.6.3</mapstruct-version>
         <lombok-version>1.18.36</lombok-version>
         <spring-cloud.version>2021.0.8</spring-cloud.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
     <dependencies>
         <!-- test 2 -->

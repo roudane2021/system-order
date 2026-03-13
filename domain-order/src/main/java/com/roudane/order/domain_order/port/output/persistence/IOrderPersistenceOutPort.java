@@ -1,7 +1,9 @@
 package com.roudane.order.domain_order.port.output.persistence;
 
 import com.roudane.order.domain_order.model.OrderModel;
+import com.roudane.order.domain_order.model.OutboxModel;
 import com.roudane.transverse.criteria.CriteriaApplication;
+import com.roudane.transverse.enums.OutboxStatus;
 import com.roudane.transverse.module.PageResult;
 
 import java.util.List;
@@ -15,6 +17,5 @@ public interface IOrderPersistenceOutPort {
     OrderModel getOrder(final Long orderID);
     OrderModel createOrder(final OrderModel orderModel);
     Optional<OrderModel> findOrderById(final Long orderID);
-    void saveOutbox(com.roudane.order.domain_order.model.OutboxModel outboxModel);
 
 }

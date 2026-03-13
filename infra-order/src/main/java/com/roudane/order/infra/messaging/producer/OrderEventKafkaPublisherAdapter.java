@@ -1,6 +1,7 @@
 package com.roudane.order.infra.messaging.producer;
 
 import com.roudane.order.domain_order.port.output.event.IOrderEventPublisherOutPort;
+import com.roudane.transverse.event.OrderCancelledEvent;
 import com.roudane.transverse.event.OrderCreatedEvent;
 import com.roudane.transverse.event.OrderShippedEvent;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +46,7 @@ public class OrderEventKafkaPublisherAdapter implements IOrderEventPublisherOutP
     }
 
     @Override
-    public void publishOrderCancelledEvent(final OrderCreatedEvent event) {
+    public void publishOrderCancelledEvent(final OrderCancelledEvent event) {
         publishEvent(orderCancelledTopic, event.getOrderId(), event);
     }
 
