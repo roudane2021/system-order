@@ -2,14 +2,18 @@ package com.roudane.order.domain_order.service;
 
 
 import com.roudane.order.domain_order.model.OrderItemModel;
+import com.roudane.order.domain_order.model.OutboxModel;
+import com.roudane.order.domain_order.port.output.json.IJsonOutPort;
+import com.roudane.order.domain_order.port.output.persistence.IOutBoxPersistenceOutPort;
 import com.roudane.transverse.criteria.CriteriaApplication;
+import com.roudane.transverse.enums.OutboxStatus;
 import com.roudane.transverse.event.*;
 import com.roudane.order.domain_order.model.OrderModel;
 import com.roudane.order.domain_order.model.OrderStatus;
 import com.roudane.order.domain_order.port.input.*;
-import com.roudane.order.domain_order.port.output.event.IOrderEventPublisherOutPort;
 import com.roudane.order.domain_order.port.output.logger.ILoggerPort;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
+import com.roudane.transverse.event.enums.OrderEventType;
 import com.roudane.transverse.exception.BadRequestException;
 import com.roudane.transverse.exception.InternalErrorException;
 import com.roudane.transverse.exception.NotFoundException;
@@ -24,13 +28,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
+public class OrderApplicationService implements ICreateOrderUseCase, IGetOrderUseCase,
         IListOrderUseCase, IUpdateOrderUseCase, ICancelOrderUseCase,
         IPayOrderUseCase, IConfirmOrderUseCase, IShipOrderUseCase, IDepletedOrderUseCase {
 
-    private final IOrderEventPublisherOutPort orderEventPublisherOutPort;
     private final IOrderPersistenceOutPort orderPersistenceOutPort;
+    private final IOutBoxPersistenceOutPort outBoxPersistenceOutPort;
     private final ILoggerPort loggerPort;
+    private final IJsonOutPort jsonOutPort;
 
     /**
      * Creates a new order.
@@ -49,15 +54,25 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
         // Enregistrement de la commande
         final OrderModel savedOrder = orderPersistenceOutPort.createOrder(orderModel);
 
-
-        // Publish OrderCreatedEvent
+        // Publish OrderCreatedEvent via Outbox
         OrderCreatedEvent event = OrderCreatedEvent.builder()
                 .orderId(savedOrder.getId())
                 .customerId(savedOrder.getCustomerId())
                 .orderDate(savedOrder.getOrderDate())
                 .items(toEventList(savedOrder.getItems()))
                 .build();
-        orderEventPublisherOutPort.publishOrderCreatedEvent(event);
+
+        OutboxModel outboxModel = OutboxModel.builder()
+                .aggregateId(String.valueOf(savedOrder.getId()))
+                .aggregateType("ORDER")
+                .eventType(OrderEventType.ORDER_CREATED)
+                .createdAt(LocalDateTime.now())
+                .status(OutboxStatus.NEW)
+                .payload(jsonOutPort.toJson(event))
+                .build();
+
+        outBoxPersistenceOutPort.saveEvent(outboxModel);
+
 
         loggerPort.info("Order created successfully with ID: " + savedOrder.getId());
         return savedOrder;
@@ -87,7 +102,7 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
     @Override
     public PageResult<OrderModel> findOrderCriteria(final List<CriteriaApplication> criteriaApplications, final int page, final int size) {
         loggerPort.debug("Fetching all orders");
-        return orderPersistenceOutPort.findOrderCriteria(criteriaApplications, page, size);
+        return orderPersistenceOutPort.findOrderCriteria(criteriaApplications, page , size);
     }
 
     /**
@@ -117,7 +132,17 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
                 .orderDate(updatedOrder.getOrderDate())
                 .items(toEventList(updatedOrder.getItems()))
                 .build();
-        orderEventPublisherOutPort.publishOrderUpdatedEvent(event);
+
+        OutboxModel outboxModel = OutboxModel.builder()
+                .aggregateId(String.valueOf(updatedOrder.getId()))
+                .aggregateType("ORDER")
+                .eventType(OrderEventType.ORDER_UPDATED)
+                .createdAt(LocalDateTime.now())
+                .status(OutboxStatus.NEW)
+                .payload(jsonOutPort.toJson(event))
+                .build();
+
+        outBoxPersistenceOutPort.saveEvent(outboxModel);
 
 
         loggerPort.info("Order updated successfully with ID: " + updatedOrder.getId());
@@ -142,7 +167,17 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
                 .orderDate(updatedOrder.getOrderDate())
                 .items(toEventList(updatedOrder.getItems()))
                 .build();
-        orderEventPublisherOutPort.publishOrderUpdatedEvent(event);
+
+        OutboxModel outboxModel = OutboxModel.builder()
+                .aggregateId(String.valueOf(updatedOrder.getId()))
+                .aggregateType("ORDER")
+                .eventType(OrderEventType.ORDER_CANCELLED)
+                .createdAt(LocalDateTime.now())
+                .status(OutboxStatus.NEW)
+                .payload(jsonOutPort.toJson(event))
+                .build();
+
+        outBoxPersistenceOutPort.saveEvent(outboxModel);
 
         loggerPort.info("Order with ID: " + orderId + " cancelled successfully.");
         return updatedOrder;
@@ -182,7 +217,7 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
                 });
 
         if (!event.isReservationConfirmed()) {
-            loggerPort.warn("Reservation not confirmed for orderId: {}. Cannot confirm order." + orderId);
+            loggerPort.warn("Reservation not confirmed for orderId: {}. Cannot confirm order." +  orderId);
             throw new NotFoundException("Inventory reservation not confirmed for orderId " + orderId);
         }
 
@@ -195,9 +230,10 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
     }
 
 
+
     @Override
     public OrderModel shipOrder(Long orderId, String trackingNumber) {
-        loggerPort.info("Attempting to ship order with ID:  " + orderId + "with tracking: {}" + trackingNumber);
+        loggerPort.info("Attempting to ship order with ID:  " + orderId +"with tracking: {}" + trackingNumber);
         OrderModel orderModel = orderPersistenceOutPort.findOrderById(orderId)
                 .orElseThrow(() -> {
                     loggerPort.warn("Order not found for shipping: {}" + orderId);
@@ -205,7 +241,7 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
                 });
 
         if (orderModel.getStatus() != OrderStatus.PROCESSING && orderModel.getStatus() != OrderStatus.PAID) {
-            loggerPort.warn("Order " + orderId + " cannot be shipped as its status is {}" + orderModel.getStatus());
+            loggerPort.warn("Order "+ orderId +" cannot be shipped as its status is {}" +  orderModel.getStatus());
 
             throw new InternalErrorException("Order " + orderId + " is in status " + orderModel.getStatus() + " and cannot be shipped.");
         }
@@ -220,7 +256,17 @@ public class OrderDomain implements ICreateOrderUseCase, IGetOrderUseCase,
                 .shippingDate(LocalDateTime.now())
                 .trackingNumber(trackingNumber)
                 .build();
-        orderEventPublisherOutPort.publishOrderShippedEvent(event);
+
+        OutboxModel outboxModel = OutboxModel.builder()
+                .aggregateId(String.valueOf(updatedOrder.getId()))
+                .aggregateType("ORDER")
+                .eventType(OrderEventType.ORDER_SHIPPED)
+                .createdAt(LocalDateTime.now())
+                .status(OutboxStatus.NEW)
+                .payload(jsonOutPort.toJson(event))
+                .build();
+
+        outBoxPersistenceOutPort.saveEvent(outboxModel);
 
         loggerPort.info("Order with ID: " + updatedOrder.getId() + "shipped successfully, status set to SHIPPED.");
         return updatedOrder;

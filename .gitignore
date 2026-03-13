@@ -21,3 +21,7 @@ order-ihm/node_modules/*
 order-ihm/.angular/*
 order-ihm/.vscode/*
 /order-ihm/node_modules/
+config-server/target/*
+gateway-server/target/*
+eureka-server/target/*
+transverse-order/target/*
