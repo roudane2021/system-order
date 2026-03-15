@@ -10,6 +10,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
 @ComponentScan(basePackages = {"com.roudane.inventory.domain", "com.roudane.inventory.infra"})
@@ -18,6 +19,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @RequiredArgsConstructor
 @EnableConfigurationProperties(OracleDataSourceProperties.class)
 @EnableDiscoveryClient
+@EnableScheduling
 public class InventoryApplication   implements CommandLineRunner  {
 
     public static void main(String[] args) {

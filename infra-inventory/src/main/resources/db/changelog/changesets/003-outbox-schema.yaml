@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 103
+      author: rachid
+      changes:
+        - sqlFile:
+            path: db/changelog/changes/003-outbox-schema.sql

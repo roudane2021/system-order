@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - changeSet:
+      id: 104
+      author: rachid
+      changes:
+        - sqlFile:
+            path: db/changelog/changes/004-outbox-retry-error-fields.sql

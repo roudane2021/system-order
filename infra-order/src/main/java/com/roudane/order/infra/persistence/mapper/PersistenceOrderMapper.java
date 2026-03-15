@@ -2,7 +2,7 @@ package com.roudane.order.infra.persistence.mapper;
 
 import com.roudane.order.domain_order.model.OrderItemModel;
 import com.roudane.order.domain_order.model.OrderModel;
-import com.roudane.order.domain_order.model.OutboxModel;
+import com.roudane.transverse.model.OutboxModel;
 import com.roudane.order.infra.persistence.entity.OrderEntity;
 import com.roudane.order.infra.persistence.entity.OrderItemEntity;
 import com.roudane.order.infra.persistence.entity.OutboxEntity;

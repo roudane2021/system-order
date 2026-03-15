@@ -1,4 +1,4 @@
-package com.roudane.order.infra.persistence.entity;
+package com.roudane.inventory.infra.persistence.entity;
 
 import com.roudane.transverse.model.OutboxModel;
 import com.roudane.transverse.enums.OutboxStatus;

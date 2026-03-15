@@ -2,7 +2,7 @@ package com.roudane.order.domain_order.service;
 
 
 import com.roudane.order.domain_order.model.OrderItemModel;
-import com.roudane.order.domain_order.model.OutboxModel;
+import com.roudane.transverse.model.OutboxModel;
 import com.roudane.order.domain_order.port.output.json.IJsonOutPort;
 import com.roudane.order.domain_order.port.output.persistence.IOutBoxPersistenceOutPort;
 import com.roudane.transverse.criteria.CriteriaApplication;
@@ -65,7 +65,7 @@ public class OrderApplicationService implements ICreateOrderUseCase, IGetOrderUs
         OutboxModel outboxModel = OutboxModel.builder()
                 .aggregateId(String.valueOf(savedOrder.getId()))
                 .aggregateType("ORDER")
-                .eventType(OrderEventType.ORDER_CREATED)
+                .eventType(OrderEventType.ORDER_CREATED.name())
                 .createdAt(LocalDateTime.now())
                 .status(OutboxStatus.NEW)
                 .payload(jsonOutPort.toJson(event))
@@ -136,7 +136,7 @@ public class OrderApplicationService implements ICreateOrderUseCase, IGetOrderUs
         OutboxModel outboxModel = OutboxModel.builder()
                 .aggregateId(String.valueOf(updatedOrder.getId()))
                 .aggregateType("ORDER")
-                .eventType(OrderEventType.ORDER_UPDATED)
+                .eventType(OrderEventType.ORDER_UPDATED.name())
                 .createdAt(LocalDateTime.now())
                 .status(OutboxStatus.NEW)
                 .payload(jsonOutPort.toJson(event))
@@ -171,7 +171,7 @@ public class OrderApplicationService implements ICreateOrderUseCase, IGetOrderUs
         OutboxModel outboxModel = OutboxModel.builder()
                 .aggregateId(String.valueOf(updatedOrder.getId()))
                 .aggregateType("ORDER")
-                .eventType(OrderEventType.ORDER_CANCELLED)
+                .eventType(OrderEventType.ORDER_CANCELLED.name())
                 .createdAt(LocalDateTime.now())
                 .status(OutboxStatus.NEW)
                 .payload(jsonOutPort.toJson(event))
@@ -260,7 +260,7 @@ public class OrderApplicationService implements ICreateOrderUseCase, IGetOrderUs
         OutboxModel outboxModel = OutboxModel.builder()
                 .aggregateId(String.valueOf(updatedOrder.getId()))
                 .aggregateType("ORDER")
-                .eventType(OrderEventType.ORDER_SHIPPED)
+                .eventType(OrderEventType.ORDER_SHIPPED.name())
                 .createdAt(LocalDateTime.now())
                 .status(OutboxStatus.NEW)
                 .payload(jsonOutPort.toJson(event))

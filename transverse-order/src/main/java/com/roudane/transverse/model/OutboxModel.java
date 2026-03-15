@@ -1,7 +1,6 @@
-package com.roudane.order.domain_order.model;
+package com.roudane.transverse.model;
 
 import com.roudane.transverse.enums.OutboxStatus;
-import com.roudane.transverse.event.enums.OrderEventType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +17,7 @@ public class OutboxModel {
     private Long id;
     private String aggregateId;
     private String aggregateType;
-    private OrderEventType eventType;
+    private String eventType;
     private String payload;
     private LocalDateTime createdAt;
     private LocalDateTime sentAt;

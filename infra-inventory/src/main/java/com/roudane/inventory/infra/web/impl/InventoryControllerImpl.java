@@ -1,7 +1,7 @@
 package com.roudane.inventory.infra.web.impl;
 
 import com.roudane.inventory.domain.model.InventoryItem;
-import com.roudane.inventory.domain.service.InventoryDomain;
+import com.roudane.inventory.infra.service.InventoryApplicationFacade;
 import com.roudane.inventory.infra.web.IInventoryController;
 import com.roudane.inventory.infra.web.dto.InventoryItemDto;
 import com.roudane.inventory.infra.web.dto.StockAdjustmentRequestDto;
@@ -20,14 +20,14 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class InventoryControllerImpl implements IInventoryController {
 
-    private final InventoryDomain inventoryDomain;
+    private final InventoryApplicationFacade inventoryApplicationFacade;
 
 
 
     @Override
     @GetMapping("/{productId}")
     public ResponseEntity<InventoryItemDto> getInventoryByProductId(@PathVariable String productId) {
-        Optional<InventoryItem> itemOptional = inventoryDomain.findInventoryByProductId(productId);
+        Optional<InventoryItem> itemOptional = inventoryApplicationFacade.findInventoryByProductId(productId);
 
         return itemOptional
                 .map(InventoryWebMapper.INSTANCE::toDto)
@@ -38,7 +38,7 @@ public class InventoryControllerImpl implements IInventoryController {
     @Override
     @GetMapping
     public ResponseEntity<List<InventoryItemDto>> getAllInventoryItems() {
-        List<InventoryItem> items = inventoryDomain.findAllInventoryItems();
+        List<InventoryItem> items = inventoryApplicationFacade.findAllInventoryItems();
         return ResponseEntity.ok(InventoryWebMapper.INSTANCE.toDtoList(items));
     }
 
@@ -48,7 +48,8 @@ public class InventoryControllerImpl implements IInventoryController {
             @PathVariable String productId,
             @RequestBody StockAdjustmentRequestDto adjustmentRequest) {
 
-        inventoryDomain.adjustStock(
+
+        inventoryApplicationFacade.adjustStock(
             productId,
             adjustmentRequest.getQuantity(),
             adjustmentRequest.getReason()

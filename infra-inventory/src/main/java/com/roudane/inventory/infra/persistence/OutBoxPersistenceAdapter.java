@@ -1,11 +1,11 @@
-package com.roudane.order.infra.persistence;
+package com.roudane.inventory.infra.persistence;
 
-import com.roudane.order.domain_order.port.output.persistence.IOutBoxPersistenceOutPort;
-import com.roudane.order.infra.persistence.entity.OutboxEntity;
-import com.roudane.order.infra.persistence.mapper.PersistenceOutBoxMapper;
-import com.roudane.order.infra.persistence.repository.OutboxJpaRepository;
-import com.roudane.transverse.enums.OutboxStatus;
 import com.roudane.transverse.model.OutboxModel;
+import com.roudane.inventory.domain.port.output.persistence.IOutBoxPersistenceOutPort;
+import com.roudane.inventory.infra.persistence.entity.OutboxEntity;
+import com.roudane.inventory.infra.persistence.mapper.PersistenceOutBoxMapper;
+import com.roudane.inventory.infra.persistence.repository.OutboxJpaRepository;
+import com.roudane.transverse.enums.OutboxStatus;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
@@ -35,7 +35,7 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
 
     @Override
     @Transactional
-    public List<OutboxModel> lockNextEvents(int limit,  int maxRetries, int delay) {
+    public List<OutboxModel> lockNextEvents(int limit, int maxRetries, int delay) {
 
         // 1. Récupérer les IDs des NEW (sans verrou)
         List<Long> ids = outboxJpaRepository.findNextNewEvents(limit, maxRetries, delay)
@@ -48,12 +48,11 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
         }
 
         // 2. Verrouiller réellement les lignes (SKIP LOCKED)
-        List<OutboxEntity> locked = entityManager.createNativeQuery("""
-            SELECT *
-            FROM outbox
-            WHERE id IN (:ids)
-            FOR UPDATE SKIP LOCKED
-            """, OutboxEntity.class)
+        List<OutboxEntity> locked = entityManager.createNativeQuery(
+            "SELECT * " +
+            "FROM outbox " +
+            "WHERE id IN (:ids) " +
+            "FOR UPDATE SKIP LOCKED", OutboxEntity.class)
                 .setParameter("ids", ids)
                 .getResultList();
 

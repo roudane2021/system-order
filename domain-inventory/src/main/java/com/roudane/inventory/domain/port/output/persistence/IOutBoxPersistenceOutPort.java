@@ -1,4 +1,4 @@
-package com.roudane.order.domain_order.port.output.persistence;
+package com.roudane.inventory.domain.port.output.persistence;
 
 import com.roudane.transverse.model.OutboxModel;
 import com.roudane.transverse.enums.OutboxStatus;

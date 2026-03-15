@@ -1,7 +1,9 @@
 /opt/backend/system-order/transverse-order/src/main/java/com/roudane/transverse/exception/NotFoundException.java
 /opt/backend/system-order/transverse-order/src/main/java/com/roudane/transverse/criteria/CriteriaApplication.java
 /opt/backend/system-order/transverse-order/src/main/java/com/roudane/transverse/enums/ErrorCode.java
+/opt/backend/system-order/transverse-order/src/main/java/com/roudane/transverse/model/OutboxModel.java
 /opt/backend/system-order/transverse-order/src/main/java/com/roudane/transverse/exception/InternalErrorException.java
+/opt/backend/system-order/transverse-order/src/main/java/com/roudane/transverse/event/enums/InventoryEventType.java
 /opt/backend/system-order/transverse-order/src/main/java/com/roudane/transverse/module/Field.java
 /opt/backend/system-order/transverse-order/src/main/java/com/roudane/transverse/event/InventoryReservedEvent.java
 /opt/backend/system-order/transverse-order/src/main/java/com/roudane/transverse/module/ApiError.java

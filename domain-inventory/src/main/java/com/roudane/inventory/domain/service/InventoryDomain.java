@@ -1,18 +1,24 @@
 package com.roudane.inventory.domain.service;
 
 import com.roudane.inventory.domain.model.InventoryItem;
+import com.roudane.transverse.model.OutboxModel;
 import com.roudane.inventory.domain.port.input.IGetInventoryUserCase;
 import com.roudane.inventory.domain.port.input.IHandleOrderCreatedUseCase;
 import com.roudane.inventory.domain.port.input.IHhandleOrderCancelledUseCase;
 import com.roudane.inventory.domain.port.input.IUpdateStockUserCase;
 import com.roudane.inventory.domain.port.output.event.IInventoryEventPublisherOutPort;
+import com.roudane.inventory.domain.port.output.json.IJsonOutPort;
 import com.roudane.inventory.domain.port.output.persistence.IInventoryPersistenceOutPort;
+import com.roudane.inventory.domain.port.output.persistence.IOutBoxPersistenceOutPort;
+import com.roudane.transverse.enums.OutboxStatus;
 import com.roudane.transverse.event.*;
+import com.roudane.transverse.event.enums.InventoryEventType;
 import com.roudane.transverse.exception.InternalErrorException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +32,8 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
 
     private final IInventoryPersistenceOutPort inventoryPersistenceOutPort;
     private final IInventoryEventPublisherOutPort eventPublisherPort;
+    private final IOutBoxPersistenceOutPort outBoxPersistenceOutPort;
+    private final IJsonOutPort jsonOutPort;
 
 
 
@@ -35,7 +43,16 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
         List<OrderItemEvent> requestedItems = event.getItems();
         if (requestedItems == null || requestedItems.isEmpty()) {
             log.warn("OrderCreatedEvent for orderId: {} has no items.", event.getOrderId());
-            eventPublisherPort.publish(InventoryReservedEvent.builder().orderId(event.getOrderId()).reservationConfirmed(false).build());
+            InventoryReservedEvent reservedEvent = InventoryReservedEvent.builder().orderId(event.getOrderId()).reservationConfirmed(false).build();
+            OutboxModel outboxModel = OutboxModel.builder()
+                    .aggregateId(String.valueOf(event.getOrderId()))
+                    .aggregateType("ORDER")
+                    .eventType(InventoryEventType.INVENTORY_RESERVED.name())
+                    .createdAt(java.time.LocalDateTime.now())
+                    .status(OutboxStatus.NEW)
+                    .payload(jsonOutPort.toJson(reservedEvent))
+                    .build();
+            outBoxPersistenceOutPort.saveEvent(outboxModel);
             return;
         }
 
@@ -59,7 +76,16 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
                                                        requestedItem.getQuantity(),
                                                        inventoryItem == null ? 0 : inventoryItem.getQuantity());
                 log.warn(depletionReason + " for orderId: {}", event.getOrderId());
-                eventPublisherPort.publish(new InventoryDepletedEvent(event.getOrderId(), depletionReason, requestedItems));
+                InventoryDepletedEvent depletedEvent = new InventoryDepletedEvent(event.getOrderId(), depletionReason, requestedItems);
+                OutboxModel outboxModel = OutboxModel.builder()
+                        .aggregateId(String.valueOf(event.getOrderId()))
+                        .aggregateType("ORDER")
+                        .eventType(InventoryEventType.INVENTORY_DEPLETED.name())
+                        .createdAt(LocalDateTime.now())
+                        .status(OutboxStatus.NEW)
+                        .payload(jsonOutPort.toJson(depletedEvent))
+                        .build();
+                outBoxPersistenceOutPort.saveEvent(outboxModel);
                 return;
             }
 
@@ -70,10 +96,19 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
 
         inventoryPersistenceOutPort.saveAll(itemsToUpdate);
         log.info("Inventory reserved successfully for orderId: {}. Items: {}", event.getOrderId(), successfullyReservedItems);
-        eventPublisherPort.publish(InventoryReservedEvent.builder()
+        InventoryReservedEvent reservedEvent = InventoryReservedEvent.builder()
                 .orderId(event.getOrderId())
                 .reservationConfirmed(true)
-                .build());
+                .build();
+        OutboxModel outboxModel = OutboxModel.builder()
+                .aggregateId(String.valueOf(event.getOrderId()))
+                .aggregateType("ORDER")
+                .eventType(InventoryEventType.INVENTORY_RESERVED.name())
+                .createdAt(LocalDateTime.now())
+                .status(OutboxStatus.NEW)
+                .payload(jsonOutPort.toJson(reservedEvent))
+                .build();
+        outBoxPersistenceOutPort.saveEvent(outboxModel);
     }
 
     @Override

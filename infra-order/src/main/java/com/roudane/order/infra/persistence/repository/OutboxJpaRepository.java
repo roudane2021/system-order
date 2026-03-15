@@ -1,6 +1,6 @@
 package com.roudane.order.infra.persistence.repository;
 
-import com.roudane.order.domain_order.model.OutboxModel;
+import com.roudane.transverse.model.OutboxModel;
 import com.roudane.order.infra.persistence.entity.OutboxEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -53,4 +53,3 @@ public interface OutboxJpaRepository extends JpaRepository<OutboxEntity, Long> {
         void updateStatus(@Param("id") Long id, @Param("status") String status);
 
         }
-
