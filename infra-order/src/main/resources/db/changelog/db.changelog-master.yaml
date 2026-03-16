@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/changesets/003-outbox-schema.yaml
   - include:
       file: db/changelog/changesets/004-outbox-retry-fields-schema.yaml
+  - include:
+      file: db/changelog/changesets/005-outbox-retryable-field-schema.yaml

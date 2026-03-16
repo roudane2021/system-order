@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ExecutionException;
+
 @Slf4j
 @Component
 public class InventoryEventPublisherAdapter implements IInventoryEventPublisherOutPort {
@@ -32,26 +34,20 @@ public class InventoryEventPublisherAdapter implements IInventoryEventPublisherO
     }
 
     @Override
-    public void publish(InventoryReservedEvent event) {
+    public void publish(InventoryReservedEvent event) throws ExecutionException, InterruptedException{
         log.info("Sending InventoryReservedEvent for orderId: {} to topic: {}", event.getOrderId(), inventoryReservedTopic);
         publishEvent(inventoryReservedTopic, event.getOrderId(), event);
     }
 
     @Override
-    public void publish(InventoryDepletedEvent event) {
+    public void publish(InventoryDepletedEvent event) throws ExecutionException, InterruptedException{
         log.info("Sending InventoryDepletedEvent for orderId: {} to topic: {}", event.getOrderId(), inventoryDepletedTopic);
         publishEvent(inventoryDepletedTopic, event.getOrderId(), event);
     }
 
-    private void publishEvent(String topic, Long orderId, Object event) {
+    private void publishEvent(String topic, Long orderId, Object event) throws ExecutionException, InterruptedException {
         kafkaTemplate.send(topic, String.valueOf(orderId), event)
-                .addCallback(
-                        result -> log.info("Successfully published {} for orderId: {}", topic, orderId),
-                        ex -> {
-                            log.error("Failed to publish {} for orderId: {}", topic, orderId, ex);
-                            handleKafkaFailure(event, ex);
-                        }
-                );
+                .get();
     }
 
     public void handleKafkaFailure(Object event, Throwable ex) {

@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.concurrent.ExecutionException;
+
 @Slf4j
 @Service
 public class OrderEventKafkaPublisherAdapter implements IOrderEventPublisherOutPort {
@@ -36,37 +38,33 @@ public class OrderEventKafkaPublisherAdapter implements IOrderEventPublisherOutP
     }
 
     @Override
-    public void publishOrderCreatedEvent(final OrderCreatedEvent event) {
+    public void publishOrderCreatedEvent(final OrderCreatedEvent event) throws ExecutionException, InterruptedException {
         publishEvent(orderCreatedTopic, event.getOrderId(), event);
     }
 
     @Override
-    public void publishOrderShippedEvent(final OrderShippedEvent event) {
+    public void publishOrderShippedEvent(final OrderShippedEvent event) throws ExecutionException, InterruptedException  {
         publishEvent(orderShippedTopic, event.getOrderId(), event);
     }
 
     @Override
-    public void publishOrderCancelledEvent(final OrderCancelledEvent event) {
+    public void publishOrderCancelledEvent(final OrderCancelledEvent event) throws ExecutionException, InterruptedException {
         publishEvent(orderCancelledTopic, event.getOrderId(), event);
     }
 
     @Override
-    public void publishOrderUpdatedEvent(final OrderCreatedEvent event) {
+    public void publishOrderUpdatedEvent(final OrderCreatedEvent event) throws ExecutionException, InterruptedException {
         publishEvent(orderUpdatedTopic, event.getOrderId(), event);
     }
 
-    private void publishEvent(String topic, Long orderId, Object event) {
+    private void publishEvent(String topic, Long orderId, Object event) throws ExecutionException, InterruptedException {
         kafkaTemplate.send(topic, String.valueOf(orderId), event)
-                .addCallback(
-                        result -> log.info("Successfully published {} for orderId: {}", topic, orderId),
-                        ex -> {
-                            handleKafkaFailure(event, ex);
-                        }
-                );
+                .get();
     }
 
     public void handleKafkaFailure(Object event, Throwable ex) {
         String eventInfo = event != null ? event.toString() : "null";
+        Throwable cause = ex.getCause() != null ? ex.getCause() : ex;
 
         if (ex instanceof SerializationException) {
             log.error("Serialization error while publishing event: {}", eventInfo, ex);

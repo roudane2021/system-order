@@ -25,6 +25,13 @@ public class KafkaProducerConfig {
         configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
         configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
+        configProps.put(ProducerConfig.MAX_BLOCK_MS_CONFIG, 2000);
+        configProps.put(ProducerConfig.METADATA_MAX_AGE_CONFIG, 1000);
+        configProps.put("allow.auto.create.topics", false);
+        configProps.put(ProducerConfig.DELIVERY_TIMEOUT_MS_CONFIG, 3000);
+        configProps.put(ProducerConfig.REQUEST_TIMEOUT_MS_CONFIG, 2000);
+        configProps.put(ProducerConfig.RETRIES_CONFIG, 0);
+
         // configProps.put(JsonSerializer.ADD_TYPE_INFO_HEADERS, false);
         return new DefaultKafkaProducerFactory<>(configProps);
     }

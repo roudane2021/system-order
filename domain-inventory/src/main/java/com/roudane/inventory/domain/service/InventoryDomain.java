@@ -1,7 +1,6 @@
 package com.roudane.inventory.domain.service;
 
 import com.roudane.inventory.domain.model.InventoryItem;
-import com.roudane.transverse.model.OutboxModel;
 import com.roudane.inventory.domain.port.input.IGetInventoryUserCase;
 import com.roudane.inventory.domain.port.input.IHandleOrderCreatedUseCase;
 import com.roudane.inventory.domain.port.input.IHhandleOrderCancelledUseCase;
@@ -10,10 +9,11 @@ import com.roudane.inventory.domain.port.output.event.IInventoryEventPublisherOu
 import com.roudane.inventory.domain.port.output.json.IJsonOutPort;
 import com.roudane.inventory.domain.port.output.persistence.IInventoryPersistenceOutPort;
 import com.roudane.inventory.domain.port.output.persistence.IOutBoxPersistenceOutPort;
+import com.roudane.transverse.enums.OutboxEventType;
 import com.roudane.transverse.enums.OutboxStatus;
 import com.roudane.transverse.event.*;
-import com.roudane.transverse.event.enums.InventoryEventType;
 import com.roudane.transverse.exception.InternalErrorException;
+import com.roudane.transverse.model.OutboxModel;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +47,7 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
             OutboxModel outboxModel = OutboxModel.builder()
                     .aggregateId(String.valueOf(event.getOrderId()))
                     .aggregateType("ORDER")
-                    .eventType(InventoryEventType.INVENTORY_RESERVED.name())
+                    .eventType(OutboxEventType.INVENTORY_RESERVED)
                     .createdAt(java.time.LocalDateTime.now())
                     .status(OutboxStatus.NEW)
                     .payload(jsonOutPort.toJson(reservedEvent))
@@ -80,7 +80,7 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
                 OutboxModel outboxModel = OutboxModel.builder()
                         .aggregateId(String.valueOf(event.getOrderId()))
                         .aggregateType("ORDER")
-                        .eventType(InventoryEventType.INVENTORY_DEPLETED.name())
+                        .eventType(OutboxEventType.INVENTORY_DEPLETED)
                         .createdAt(LocalDateTime.now())
                         .status(OutboxStatus.NEW)
                         .payload(jsonOutPort.toJson(depletedEvent))
@@ -103,7 +103,7 @@ public class InventoryDomain implements IGetInventoryUserCase, IHandleOrderCreat
         OutboxModel outboxModel = OutboxModel.builder()
                 .aggregateId(String.valueOf(event.getOrderId()))
                 .aggregateType("ORDER")
-                .eventType(InventoryEventType.INVENTORY_RESERVED.name())
+                .eventType(OutboxEventType.INVENTORY_RESERVED)
                 .createdAt(LocalDateTime.now())
                 .status(OutboxStatus.NEW)
                 .payload(jsonOutPort.toJson(reservedEvent))

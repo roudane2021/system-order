@@ -1,5 +1,6 @@
 package com.roudane.order.infra.persistence.entity;
 
+import com.roudane.transverse.enums.OutboxEventType;
 import com.roudane.transverse.model.OutboxModel;
 import com.roudane.transverse.enums.OutboxStatus;
 import lombok.*;
@@ -27,7 +28,8 @@ public class OutboxEntity {
     private String aggregateType;
 
     @Column(name = "event_type", nullable = false)
-    private String eventType;
+    @Enumerated(EnumType.STRING)
+    private OutboxEventType eventType;
 
     @Column(nullable = false)
     @Lob
@@ -56,6 +58,9 @@ public class OutboxEntity {
     @Lob
     private String errorStacktrace;
 
+    @Column(name = "retryable", nullable = false)
+    private boolean retryable = true;
+
 
     @PrePersist
     public void prePersist() {
@@ -83,6 +88,11 @@ public class OutboxEntity {
                 .status(status)
                 .createdAt(createdAt)
                 .sentAt(sentAt)
+                .retryCount(retryCount)
+                .lastAttemptAt(lastAttemptAt)
+                .errorMessage(errorMessage)
+                .errorStacktrace(errorStacktrace)
+                .retryable(retryable)
                 .build();
     }
 }

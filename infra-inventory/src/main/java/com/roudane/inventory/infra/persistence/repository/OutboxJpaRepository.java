@@ -17,7 +17,7 @@ public interface OutboxJpaRepository extends JpaRepository<OutboxEntity, Long> {
     @Query(value = "SELECT o.* FROM outbox o " +
         "WHERE " +
         "o.status = 'NEW' " +
-        "OR ( o.status = 'ERROR' AND o.retry_count < :maxRetries " +
+        "OR ( o.status = 'ERROR' AND o.retry_count < :maxRetries AND o.retryable = 1 " +
                 "AND ( " +
                     "o.last_attempt_at IS NULL " +
                     "OR o.last_attempt_at < SYSTIMESTAMP - NUMTODSINTERVAL(:delay, 'SECOND') " +
