@@ -75,7 +75,7 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     @Override
-    public void markAsError(Long id, Exception e) {
+    public void markAsError(Long id, Throwable e, boolean retryable) {
         OutboxEntity entity = outboxJpaRepository.findById(id)
                 .orElseThrow(() -> new IllegalStateException("Outbox event not found: " + id));
 
@@ -83,6 +83,7 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
         entity.setRetryCount(entity.getRetryCount() + 1);
         entity.setErrorMessage(e.getMessage());
         entity.setErrorStacktrace(ExceptionUtils.getStackTrace(e));
+        entity.setRetryable(retryable);
 
     }
 

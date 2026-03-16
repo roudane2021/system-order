@@ -19,6 +19,7 @@ com/roudane/transverse/model/OutboxModel$OutboxModelBuilder.class
 com/roudane/transverse/event/InventoryReservedEvent$InventoryReservedEventBuilder.class
 com/roudane/transverse/module/Field$FieldBuilder.class
 com/roudane/transverse/exception/BadRequestException.class
+com/roudane/transverse/enums/OutboxEventType.class
 com/roudane/transverse/event/OrderShippedEvent.class
 com/roudane/transverse/criteria/OperatorApplication.class
 com/roudane/transverse/enums/Layer.class

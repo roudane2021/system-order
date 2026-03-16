@@ -1,16 +1,12 @@
 package com.roudane.order.infra.persistence.repository;
 
-import com.roudane.transverse.model.OutboxModel;
 import com.roudane.order.infra.persistence.entity.OutboxEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.LockModeType;
-import java.time.Duration;
 import java.util.List;
 
 
@@ -22,7 +18,7 @@ public interface OutboxJpaRepository extends JpaRepository<OutboxEntity, Long> {
        SELECT o.* FROM outbox o
         WHERE
         o.status = 'NEW' 
-        OR ( o.status = 'ERROR' AND o.retry_count < :maxRetries
+        OR ( o.status = 'ERROR' AND o.retry_count < :maxRetries AND o.retryable = 1
                 AND (
                     o.last_attempt_at IS NULL
                     OR o.last_attempt_at < SYSTIMESTAMP - NUMTODSINTERVAL(:delay, 'SECOND')

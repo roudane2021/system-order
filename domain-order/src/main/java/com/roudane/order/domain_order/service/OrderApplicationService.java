@@ -2,21 +2,21 @@ package com.roudane.order.domain_order.service;
 
 
 import com.roudane.order.domain_order.model.OrderItemModel;
-import com.roudane.transverse.model.OutboxModel;
-import com.roudane.order.domain_order.port.output.json.IJsonOutPort;
-import com.roudane.order.domain_order.port.output.persistence.IOutBoxPersistenceOutPort;
-import com.roudane.transverse.criteria.CriteriaApplication;
-import com.roudane.transverse.enums.OutboxStatus;
-import com.roudane.transverse.event.*;
 import com.roudane.order.domain_order.model.OrderModel;
 import com.roudane.order.domain_order.model.OrderStatus;
 import com.roudane.order.domain_order.port.input.*;
+import com.roudane.order.domain_order.port.output.json.IJsonOutPort;
 import com.roudane.order.domain_order.port.output.logger.ILoggerPort;
 import com.roudane.order.domain_order.port.output.persistence.IOrderPersistenceOutPort;
-import com.roudane.transverse.event.enums.OrderEventType;
+import com.roudane.order.domain_order.port.output.persistence.IOutBoxPersistenceOutPort;
+import com.roudane.transverse.criteria.CriteriaApplication;
+import com.roudane.transverse.enums.OutboxEventType;
+import com.roudane.transverse.enums.OutboxStatus;
+import com.roudane.transverse.event.*;
 import com.roudane.transverse.exception.BadRequestException;
 import com.roudane.transverse.exception.InternalErrorException;
 import com.roudane.transverse.exception.NotFoundException;
+import com.roudane.transverse.model.OutboxModel;
 import com.roudane.transverse.module.PageResult;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
@@ -65,7 +65,7 @@ public class OrderApplicationService implements ICreateOrderUseCase, IGetOrderUs
         OutboxModel outboxModel = OutboxModel.builder()
                 .aggregateId(String.valueOf(savedOrder.getId()))
                 .aggregateType("ORDER")
-                .eventType(OrderEventType.ORDER_CREATED.name())
+                .eventType(OutboxEventType.ORDER_CREATED)
                 .createdAt(LocalDateTime.now())
                 .status(OutboxStatus.NEW)
                 .payload(jsonOutPort.toJson(event))
@@ -136,7 +136,7 @@ public class OrderApplicationService implements ICreateOrderUseCase, IGetOrderUs
         OutboxModel outboxModel = OutboxModel.builder()
                 .aggregateId(String.valueOf(updatedOrder.getId()))
                 .aggregateType("ORDER")
-                .eventType(OrderEventType.ORDER_UPDATED.name())
+                .eventType(OutboxEventType.ORDER_UPDATED)
                 .createdAt(LocalDateTime.now())
                 .status(OutboxStatus.NEW)
                 .payload(jsonOutPort.toJson(event))
@@ -171,7 +171,7 @@ public class OrderApplicationService implements ICreateOrderUseCase, IGetOrderUs
         OutboxModel outboxModel = OutboxModel.builder()
                 .aggregateId(String.valueOf(updatedOrder.getId()))
                 .aggregateType("ORDER")
-                .eventType(OrderEventType.ORDER_CANCELLED.name())
+                .eventType(OutboxEventType.ORDER_CANCELLED)
                 .createdAt(LocalDateTime.now())
                 .status(OutboxStatus.NEW)
                 .payload(jsonOutPort.toJson(event))
@@ -260,7 +260,7 @@ public class OrderApplicationService implements ICreateOrderUseCase, IGetOrderUs
         OutboxModel outboxModel = OutboxModel.builder()
                 .aggregateId(String.valueOf(updatedOrder.getId()))
                 .aggregateType("ORDER")
-                .eventType(OrderEventType.ORDER_SHIPPED.name())
+                .eventType(OutboxEventType.ORDER_SHIPPED)
                 .createdAt(LocalDateTime.now())
                 .status(OutboxStatus.NEW)
                 .payload(jsonOutPort.toJson(event))
