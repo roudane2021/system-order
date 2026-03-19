@@ -29,6 +29,15 @@ spec:
           image: gvenzl/oracle-xe
           ports:
             - containerPort: 1521
+          startupProbe:
+            exec:
+              command:
+                - sh
+                - -c
+                - "echo 'SELECT 1 FROM DUAL' | sqlplus -s SYSTEM/${ORACLE_PASSWORD}@localhost:1521/XEPDB1"
+            initialDelaySeconds: 30
+            periodSeconds: 5
+            failureThreshold: 5
 
           env:
             - name: ORACLE_PASSWORD

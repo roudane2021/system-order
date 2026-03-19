@@ -20,6 +20,36 @@ spec:
           imagePullPolicy: {{ .Values.pods.infraInventory.imagePullPolicy  }}
           ports:
             - containerPort: {{ .Values.pods.infraInventory.port  }}
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: {{ .Values.pods.infraOrder.port  }}
+            initialDelaySeconds: 30
+            periodSeconds: 120
+            timeoutSeconds: 5
+            failureThreshold: 3
+            successThreshold: 1
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: {{ .Values.pods.infraOrder.port  }}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: {{ .Values.pods.infraOrder.port  }}
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            failureThreshold: 30
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "1Gi"
+              cpu: "500m"
           env:
             - name: SPRING_PROFILES_ACTIVE
               valueFrom:
