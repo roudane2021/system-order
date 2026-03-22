@@ -23,7 +23,7 @@ spec:
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
-              port: {{ .Values.pods.infraOrder.port  }}
+              port: {{ .Values.pods.infraNotification.port  }}
             initialDelaySeconds: 30
             periodSeconds: 120
             timeoutSeconds: 5
@@ -32,14 +32,14 @@ spec:
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
-              port: {{ .Values.pods.infraOrder.port  }}
+              port: {{ .Values.pods.infraNotification.port  }}
             initialDelaySeconds: 30
             periodSeconds: 30
             failureThreshold: 3
           startupProbe:
             httpGet:
               path: /actuator/health/liveness
-              port: {{ .Values.pods.infraOrder.port  }}
+              port: {{ .Values.pods.infraNotification.port  }}
             initialDelaySeconds: 30
             periodSeconds: 30
             failureThreshold: 30
