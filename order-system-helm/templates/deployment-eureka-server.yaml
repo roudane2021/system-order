@@ -20,6 +20,13 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 9102
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 9102
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            failureThreshold: 10
           env:
             - name: CONFIG_SERVER_URL
               valueFrom:
