@@ -10,13 +10,14 @@ import com.roudane.transverse.event.OrderShippedEvent;
 import com.roudane.transverse.model.OutboxModel;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.type.SerializationException;
 import org.springframework.kafka.KafkaException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
@@ -34,15 +35,17 @@ public class OutboxProcessor {
 
     @Scheduled(fixedDelayString = "${outbox.polling-delay}")
     public void processOutboxMessages() {
-        List<OutboxModel> events = outBoxPersistenceOutPort.lockNextEvents(outboxProperties.getLimit(), outboxProperties.getMaxRetries(), outboxProperties.getDelaySeconds());
-
-        if (CollectionUtils.isEmpty(events)) {
-            events = List.of();
-        }
+        var events = Optional.ofNullable(
+                outBoxPersistenceOutPort.lockNextEvents(
+                        outboxProperties.getLimit(),
+                        outboxProperties.getMaxRetries(),
+                        outboxProperties.getDelaySeconds()
+                )
+        ).orElseGet(List::of);
 
         log.debug("Processing {} pending outbox messages", events.size());
 
-        events.forEach(this::processEvent);
+        events.stream().filter(Objects::nonNull).forEach(this::processEvent);
     }
 
     private void processEvent(OutboxModel event) {
@@ -87,28 +90,27 @@ public class OutboxProcessor {
     }
 
     private boolean determineIfRetryable(Throwable cause) {
-        if (cause instanceof SerializationException) {
-            log.error("Serialization error (non retryable)");
-            return false;
-        } else if (cause instanceof IllegalArgumentException) {
-            log.error("Invalid argument (non retryable)");
-            return false;
-        } else if (cause instanceof InterruptedException) {
+
+        if (cause instanceof InterruptedException) {
             Thread.currentThread().interrupt();
-            log.error("Thread interrupted (non retryable)");
+            log.error("Thread interrupted (non retryable)", cause);
             return false;
-        } else if (cause instanceof ExecutionException) {
-            log.warn("Execution error (retryable)");
-            return true;
-        } else if (cause instanceof KafkaException) {
-            log.warn("Kafka error (retryable)");
-            return true;
-        } else if (cause instanceof TimeoutException) {
-            log.warn("⏳ Timeout (retryable)");
-            return true;
-        } else {
-            log.warn("❓ Unknown error (retryable by default)");
+        }
+
+        if (cause instanceof SerializationException
+                || cause instanceof IllegalArgumentException) {
+            log.error("Non-retryable error", cause);
+            return false;
+        }
+
+        if (cause instanceof ExecutionException
+                || cause instanceof KafkaException
+                || cause instanceof TimeoutException) {
+            log.warn("Retryable error", cause);
             return true;
         }
+
+        log.warn("Unknown error (retryable by default)", cause);
+        return true;
     }
 }

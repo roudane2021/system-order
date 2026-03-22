@@ -35,42 +35,21 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
 
     @Override
     @Transactional
-    public List<OutboxModel> lockNextEvents(int limit,  int maxRetries, int delay) {
+    public List<OutboxModel> lockNextEvents(int limit, int maxRetries, int delay) {
 
-        // 1. Récupérer les IDs des NEW (sans verrou)
-        List<Long> ids = outboxJpaRepository.findNextNewEvents(limit, maxRetries, delay)
-                .stream()
-                .map(OutboxEntity::getId)
-                .toList();
+        // 1️ Récupérer les IDs des événements NEW
+        List<Long> ids = fetchNewEventIds(limit, maxRetries, delay);
+        if (CollectionUtils.isEmpty(ids)) return List.of();
 
-        if (CollectionUtils.isEmpty(ids)) {
-            return List.of();
-        }
+        // 2️ Verrouiller les entités
+        List<OutboxEntity> lockedEntities = lockEntities(ids);
+        if (CollectionUtils.isEmpty(lockedEntities)) return List.of();
 
-        // 2. Verrouiller réellement les lignes (SKIP LOCKED)
-        List<OutboxEntity> locked = entityManager.createNativeQuery("""
-            SELECT *
-            FROM outbox
-            WHERE id IN (:ids)
-            FOR UPDATE SKIP LOCKED
-            """, OutboxEntity.class)
-                .setParameter("ids", ids)
-                .getResultList();
+        // 3 Passer en PROCESSING
+        markAsProcessing(lockedEntities);
 
-        if (CollectionUtils.isEmpty(locked)) {
-            return List.of(); // un autre pod les a prises
-        }
-
-        // 3. Mise en PROCESSING dans la même transaction
-        locked.forEach(e -> e.setStatus(OutboxStatus.PROCESSING));
-
-        // forcer l’UPDATE avant libération des verrous Oracle
-        entityManager.flush();
-
-        // 4. Conversion en modèle
-        return locked.stream()
-                .map(OutboxEntity::toModel)
-                .toList();
+        // 4️ Conversion en modèles métier
+        return convertToModels(lockedEntities);
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -96,6 +75,42 @@ public class OutBoxPersistenceAdapter implements IOutBoxPersistenceOutPort {
         entity.setStatus(OutboxStatus.SENT);
         entity.setErrorMessage(null);
         entity.setErrorStacktrace(null);
+    }
+
+
+
+    private List<Long> fetchNewEventIds(int limit, int maxRetries, int delay) {
+        return outboxJpaRepository.findNextNewEvents(limit, maxRetries, delay)
+                .stream()
+                .map(OutboxEntity::getId)
+                .toList();
+    }
+
+
+    private List<OutboxEntity> lockEntities(List<Long> ids) {
+        if (ids.isEmpty()) return List.of();
+
+        return entityManager.createNativeQuery("""
+            SELECT *
+            FROM outbox
+            WHERE id IN (:ids)
+            FOR UPDATE SKIP LOCKED
+            """, OutboxEntity.class)
+                .setParameter("ids", ids)
+                .getResultList();
+    }
+
+
+    private void markAsProcessing(List<OutboxEntity> entities) {
+        entities.forEach(e -> e.setStatus(OutboxStatus.PROCESSING));
+        entityManager.flush(); // forcer l'update avant libération du lock
+    }
+
+
+    private List<OutboxModel> convertToModels(List<OutboxEntity> entities) {
+        return entities.stream()
+                .map(OutboxEntity::toModel)
+                .toList();
     }
 
 }

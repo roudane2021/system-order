@@ -10,6 +10,9 @@
     <name>domain-order</name>
     <version>1.0.0-SNAPSHOT</version>
     <url>http://maven.apache.org</url>
+    <properties>
+        <java.version>17</java.version>
+    </properties>
 
     <dependencies>
         <dependency>
@@ -49,9 +52,8 @@
         <!-- Dépendance pour Mockito -->
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
-            <optional>true</optional>
         </dependency>
 
         <!-- Dépendance pour AssertJ -->
