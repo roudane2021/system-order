@@ -1,0 +1,43 @@
+<!-- Message Item Template -->
+
+<div class="message-container" [class.user-message]="isUserMessage()" [class.assistant-message]="isAssistantMessage()">
+  <!-- Avatar -->
+  <div *ngIf="showAvatar" class="message-avatar">
+    <span *ngIf="isUserMessage()" class="user-avatar">👤</span>
+    <span *ngIf="isAssistantMessage()" class="assistant-avatar">✨</span>
+  </div>
+
+  <!-- Message Content -->
+  <div class="message-content-wrapper">
+    <!-- Metadata -->
+    <div class="message-meta">
+      <span class="role-label">{{ isUserMessage() ? 'You' : 'Assistant' }}</span>
+      <span class="timestamp">{{ getFormattedTime() }}</span>
+    </div>
+
+    <!-- Message Text -->
+    <div class="message-text" [innerHTML]="message.content"></div>
+
+    <!-- Status Icon -->
+    <div *ngIf="message.status === 'sending'" class="message-status">
+      <mat-icon class="sending-icon">schedule</mat-icon>
+    </div>
+
+    <div *ngIf="message.status === 'error'" class="message-status error">
+      <mat-icon class="error-icon">error</mat-icon>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="message-actions">
+      <button
+        mat-icon-button
+        matTooltip="Copy message"
+        (click)="copyMessage()"
+        class="action-btn"
+      >
+        <mat-icon>content_copy</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
+

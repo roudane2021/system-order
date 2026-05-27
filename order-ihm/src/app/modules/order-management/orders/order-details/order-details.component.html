@@ -1,0 +1,56 @@
+<mat-card *ngIf="!loading">
+  <mat-card-title>Order #{{order.id}}</mat-card-title>
+  <mat-card-subtitle>{{order.customer.name}} • {{order.status}}</mat-card-subtitle>
+
+  <mat-divider></mat-divider>
+
+  <div class="order-grid">
+    <div class="left">
+      <mat-card>
+        <mat-card-title>Customer</mat-card-title>
+        <mat-card-content>
+          <div>{{order.customer.name}}</div>
+          <div>{{order.customer.email}}</div>
+          <div>{{order.customer.phone}}</div>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Shipping</mat-card-title>
+        <mat-card-content>
+          <div>{{order.shipping.address}}</div>
+          <div>{{order.shipping.city}}, {{order.shipping.postalCode}}</div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="right">
+      <mat-card>
+        <mat-card-title>Items</mat-card-title>
+        <mat-card-content>
+          <table class="items-table">
+            <tr *ngFor="let p of order.items">
+              <td>{{p.quantity}} x</td>
+              <td>{{p.product.name}}</td>
+              <td class="price">{{p.total | currency}}</td>
+            </tr>
+          </table>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card>
+        <mat-card-title>Payment</mat-card-title>
+        <mat-card-content>
+          <div>Method: {{order.paymentMethod}}</div>
+          <div>Status: {{order.paymentStatus}}</div>
+          <div class="total">Total: {{order.total | currency}}</div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </div>
+
+</mat-card>
+
+<mat-progress-spinner *ngIf="loading" mode="indeterminate"></mat-progress-spinner>
+

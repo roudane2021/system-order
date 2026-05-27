@@ -1,0 +1,64 @@
+<mat-card>
+  <mat-card-title>Create Order</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Customer</mat-label>
+        <mat-select formControlName="customerId">
+          <mat-option *ngFor="let c of customers" [value]="c.id">{{c.name}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div formArrayName="items" class="items">
+        <div *ngFor="let item of items.controls; let i = index" [formGroupName]="i" class="item-row">
+          <mat-form-field appearance="outline">
+            <mat-label>Product</mat-label>
+            <input matInput formControlName="name">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Qty</mat-label>
+            <input type="number" matInput formControlName="quantity">
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Price</mat-label>
+            <input type="number" matInput formControlName="price">
+          </mat-form-field>
+          <button mat-icon-button color="warn" (click)="removeItem(i)"><mat-icon>delete</mat-icon></button>
+        </div>
+      </div>
+
+      <button mat-stroked-button color="primary" type="button" (click)="addItem()">Add Item</button>
+
+      <mat-divider></mat-divider>
+
+      <div formGroupName="shipping" class="shipping">
+        <mat-form-field appearance="outline" class="full">
+          <mat-label>Address</mat-label>
+          <input matInput formControlName="address">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>City</mat-label>
+          <input matInput formControlName="city">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Postal code</mat-label>
+          <input matInput formControlName="postalCode">
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Payment Method</mat-label>
+        <mat-select formControlName="paymentMethod">
+          <mat-option value="Card">Card</mat-option>
+          <mat-option value="Invoice">Invoice</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="actions">
+        <button mat-flat-button color="primary" type="submit">Create</button>
+        <button mat-button type="button" routerLink="/orders">Cancel</button>
+      </div>
+    </form>
+  </mat-card-content>
+</mat-card>
+

@@ -1,0 +1,7 @@
+.activity-list { display:flex; flex-direction:column; gap:10px; }
+.activity-item { display:flex; align-items:center; gap:12px; padding:8px; border-radius:8px; }
+.activity-item .avatar { width:44px; height:44px; display:flex; align-items:center; justify-content:center; background:rgba(0,0,0,0.04); border-radius:8px }
+.activity-item .title { font-weight:600 }
+.activity-item .subtitle { color:rgba(0,0,0,0.6); font-size:13px }
+.activity-item .time { margin-left:auto; color:rgba(0,0,0,0.45); font-size:12px }
+

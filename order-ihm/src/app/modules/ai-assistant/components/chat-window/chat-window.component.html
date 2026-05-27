@@ -1,0 +1,28 @@
+<!-- Chat Window Template -->
+
+<div class="chat-window">
+  <!-- Messages Container -->
+  <div #messagesContainer class="messages-container">
+    <!-- Empty State -->
+    <div *ngIf="messages.length === 0 && !isLoading" class="empty-state">
+      <div class="empty-icon">✨</div>
+      <h2>Welcome to AI Assistant</h2>
+      <p>{{ getEmptyMessage() }}</p>
+    </div>
+
+    <!-- Messages List -->
+    <div *ngIf="messages.length > 0" class="messages-list">
+      <app-message-item
+        *ngFor="let message of messages; let i = index"
+        [message]="message"
+        [showAvatar]="shouldShowAvatar(i)"
+      ></app-message-item>
+    </div>
+
+    <!-- Typing Indicator -->
+    <div *ngIf="isLoading" class="typing-section">
+      <app-typing-indicator [isVisible]="true"></app-typing-indicator>
+    </div>
+  </div>
+</div>
+

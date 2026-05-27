@@ -1,0 +1,14 @@
+<mat-card>
+  <mat-card-title>Customers</mat-card-title>
+  <mat-list>
+    <mat-list-item *ngFor="let c of customers">
+      <mat-icon mat-list-icon>person</mat-icon>
+      <h4 matLine>{{c.name}}</h4>
+      <p matLine>{{c.email}}</p>
+      <button mat-icon-button matTooltip="View" [routerLink]="['/customers', c.id]">
+        <mat-icon>visibility</mat-icon>
+      </button>
+    </mat-list-item>
+  </mat-list>
+</mat-card>
+

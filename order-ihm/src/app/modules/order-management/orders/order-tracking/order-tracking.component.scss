@@ -1,0 +1,8 @@
+/* Styles for order tracking */
+.mat-card { padding:12px }
+.mat-card-content div { margin-bottom:6px }
+
+@media (max-width: 700px) {
+  .mat-card { padding:8px }
+}
+

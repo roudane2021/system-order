@@ -1,0 +1,28 @@
+@use 'sass:map';
+@use 'sass:color';
+
+// Theme tokens for future dark/light switching
+$light-theme: (
+  primary: #1565c0,
+  background: #f6f8fb,
+  surface: #ffffff,
+  text: #0b2540
+);
+
+$dark-theme: (
+  primary: #90caf9,
+  background: #0b1724,
+  surface: #0f1b2a,
+  text: #e6f0ff
+);
+
+@mixin theme($t) {
+  --oms-primary: #{map.get($t, primary)};
+  --oms-bg: #{map.get($t, background)};
+  --oms-surface: #{map.get($t, surface)};
+  --oms-text: #{map.get($t, text)};
+}
+
+:root { @include theme($light-theme); }
+.dark-mode { @include theme($dark-theme); }
+

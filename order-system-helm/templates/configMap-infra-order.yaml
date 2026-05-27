@@ -5,7 +5,7 @@ metadata:
   namespace: {{ .Values.namespace }}
 data:
   SPRING_PROFILES_ACTIVE: "oracle"
-  KAFKA_BROKERS: "kafka-broker1.infra-order-dev.svc.cluster.local:9092,kafka-broker2.infra-order-dev.svc.cluster.local:9093"
+  KAFKA_BROKERS: "kafka-0.kafka.infra-order-dev.svc.cluster.local:9092,kafka-1.kafka.infra-order-dev.svc.cluster.local:9093"
   BD_ORACLE_HOST: oracle-xe.infra-order-dev.svc.cluster.local:1521
   APP_USER: rachid
   CONFIG_SERVER_URL: http://config-server.order-dev.svc.cluster.local

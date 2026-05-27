@@ -1,0 +1,210 @@
+/* AI Assistant Layout Styles */
+
+* {
+  box-sizing: border-box;
+}
+
+body, html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--primary-text);
+  background-color: var(--container-bg);
+}
+
+/* Layout Containers */
+.ai-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  flex-direction: column;
+}
+
+.ai-layout-main {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.ai-sidebar-container {
+  width: 260px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--border-color);
+  background-color: var(--sidebar-bg);
+}
+
+.ai-content-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.ai-header {
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--topbar-bg);
+}
+
+.ai-chat-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--chat-bg);
+}
+
+.ai-input-area {
+  flex-shrink: 0;
+  border-top: 1px solid var(--border-color);
+  background-color: var(--input-container-bg);
+}
+
+/* Utility Classes */
+.ai-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--secondary-text);
+  margin: 1rem 0 0.5rem 0;
+  padding: 0 1rem;
+}
+
+.ai-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 0;
+}
+
+.ai-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  text-align: center;
+  color: var(--secondary-text);
+
+  > p {
+    margin: 0.5rem 0 0 0;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn 0.3s ease-out;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.3s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.3s ease-out;
+}
+
+.slide-in-up {
+  animation: slideInUp 0.3s ease-out;
+}
+
+/* Responsive Layouts */
+@media (max-width: 768px) {
+  .ai-sidebar-container {
+    width: 240px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ai-sidebar-container {
+    position: fixed;
+    left: -240px;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+    width: 240px;
+
+    &.open {
+      left: 0;
+    }
+  }
+
+  .ai-layout-main {
+    position: relative;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--scrollbar-thumb);
+  border-radius: 4px;
+
+  &:hover {
+    background-color: var(--scrollbar-thumb-hover);
+  }
+}
+
+/* Selection styling */
+::selection {
+  background-color: var(--primary);
+  color: white;
+}
+
+::-moz-selection {
+  background-color: var(--primary);
+  color: white;
+}
+

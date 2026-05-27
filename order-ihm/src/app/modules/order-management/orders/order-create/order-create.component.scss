@@ -1,0 +1,7 @@
+.full { width: 100% }
+.items { display:flex; flex-direction:column; gap:12px; margin-bottom:12px }
+.item-row { display:flex; gap:8px; align-items:center }
+.shipping { display:grid; grid-template-columns: 1fr 200px 150px; gap:12px; margin-top:12px }
+.actions { margin-top:16px; display:flex; gap:8px }
+@media (max-width: 900px) { .shipping { grid-template-columns: 1fr } .item-row { flex-direction:column; align-items:stretch } }
+

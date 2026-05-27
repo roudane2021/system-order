@@ -1,0 +1,18 @@
+<div class="analytics-cards">
+  <mat-card *ngFor="let c of cards" class="analytics-card" [ngClass]="c.color">
+    <mat-card-content>
+      <div class="card-top">
+        <div class="meta">
+          <div class="title">{{c.title}}</div>
+          <div class="value">{{c.value | number}}</div>
+        </div>
+        <mat-icon class="icon">{{c.icon}}</mat-icon>
+      </div>
+      <div class="card-footer">
+        <div class="trend">+3.8%</div>
+        <mat-progress-spinner diameter="36" mode="determinate" value="75"></mat-progress-spinner>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+

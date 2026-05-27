@@ -1,0 +1,9 @@
+/* Styles for customer details */
+.mat-card { padding: 12px }
+.mat-card-title { font-size: 18px }
+.mat-card-content div { margin-bottom: 8px }
+
+@media (max-width: 900px) {
+  .mat-card { padding: 8px }
+}
+

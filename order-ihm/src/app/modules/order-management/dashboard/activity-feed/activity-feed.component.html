@@ -1,0 +1,11 @@
+<div class="activity-list">
+  <div *ngFor="let a of activities" class="activity-item">
+    <div class="avatar"><mat-icon>receipt</mat-icon></div>
+    <div class="meta">
+      <div class="title">{{a.title}}</div>
+      <div class="subtitle">{{a.subtitle}}</div>
+    </div>
+    <div class="time">{{a.time}}</div>
+  </div>
+</div>
+

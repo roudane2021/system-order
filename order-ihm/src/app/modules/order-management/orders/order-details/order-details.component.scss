@@ -1,0 +1,7 @@
+.order-grid { display: grid; grid-template-columns: 1fr 360px; gap: 16px; }
+.items-table { width:100%; }
+.items-table td { padding:6px 8px }
+.price { text-align:right }
+.total { font-weight:700; margin-top:8px }
+@media (max-width: 900px) { .order-grid { grid-template-columns: 1fr } }
+
