@@ -1,0 +1,36 @@
+<mat-sidenav-container class="oms-sidenav-container">
+  <mat-sidenav #sidenav mode="side" class="oms-sidenav" [opened]="!isCollapsed">
+    <div class="logo">Order System</div>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/orders" routerLinkActive="active"> <mat-icon>receipt_long</mat-icon> Orders</a>
+      <a mat-list-item routerLink="/dashboard" routerLinkActive="active"> <mat-icon>dashboard</mat-icon> Dashboard</a>
+      <a mat-list-item routerLink="/customers" routerLinkActive="active"> <mat-icon>people</mat-icon> Customers</a>
+      <a mat-list-item routerLink="/products" routerLinkActive="active"> <mat-icon>inventory_2</mat-icon> Products</a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <mat-toolbar class="oms-toolbar" color="primary">
+      <button mat-icon-button (click)="toggleSidenav()" class="mobile-toggle">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="toolbar-title">Order Management</span>
+      <span class="toolbar-spacer"></span>
+      <button mat-icon-button matTooltip="Notifications">
+        <mat-icon>notifications</mat-icon>
+      </button>
+      <button mat-icon-button matTooltip="Account">
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <div class="oms-breadcrumbs">
+      <!-- Breadcrumb placeholder -->
+    </div>
+
+    <div class="oms-content">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

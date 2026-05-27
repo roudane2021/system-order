@@ -1,0 +1,13 @@
+.oms-sidenav-container { height: 100vh; }
+.oms-sidenav { width: 260px; background: var(--oms-surface); padding-top: 16px; }
+.logo { font-weight: 700; font-size: 18px; padding: 16px; }
+.oms-toolbar { position: sticky; top: 0; z-index: 10; }
+.toolbar-title { font-weight: 600; }
+.toolbar-spacer { flex: 1 1 auto; }
+.oms-content { padding: 24px; background: var(--oms-bg); min-height: calc(100vh - 64px); }
+.mobile-toggle { display: none; }
+@media (max-width: 900px) {
+  .oms-sidenav { width: 0; }
+  .mobile-toggle { display: inline-flex; }
+}
+

@@ -34,8 +34,8 @@ export class TableDisplayComponent implements OnInit, OnDestroy {
        .pipe(
          takeUntil(this.destroy$),
          tap(() => {
-           this.dialogService.error(InventoryMessages.dowloadListOrder());
-           this.notificationService.error(InventoryMessages.dowloadListOrder());
+           this.dialogService.error(InventoryMessages.downloadListOrder());
+           this.notificationService.error(InventoryMessages.downloadListOrder());
          })
        )
        .subscribe();

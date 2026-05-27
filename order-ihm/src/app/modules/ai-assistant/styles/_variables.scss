@@ -1,0 +1,93 @@
+/* AI Assistant Variables - Light Theme */
+
+:root {
+  // Primary Colors
+  --primary: #1976d2;
+  --primary-light: #bbdefb;
+  --primary-dark: #1565c0;
+
+  // Text Colors
+  --primary-text: #212121;
+  --secondary-text: #757575;
+  --tertiary-text: #bdbdbd;
+
+  // Background Colors
+  --container-bg: #fff;
+  --sidebar-bg: #f5f5f5;
+  --chat-bg: #fff;
+  --input-container-bg: #fff;
+  --input-bg: #f5f5f5;
+  --user-msg-bg: #e3f2fd;
+  --assistant-msg-bg: #fff;
+  --code-bg: #f5f5f5;
+  --topbar-bg: #fff;
+  --hover-bg: #f5f5f5;
+  --avatar-bg: #e0e0e0;
+  --kbd-bg: #f0f0f0;
+
+  // Border Colors
+  --border-color: #e5e5e5;
+  --input-border: #e0e0e0;
+
+  // Status Colors
+  --success: #4caf50;
+  --error: #f44336;
+  --warning: #ff9800;
+  --info: #2196f3;
+
+  // Scrollbar
+  --scrollbar-thumb: #ccc;
+  --scrollbar-thumb-hover: #999;
+}
+
+/* Dark Theme */
+@media (prefers-color-scheme: dark) {
+  :root {
+    // Primary Colors (same)
+    --primary: #90caf9;
+    --primary-light: #42a5f5;
+    --primary-dark: #1976d2;
+
+    // Text Colors
+    --primary-text: #fff;
+    --secondary-text: #b0bec5;
+    --tertiary-text: #616161;
+
+    // Background Colors
+    --container-bg: #121212;
+    --sidebar-bg: #191919;
+    --chat-bg: #121212;
+    --input-container-bg: #191919;
+    --input-bg: #2a2a2a;
+    --user-msg-bg: #1e3a8a;
+    --assistant-msg-bg: #1a1a1a;
+    --code-bg: #2a2a2a;
+    --topbar-bg: #1a1a1a;
+    --hover-bg: #2a2a2a;
+    --avatar-bg: #424242;
+    --kbd-bg: #2a2a2a;
+
+    // Border Colors
+    --border-color: #353535;
+    --input-border: #404040;
+
+    // Status Colors (same)
+    --success: #66bb6a;
+    --error: #ef5350;
+    --warning: #ffa726;
+    --info: #42a5f5;
+
+    // Scrollbar
+    --scrollbar-thumb: #555;
+    --scrollbar-thumb-hover: #777;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  :root {
+    // Slightly larger text on mobile
+    --font-size-base: 16px;
+  }
+}
+

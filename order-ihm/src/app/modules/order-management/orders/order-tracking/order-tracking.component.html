@@ -1,0 +1,9 @@
+<mat-card>
+  <mat-card-title>Tracking</mat-card-title>
+  <mat-card-content>
+    <div *ngIf="tracking">Tracking: {{tracking}}</div>
+    <div *ngIf="carrier">Carrier: {{carrier}}</div>
+    <div *ngIf="!tracking">No tracking information available.</div>
+  </mat-card-content>
+</mat-card>
+

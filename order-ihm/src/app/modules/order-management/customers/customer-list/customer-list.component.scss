@@ -1,0 +1,9 @@
+/* Styles for customers list */
+.mat-list-item { display:flex; align-items:center; gap:12px }
+.mat-list-item h4 { margin:0 }
+.mat-list-item p { margin:0; color: rgba(0,0,0,0.6) }
+
+@media (max-width: 700px) {
+  .mat-list-item { flex-direction: column; align-items:flex-start }
+}
+

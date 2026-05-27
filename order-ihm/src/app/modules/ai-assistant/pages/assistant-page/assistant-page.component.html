@@ -1,0 +1,29 @@
+<!-- Assistant Page Template -->
+
+<mat-sidenav-container class="assistant-container">
+  <!-- Sidebar -->
+  <mat-sidenav
+    #sidenav
+    class="assistant-sidebar"
+    mode="side"
+    [opened]="(sidebarOpen$ | async)"
+    [disableClose]="(isMobile$ | async) === false"
+  >
+    <app-ai-sidebar></app-ai-sidebar>
+  </mat-sidenav>
+
+  <!-- Main Content -->
+  <mat-sidenav-content class="assistant-content">
+    <div class="content-wrapper">
+      <!-- Top Bar -->
+      <app-ai-topbar></app-ai-topbar>
+
+      <!-- Chat Window -->
+      <app-chat-window></app-chat-window>
+
+      <!-- Prompt Input -->
+      <app-prompt-input (messageSent)="onMessageSent($event)"></app-prompt-input>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+

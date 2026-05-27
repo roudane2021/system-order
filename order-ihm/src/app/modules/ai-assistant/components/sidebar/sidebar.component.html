@@ -1,0 +1,69 @@
+<!-- Sidebar Template -->
+
+<div class="ai-sidebar">
+  <!-- Header -->
+  <div class="sidebar-header">
+    <button mat-raised-button color="primary" (click)="createNewChat()" class="new-chat-btn">
+      <mat-icon>add</mat-icon>
+      New chat
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Chat History -->
+  <div class="chat-history">
+    <h3 class="section-title">Chat History</h3>
+
+    <mat-list class="conversation-list">
+      <mat-list-item
+        *ngFor="let conversation of conversations"
+        (click)="selectConversation(conversation)"
+        class="conversation-item"
+        [class.active]="conversation.isActive"
+      >
+        <mat-icon matListItemIcon>
+          <span class="history-icon">💬</span>
+        </mat-icon>
+        <div matListItemTitle class="conversation-title">
+          {{ conversation.title }}
+        </div>
+        <div matListItemLine class="conversation-subtitle">
+          {{ conversation.messageCount }} messages
+        </div>
+
+        <!-- Delete Button -->
+        <button
+          mat-icon-button
+          matListItemMeta
+          (click)="deleteConversation($event, conversation.id)"
+          matTooltip="Delete conversation"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-list-item>
+    </mat-list>
+
+    <div *ngIf="conversations.length === 0" class="empty-state">
+      <mat-icon>message</mat-icon>
+      <p>No conversations yet</p>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- User Profile Section -->
+  <div class="sidebar-footer">
+    <button mat-button class="user-menu">
+      <mat-icon>account_circle</mat-icon>
+      <span>User Profile</span>
+    </button>
+    <button mat-icon-button matTooltip="Settings">
+      <mat-icon>settings</mat-icon>
+    </button>
+    <button mat-icon-button matTooltip="Help">
+      <mat-icon>help</mat-icon>
+    </button>
+  </div>
+</div>
+

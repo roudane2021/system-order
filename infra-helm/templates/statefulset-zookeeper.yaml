@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: zookeeper
+  namespace: infra-order-dev
+spec:
+  serviceName: zookeeper
+  replicas: 3
+  podManagementPolicy: OrderedReady
+
+  selector:
+    matchLabels:
+      app: zookeeper
+
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+
+    spec:
+      terminationGracePeriodSeconds: 30
+
+      containers:
+        - name: zookeeper
+          image: confluentinc/cp-zookeeper:7.5.0
+
+          ports:
+            - containerPort: 2181
+            - containerPort: 2888
+            - containerPort: 3888
+
+#          startupProbe:
+#            tcpSocket:
+#              port: 2181
+#            initialDelaySeconds: 10
+#            periodSeconds: 5
+#            failureThreshold: 30
+#
+#          livenessProbe:
+#            tcpSocket:
+#              port: 2181
+#            initialDelaySeconds: 30
+#            periodSeconds: 10
+#            failureThreshold: 5
+#
+#          readinessProbe:
+#            tcpSocket:
+#              port: 2181
+#            initialDelaySeconds: 20
+#            periodSeconds: 5
+#            failureThreshold: 5
+
+
+          env:
+            - name: ZOOKEEPER_CLIENT_PORT
+              value: "2181"
+
+            - name: ZOOKEEPER_SERVERS
+              value: "zookeeper-0.zookeeper:2888:3888;zookeeper-1.zookeeper:2888:3888;zookeeper-2.zookeeper:2888:3888"
+
+          command:
+            - sh
+            - -c
+            - |
+              export ZOOKEEPER_SERVER_ID=$(hostname | awk -F'-' '{print $NF + 1}')
+              exec /etc/confluent/docker/run
+
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/zookeeper/data
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 3Gi

@@ -1,0 +1,6 @@
+.table-toolbar { display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px }
+.table-wrap { overflow:auto }
+.mat-table { min-width: 800px }
+.actions { display:flex; gap:8px }
+@media (max-width: 900px) { .mat-table { min-width: 100% } }
+

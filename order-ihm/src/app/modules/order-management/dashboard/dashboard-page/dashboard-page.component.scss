@@ -1,0 +1,5 @@
+.dashboard-grid { display: grid; grid-template-columns: 1fr 420px; gap: 20px; }
+.recent-section { display: flex; flex-direction: column; gap: 20px; }
+.chart-placeholder { height: 220px; display:flex; align-items:center; justify-content:center; color:rgba(0,0,0,0.4); }
+@media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+

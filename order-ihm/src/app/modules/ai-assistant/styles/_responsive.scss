@@ -1,0 +1,293 @@
+/* AI Assistant Responsive Design */
+
+/* Mobile First Approach */
+
+/* Extra Small Devices (< 480px) */
+@media (max-width: 479px) {
+  // Font sizes
+  html {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  // Layout adjustments
+  .ai-sidebar-container {
+    width: 100%;
+    position: fixed;
+    left: -100%;
+    top: 0;
+    height: 100vh;
+    z-index: 1000;
+    transition: left 0.3s ease;
+
+    &.open {
+      left: 0;
+    }
+  }
+
+  .ai-content-container {
+    width: 100%;
+  }
+
+  // Padding and margins
+  * {
+    &:not(pre):not(code) {
+      letter-spacing: normal;
+    }
+  }
+
+  // Input area
+  textarea {
+    font-size: 16px; // Prevents zoom on iOS
+  }
+
+  button {
+    min-height: 44px; // Touch target
+
+    span {
+      font-size: 0.875rem;
+    }
+  }
+}
+
+/* Small Devices (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+  .ai-sidebar-container {
+    width: 240px;
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100vh;
+  }
+
+  .ai-content-container {
+    margin-left: 0;
+  }
+
+  // Landscape mode
+  @media (orientation: landscape) {
+    .ai-sidebar-container {
+      width: 200px;
+    }
+
+    h1 {
+      font-size: 1.25rem;
+    }
+
+    .ai-header {
+      min-height: 3rem;
+    }
+  }
+}
+
+/* Tablets (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .ai-sidebar-container {
+    width: 240px;
+  }
+
+  // Reduced spacing on tablet
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .message-container {
+    max-width: 85%;
+  }
+}
+
+/* Desktop (1024px +) */
+@media (min-width: 1024px) {
+  .ai-sidebar-container {
+    width: 260px;
+  }
+
+  .message-container {
+    max-width: 70%;
+
+    &.user-message {
+      margin-left: auto;
+    }
+  }
+
+  // Wider input
+  .prompt-input-container {
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+  }
+}
+
+/* Large Desktops (1440px +) */
+@media (min-width: 1440px) {
+  .ai-sidebar-container {
+    width: 280px;
+  }
+
+  .message-container {
+    max-width: 60%;
+  }
+}
+
+/* Ultra-wide Displays (1920px +) */
+@media (min-width: 1920px) {
+  .ai-sidebar-container {
+    width: 300px;
+  }
+
+  .message-container {
+    max-width: 50%;
+  }
+
+  .prompt-input-container {
+    max-width: 1200px;
+  }
+}
+
+/* Flexible Column Layouts */
+@media (max-width: 767px) {
+  .flex-row {
+    flex-direction: column !important;
+  }
+
+  .hide-mobile {
+    display: none !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .show-mobile {
+    display: none !important;
+  }
+}
+
+/* Touch Device Specific */
+@media (hover: none) and (pointer: coarse) {
+  // Increase button sizes for touch
+  button {
+    min-height: 48px;
+    min-width: 48px;
+  }
+
+  // Increase touch targets
+  .conversation-item {
+    padding: 1rem;
+  }
+
+  // Reduce motion for touch devices
+  * {
+    @media (prefers-reduced-motion: reduce) {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+/* Landscape orientation specific */
+@media (orientation: landscape) and (max-height: 500px) {
+  .ai-header {
+    min-height: 2.5rem;
+  }
+
+  .ai-chat-area {
+    max-height: calc(100vh - 5rem);
+  }
+
+  // Hide non-essential elements in landscape mobile
+  .sidebar-header {
+    padding: 0.5rem;
+  }
+
+  .topbar-title {
+    display: none;
+  }
+}
+
+/* Portrait orientation */
+@media (orientation: portrait) {
+  // Normal layout
+}
+
+/* High DPI / Retina Display */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  // Thinner borders
+  border: 0.5px solid var(--border-color);
+
+  // Optimize fonts for retina
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Print Styles */
+@media print {
+  .ai-sidebar-container,
+  .topbar-right,
+  .prompt-input-container,
+  button {
+    display: none !important;
+  }
+
+  .ai-chat-area {
+    height: auto;
+    max-height: none;
+  }
+
+  .message-container {
+    page-break-inside: avoid;
+  }
+}
+
+/* Accessibility - Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Dark Mode Specific Responsive */
+@media (prefers-color-scheme: dark) {
+  // Ensure contrast on dark background
+  .ai-topbar {
+    background-color: #1a1a1a;
+  }
+
+  .ai-sidebar-container {
+    background-color: #191919;
+  }
+
+  .ai-chat-area {
+    background-color: #121212;
+  }
+}
+
+/* Forced Colors Mode (for accessibility) */
+@media (forced-colors: active) {
+  * {
+    border-color: CanvasText;
+    color: CanvasText;
+    background-color: Canvas;
+  }
+
+  button {
+    border: 1px solid CanvasText;
+    background-color: Canvas;
+    color: CanvasText;
+  }
+
+  button:hover {
+    background-color: Highlight;
+  }
+}
+

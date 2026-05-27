@@ -1,0 +1,7 @@
+<div class="workflow">
+  <div *ngFor="let s of steps; let i = index" class="step" [class.active]="steps.indexOf(status) >= i">
+    <div class="circle">{{i+1}}</div>
+    <div class="label">{{s}}</div>
+  </div>
+</div>
+

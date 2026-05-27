@@ -1,0 +1,118 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: kafka
+  namespace: infra-order-dev
+spec:
+  serviceName: "kafka"
+  replicas: 3
+  podManagementPolicy: OrderedReady
+
+  selector:
+    matchLabels:
+      app: kafka
+
+  template:
+    metadata:
+      labels:
+        app: kafka
+
+    spec:
+      terminationGracePeriodSeconds: 60
+
+      containers:
+        - name: kafka
+          image: confluentinc/cp-kafka:7.5.0
+
+          ports:
+            - name: broker
+              containerPort: 9092
+
+#          startupProbe:
+#            tcpSocket:
+#              port: 9092
+#            initialDelaySeconds: 10
+#            periodSeconds: 5
+#            failureThreshold: 30
+#
+#          livenessProbe:
+#            tcpSocket:
+#              port: 9092
+#            initialDelaySeconds: 30
+#            periodSeconds: 10
+#            failureThreshold: 5
+#
+#          readinessProbe:
+#            tcpSocket:
+#              port: 9092
+#            initialDelaySeconds: 20
+#            periodSeconds: 5
+#            failureThreshold: 5
+
+
+          command:
+            - sh
+            - -c
+            - |
+              export POD_INDEX=$(echo $POD_NAME | rev | cut -d'-' -f1 | rev)
+              
+              # On change le nom pour éviter le conflit avec l'image Confluent
+              export MY_DYNAMIC_PORT=$((9092 + POD_INDEX))
+              export KAFKA_BROKER_ID=$POD_INDEX
+              
+              # 1. Le Broker ECOUTE sur son port spécifique (9092, 9093, 9094)
+              #export KAFKA_LISTENERS="INTERNAL://:${MY_DYNAMIC_PORT}"
+              
+              # 2. Le Broker ANNONCE ce même port spécifique
+              #export KAFKA_ADVERTISED_LISTENERS="INTERNAL://${POD_NAME}.kafka.infra-order-dev.svc.cluster.local:${MY_DYNAMIC_PORT}"
+              
+              exec /etc/confluent/docker/run
+
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+
+            # Connexion Zookeeper (DNS correct)
+            - name: KAFKA_ZOOKEEPER_CONNECT
+              value: "zookeeper-0.zookeeper.infra-order-dev.svc.cluster.local:2181,zookeeper-1.zookeeper.infra-order-dev.svc.cluster.local:2181,zookeeper-2.zookeeper.infra-order-dev.svc.cluster.local:2181"
+
+            # Listeners
+            - name: KAFKA_LISTENERS
+              value: "INTERNAL://:9092"
+
+            - name: KAFKA_ADVERTISED_LISTENERS
+              value: "INTERNAL://$(POD_NAME).kafka.infra-order-dev.svc.cluster.local:9092"
+
+            - name: KAFKA_LISTENER_SECURITY_PROTOCOL_MAP
+              value: "INTERNAL:PLAINTEXT"
+
+            - name: KAFKA_INTER_BROKER_LISTENER_NAME
+              value: "INTERNAL"
+
+            # Réplication
+            - name: KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR
+              value: "3"
+            - name: KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR
+              value: "3"
+            - name: KAFKA_TRANSACTION_STATE_LOG_MIN_ISR
+              value: "2"
+            - name: KAFKA_MIN_INSYNC_REPLICAS
+              value: "2"
+            - name: KAFKA_DEFAULT_REPLICATION_FACTOR
+              value: "3"
+
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/kafka/data
+
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: standard
+        resources:
+          requests:
+            storage: 3Gi

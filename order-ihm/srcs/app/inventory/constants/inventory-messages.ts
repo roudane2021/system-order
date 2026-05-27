@@ -1,4 +1,4 @@
-import { Inventory } from "../models/inventory.model";
+import { Inventory } from "src/app/inventory/models/inventory.model";
 
 export const InventoryMessages = {
     deleteSuccess: (item: Inventory): string => `Item #${item.itemNumber} est supprimée`,

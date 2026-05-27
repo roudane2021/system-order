@@ -1,0 +1,11 @@
+<mat-card *ngIf="!loading">
+  <mat-card-title>{{customer.name}}</mat-card-title>
+  <mat-card-content>
+    <div>Email: {{customer.email}}</div>
+    <div>Phone: {{customer.phone}}</div>
+    <div>Orders: {{customer.orders?.length || 0}}</div>
+  </mat-card-content>
+</mat-card>
+
+<mat-progress-spinner *ngIf="loading" mode="indeterminate"></mat-progress-spinner>
+

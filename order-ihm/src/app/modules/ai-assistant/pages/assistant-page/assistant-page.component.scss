@@ -1,0 +1,84 @@
+/* Assistant Page Styles */
+
+.assistant-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--container-bg, #fff);
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #191919;
+  }
+}
+
+.assistant-sidebar {
+  width: 260px;
+  background-color: var(--sidebar-bg, #fff);
+  flex-shrink: 0;
+
+  @media (prefers-color-scheme: dark) {
+    background-color: #191919;
+  }
+
+  /* Adjust sidebar width for mobile */
+  @media (max-width: 768px) {
+    width: 240px;
+  }
+
+  @media (max-width: 480px) {
+    width: 100%;
+    max-width: 80vw;
+  }
+}
+
+.assistant-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+/* Material Sidenav Overrides */
+::ng-deep {
+  .mat-drawer-inner-container {
+    display: flex !important;
+    flex-direction: column;
+  }
+
+  .mat-drawer-side {
+    border-right: 1px solid var(--border-color, #e5e5e5);
+
+    @media (prefers-color-scheme: dark) {
+      border-right-color: #353535;
+    }
+  }
+}
+
+/* Smooth transitions */
+.assistant-sidebar {
+  transition: all 0.3s ease;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .assistant-container {
+    height: 100%;
+  }
+
+  .assistant-sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    height: 100%;
+    z-index: 1000;
+  }
+}
+

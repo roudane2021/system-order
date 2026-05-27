@@ -1,0 +1,50 @@
+<!-- Prompt Input Template -->
+
+<div class="prompt-input-container">
+  <div class="input-wrapper">
+    <!-- Textarea -->
+    <textarea
+      #textarea
+      class="prompt-textarea"
+      [(ngModel)]="message"
+      (keydown)="onKeyDown($event)"
+      (input)="resizeTextarea()"
+      placeholder="Ask me anything... (Ctrl+Enter to send)"
+      [disabled]="isLoading"
+      rows="1"
+    ></textarea>
+
+    <!-- Action Buttons -->
+    <div class="input-actions">
+      <!-- Attachment Button -->
+      <button
+        mat-icon-button
+        (click)="attachFile()"
+        matTooltip="Attach file"
+        [disabled]="isLoading"
+        class="action-btn"
+      >
+        <mat-icon>attach_file</mat-icon>
+      </button>
+
+      <!-- Send Button -->
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="sendMessage()"
+        [disabled]="isSendDisabled()"
+        class="send-btn"
+      >
+        <mat-icon *ngIf="!isLoading">send</mat-icon>
+        <mat-icon *ngIf="isLoading" class="loading-icon">schedule</mat-icon>
+        <span>{{ isLoading ? 'Sending...' : 'Send' }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Info Text -->
+  <div class="input-info">
+    <small>Use <kbd>Ctrl+Enter</kbd> to send, <kbd>Shift+Enter</kbd> for new line</small>
+  </div>
+</div>
+

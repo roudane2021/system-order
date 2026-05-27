@@ -1,0 +1,21 @@
+<div class="dashboard-grid">
+  <app-analytics-cards [class.loading]="false" ></app-analytics-cards>
+
+  <div class="recent-section">
+    <mat-card class="recent-card">
+      <mat-card-title>Latest Orders</mat-card-title>
+      <mat-card-content>
+        <app-activity-feed></app-activity-feed>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="analytics-card">
+      <mat-card-title>Revenue</mat-card-title>
+      <mat-card-content>
+        <!-- Chart placeholder -->
+        <div class="chart-placeholder">Revenue chart here</div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
+
