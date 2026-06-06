@@ -47,7 +47,6 @@ export class OrderUiFacade {
         public deleteOrder(order: Order): Observable<boolean> {
             return this.orderBusinessFacade.deleteOrder(order).pipe(
                 takeUntil(this.destroy$),
-                switchMap(() => throwError(() => new Error('Erreur suppression'))),
                 tap(() => this.refresh()),
                 catchError((error) => {
                     return throwError(() => error);

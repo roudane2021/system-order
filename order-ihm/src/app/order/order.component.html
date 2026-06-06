@@ -8,10 +8,24 @@
 
   <!-- 🔹 Contenu principal -->
   <mat-sidenav-content>
-    <app-table-filter (criteriaChange)="onCriteriaReceived($event)"></app-table-filter>
-    <app-table-display ></app-table-display>
-    <app-table-pagination (pageChange)="onPageReceived($event)"></app-table-pagination>
 
+    <!-- En-tête -->
+    <mat-toolbar color="primary" class="main-toolbar">
+      <span>Gestion des commandes</span>
+    </mat-toolbar>
+
+
+    <!-- Contenu avec marge -->
+    <div class="content-wrapper">
+      <mat-card>
+        <mat-card-content>
+          <app-table-filter (criteriaChange)="onCriteriaReceived($event)"></app-table-filter>
+          <mat-divider></mat-divider>
+          <app-table-display></app-table-display>
+          <app-table-pagination (pageChange)="onPageReceived($event)"></app-table-pagination>
+        </mat-card-content>
+      </mat-card>
+    </div>
 
   </mat-sidenav-content>
 </mat-sidenav-container>
